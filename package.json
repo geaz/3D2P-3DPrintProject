@@ -1,0 +1,86 @@
+{
+	"name": "3d2p",
+	"publisher": "geaz",
+	"displayName": "3D2P",
+	"description": "3D Print Projects Management in VS Code",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.43.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:3d2p.initProject",
+		"workspaceContains:3D2P.json"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "3d2p.cmd.initProject",
+				"title": "3D2P: Initialize 3D Print Project"
+			},
+			{
+				"command": "3d2p.cmd.openStlWebview",
+				"title": "3D2P: Open STL Webview"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "3d2p.cmd.openStlWebview",
+					"when": "false"
+				}
+			]
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "3d2pViewContainer",
+					"title": "3D Print Project",
+					"icon": "resources/images/3d-printer-variant.svg"
+				}
+			]
+		},
+		"views": {
+			"3d2pViewContainer": [
+				{
+					"id": "3d2p.view.stl",
+					"name": "STLs",
+					"when": "3d2p.context.activated"
+				},
+				{
+					"id": "3d2p.view.gallery",
+					"name": "Gallery",
+					"when": "3d2p.context.activated"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm-run-all compile:*",
+		"compile:vsc": "tsc -p ./",
+		"compile:views": "parcel build src/views/* --out-dir out/views",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mithril": "^2.0.2",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.43.0",
+		"@types/webgl2": "0.0.5",
+		"@typescript-eslint/eslint-plugin": "^2.18.0",
+		"@typescript-eslint/parser": "^2.18.0",
+		"eslint": "^6.8.0",
+		"glob": "^7.1.6",
+		"htm": "^3.0.3",
+		"mithril": "^2.0.4",
+		"npm-run-all": "^4.1.5",
+		"parcel-bundler": "^1.12.4",
+		"preact": "^10.3.4",
+		"three": "^0.114.0",
+		"typescript": "^3.7.5"
+	}
+}

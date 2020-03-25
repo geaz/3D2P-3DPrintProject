@@ -1,0 +1,7 @@
+{
+    "name": "{{name}}",
+    "provider": "{{provider}}",
+    "rawBasePath": "{{rawBasePath}}",
+    "stls": [],
+    "gallery": []
+}
