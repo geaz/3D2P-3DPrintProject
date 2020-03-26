@@ -12,7 +12,7 @@ export class StlWebView {
             '3d2pStlWebView',
             `3D2P - ${stlInfo.name}`,
             vscode.ViewColumn.One,
-            { enableScripts: true }
+            { enableScripts: true, retainContextWhenHidden: true }
         );
 
         const webViewApp = this._panel.webview.asWebviewUri(
