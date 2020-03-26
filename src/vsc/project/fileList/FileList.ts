@@ -27,10 +27,6 @@ export class FileList<T extends FileListItem> {
         });
     }
 
-    public clearList(): void {
-        this._items = new Array<T>();
-    }
-
     public getItemByRelativePath(relativePath: string): T {
         return this._items.filter(i => i.relativePath === relativePath)?.[0];
     }

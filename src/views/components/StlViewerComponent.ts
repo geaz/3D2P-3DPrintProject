@@ -29,7 +29,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
             this._currentStlFilePath = this.props.stlFilePath;
             this.updateSceneStl(await this.loadStl()); 
         }
-        if(this._material.color.getHex() !== this.props.color) {
+        if(this._material !== undefined && this._material.color.getHex() !== this.props.color) {
             this._material.color.setHex(this.props.color);
         }
     }

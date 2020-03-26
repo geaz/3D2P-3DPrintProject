@@ -30,11 +30,19 @@ import { StlWebView } from './vsc/webViews/StlWebView';
 */
 export function activate(context: vscode.ExtensionContext) {
 	let fileWatcher = new FileWatcher();
-	let project = new Project(fileWatcher);
+	let project = initProject(fileWatcher);
 
 	activationCheck(project, fileWatcher);
 	add3D2PTreeViews(project, fileWatcher);
 	add3D2PCommands(project, context);	
+}
+
+function initProject(fileWatcher: FileWatcher): Project {
+	let project = new Project();
+	fileWatcher.ProjectFileWatcher.onDidCreate((projectFile: vscode.Uri) => project.Load(path.dirname(projectFile.fsPath)));
+	fileWatcher.ProjectFileWatcher.onDidDelete(() => project.Close());
+	
+	return project;
 }
 
 function activationCheck(project: Project, fileWatcher: FileWatcher) {
@@ -64,7 +72,10 @@ function add3D2PCommands(project: Project, context: vscode.ExtensionContext) {
 
     let openStlWebviewCommand = vscode.commands.registerCommand(
         '3d2p.cmd.openStlWebview', 
-        async(filePath: string) => { return new StlWebView(project.stls.getItemByRelativePath(path.relative(project.projectPath, filePath))); });
+        async(filePath: string) => {
+			let stlInfo = project.stls.getItemByRelativePath(path.relative(project.projectPath, filePath));
+			return new StlWebView(project, stlInfo); 
+		});
 
     context.subscriptions.push(initProjectCommand);
     context.subscriptions.push(openStlWebviewCommand);

@@ -17,33 +17,7 @@ export class ProjectFile {
         if(!fs.existsSync(_projectFilePath)) {
             throw "Project file does not exist!";
         }
-        this.Reload();
-    }
-
-    public Reload(): void {
-        this.stls.clearList();
-        this.gallery.clearList();
-
-        let projectJson = require(this._projectFilePath);
-        for(var property in projectJson) {
-            switch (property) {
-                case 'stls':
-                    projectJson[property].forEach((element: any) => {
-                        this.stls.items.push(<StlInfo>StlInfo.fromObject(this._projectPath, element));
-                    });
-                    break;
-                case 'gallery':
-                    break;
-                default:
-                    let propertyDescriptor = Object.getOwnPropertyDescriptor(this, property);
-                    if(propertyDescriptor !== undefined) {
-                        propertyDescriptor.value = projectJson[property];
-                        Object.defineProperty(this, property, propertyDescriptor);
-                    }
-                    break;
-            }
-        }
-        this.stls.updateListFromDisk(path.dirname(this._projectFilePath));
+        this.Load();
     }
 
     public Save(): void {
@@ -64,5 +38,28 @@ export class ProjectFile {
                 }
             });
         fs.writeFileSync(this._projectFilePath, JSON.stringify(jsonObject, null, 4), 'utf8');
+    }
+
+    private Load(): void {
+        let projectJson = require(this._projectFilePath);
+        for(var property in projectJson) {
+            switch (property) {
+                case 'stls':
+                    projectJson[property].forEach((element: any) => {
+                        this.stls.items.push(<StlInfo>StlInfo.fromObject(this._projectPath, element));
+                    });
+                    break;
+                case 'gallery':
+                    break;
+                default:
+                    let propertyDescriptor = Object.getOwnPropertyDescriptor(this, property);
+                    if(propertyDescriptor !== undefined) {
+                        propertyDescriptor.value = projectJson[property];
+                        Object.defineProperty(this, property, propertyDescriptor);
+                    }
+                    break;
+            }
+        }
+        this.stls.updateListFromDisk(path.dirname(this._projectFilePath));
     }
 }

@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+import { Project } from '../project/Project';
 import { StlInfo } from '../project/model/StlInfo';
 
 export class StlWebView {
     private readonly _panel: vscode.WebviewPanel;
     
-    constructor(stlInfo: StlInfo) {
+    constructor(project: Project, stlInfo: StlInfo) {
         this._panel = vscode.window.createWebviewPanel(
             '3d2pStlWebView',
             `3D2P - ${stlInfo.name}`,
@@ -33,8 +34,17 @@ export class StlWebView {
             </body>
             </html>`;
 
-        //ProjectFile.Load();
         this._panel.webview.postMessage({ command: 'filechange', data: stlFilePathViewUri.toString() });
-        //his._panel.webview.postMessage({ command: 'projectfile', data: ProjectFile.GetProjectFilePath() });
+        this._panel.webview.postMessage({ command: 'setStlInfo', data: { color: stlInfo.color, status: stlInfo.status } });
+
+        this._panel.webview.onDidReceiveMessage(message => {
+            switch (message.command) {
+                case 'updateStlInfo':
+                    stlInfo.color = message.data.color;
+                    stlInfo.status = message.data.status;
+                    project.Save();
+                    break;
+            }
+        });
     }
 }

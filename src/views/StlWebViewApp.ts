@@ -1,8 +1,9 @@
 import { h, Component, render } from 'preact';
 import htm from 'htm';
-const html = htm.bind(h);
 
-import { IStlInfo, StlStatus } from '../vsc/ProjectFile';
+const html = htm.bind(h);
+declare var acquireVsCodeApi;
+
 import { StlViewerComponent } from './components/StlViewerComponent';
 import { ConfigComponent, IConfigDescription, ConfigType } from './components/ConfigComponent';
 
@@ -12,7 +13,8 @@ interface AppState {
 }
 
 class App extends Component<{}, AppState> {
-    private _config = <IStlInfo>{ color: 0xF58026, status: StlStatus.WIP };
+    private _vscode = acquireVsCodeApi();
+    private _config = { color: 0xF58026, status: "" };
     private _configDescription = new Array<IConfigDescription>();
 
     constructor() {
@@ -45,7 +47,10 @@ class App extends Component<{}, AppState> {
             case 'filechange':
                 this.setState({ stlFilePath: message.data });
                 break;
-            case 'projectfile':
+            case 'setStlInfo':
+                this.setState({ color: message.data.color });
+                this._config.color = message.data.color;
+                this._config.status = message.data.status;
                 break;
         }
     };
@@ -54,6 +59,14 @@ class App extends Component<{}, AppState> {
         if(property === 'color') {
             this.setState({ color: value });
         }
+
+        this._vscode.postMessage({
+            command: 'updateStlInfo',
+            data: {
+                color: this._config.color,
+                status: this._config.status
+            }
+        })
     }
 }
 

@@ -15,14 +15,17 @@ export class ConfigComponent extends Component<IConfigComponentProps> {
         this.props.configDescription.forEach(element => {
             if(element.type === ConfigType.Color) {
                 let controller = gui.addColor(this.props.config, element.property);
+                controller.listen();
                 controller.onChange((value) => changeDelegate(element.property, value));                  
             }
             else if(element.type === ConfigType.Picker) {
                 let controller = gui.add(this.props.config, element.property, element.options);
+                controller.listen();
                 controller.onChange((value) => changeDelegate(element.property, value));      
             }
             else {
                 let controller = gui.add(this.props.config, element.property);
+                controller.listen();
                 controller.onChange((value) => changeDelegate(element.property, value));      
             }
         });
