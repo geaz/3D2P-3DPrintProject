@@ -41,7 +41,7 @@ export class InitProjectQuestionnaire extends BaseQuestionnaire {
             (progress, token) => {
                 return new Promise(async (resolve, reject) => {
                     try{
-                        fs.writeFileSync(this.projectFilePath, `{ name: '${this.projectName.answer}' }`, 'utf8');
+                        fs.writeFileSync(this.projectFilePath, `{ "name": "${this.projectName.answer}" }`, 'utf8');
                         //fs.writeFileSync(path.join(projectPath, "README.md"), `{ name: '${this.projectName.answer}' }`, 'utf8');
                         //fs.writeFileSync(path.join(projectPath, "LICENSE.md"), `{ name: '${this.projectName.answer}' }`, 'utf8');                       
                         resolve();

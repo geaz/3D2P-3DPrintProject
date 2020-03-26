@@ -11,7 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:3d2p.initProject",
+		"onCommand:3d2p.cmd.initProject",
 		"workspaceContains:3D2P.json"
 	],
 	"main": "./out/extension.js",
