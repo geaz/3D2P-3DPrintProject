@@ -40,8 +40,9 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 
     public resetCamera(): void {
         let stlDimensions = new StlDimensions(this._mesh.geometry.boundingBox);
-        this._camera.position.set(0, stlDimensions.y / 2, stlDimensions.z * 5);
+        let maxDimension = Math.max(stlDimensions.x, stlDimensions.y, stlDimensions.z);
         this._camera.lookAt(new THREE.Vector3(0, 0, 0));
+        this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
         this._controls.target.set(0, 0, 0);
         this._controls.autoRotate = true;
     }
@@ -129,7 +130,9 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._mesh.receiveShadow = true;
 
         this._meshParent.add(this._mesh);
-        this._camera.position.set(0, stlDimensions.y / 2, stlDimensions.z * 5);
+
+        let maxDimension = Math.max(stlDimensions.x, stlDimensions.y, stlDimensions.z);
+        this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
 
         if(this.props.onSceneUpdated !== undefined) this.props.onSceneUpdated(this._camera, this._mesh);
     } 
