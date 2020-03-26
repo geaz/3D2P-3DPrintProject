@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+
 import { FileWatcher } from '../FileWatcher';
-import { ProjectFile, IStlInfo } from './ProjectFile';
-import { ProjectInfoList } from './ProjectInfoList';
+import { ProjectFile } from './model/ProjectFile';
+import { FileList } from './fileList/FileList';
+import { StlInfo } from './model/StlInfo';
 
 export const PROJECTFILE_NAME = "3D2P.json";
 
@@ -23,7 +25,7 @@ export class Project {
         }
 
         this._projectPath = projectPath;
-        this._projectFile = new ProjectFile(path.join(projectPath, PROJECTFILE_NAME));
+        this._projectFile = new ProjectFile(projectPath, path.join(projectPath, PROJECTFILE_NAME));
     }
 
     public Save(): void {
@@ -41,7 +43,7 @@ export class Project {
         return this._projectPath;
     }
 
-    public get stls(): ProjectInfoList<IStlInfo> {
+    public get stls(): FileList<StlInfo> {
         if(this._projectFile === undefined) throw "No project loaded!";
         return this._projectFile.stls;
     }

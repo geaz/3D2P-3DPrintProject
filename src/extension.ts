@@ -30,32 +30,32 @@ import { StlWebView } from './vsc/webViews/StlWebView';
 */
 export function activate(context: vscode.ExtensionContext) {
 	let fileWatcher = new FileWatcher();
-	let projectFile = new Project(fileWatcher);
+	let project = new Project(fileWatcher);
 
-	activationCheck(projectFile, fileWatcher);
-	add3D2PTreeViews(projectFile, fileWatcher);
-	add3D2PCommands(context);	
+	activationCheck(project, fileWatcher);
+	add3D2PTreeViews(project, fileWatcher);
+	add3D2PCommands(project, context);	
 }
 
-function activationCheck(projectFile: Project, fileWatcher: FileWatcher) {
+function activationCheck(project: Project, fileWatcher: FileWatcher) {
 	if(vscode.workspace.workspaceFolders !== undefined) {
 		let workspaceRootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 		fileWatcher.ProjectFileWatcher.onDidCreate(() => vscode.commands.executeCommand('setContext', '3d2p.context.activated', true));
 		fileWatcher.ProjectFileWatcher.onDidDelete(() => vscode.commands.executeCommand('setContext', '3d2p.context.activated', false));
 
 		if(fs.existsSync(path.join(workspaceRootPath, PROJECTFILE_NAME))) {
-			projectFile.Load(workspaceRootPath);
+			project.Load(workspaceRootPath);
 			vscode.commands.executeCommand('setContext', '3d2p.context.activated', true);
 		}		
 	}
 }
 
-function add3D2PTreeViews(projectFile: Project, fileWatcher: FileWatcher) {
-	vscode.window.registerTreeDataProvider(StlTreeDataProvider.TREEVIEW_ID, new StlTreeDataProvider(projectFile, fileWatcher));
+function add3D2PTreeViews(project: Project, fileWatcher: FileWatcher) {
+	vscode.window.registerTreeDataProvider(StlTreeDataProvider.TREEVIEW_ID, new StlTreeDataProvider(project, fileWatcher));
 	vscode.window.registerTreeDataProvider(GalleryTreeDataProvider.TREEVIEW_ID, new GalleryTreeDataProvider());
 }
 
-function add3D2PCommands(context: vscode.ExtensionContext) {
+function add3D2PCommands(project: Project, context: vscode.ExtensionContext) {
 	let promptEngine = new PromptEngine();
     
     let initProjectCommand = vscode.commands.registerCommand(
@@ -64,7 +64,7 @@ function add3D2PCommands(context: vscode.ExtensionContext) {
 
     let openStlWebviewCommand = vscode.commands.registerCommand(
         '3d2p.cmd.openStlWebview', 
-        async(filePath: string) => { return new StlWebView(filePath); });
+        async(filePath: string) => { return new StlWebView(project.stls.getItemByRelativePath(path.relative(project.projectPath, filePath))); });
 
     context.subscriptions.push(initProjectCommand);
     context.subscriptions.push(openStlWebviewCommand);

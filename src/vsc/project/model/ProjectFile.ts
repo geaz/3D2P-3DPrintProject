@@ -1,31 +1,36 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ProjectInfoList, IInfoListItem } from "./ProjectInfoList";
+import { FileList } from "../fileList/FileList";
+import { StlInfo } from './StlInfo';
+import { GalleryInfo } from './GalleryInfo';
 
 export class ProjectFile {
     public name: string = "";
     public provider: string = "";
-    public stls: ProjectInfoList<IStlInfo> = new ProjectInfoList<IStlInfo>(".stl");
-    public gallery: Array<IGalleryInfo> = new Array<IGalleryInfo>();
+    public stls: FileList<StlInfo> = 
+        new FileList<StlInfo>(".stl", (name, relPath) => new StlInfo(this._projectPath, name, relPath));
+    public gallery: FileList<GalleryInfo> = 
+        new FileList<GalleryInfo>(".jpg|.jpeg|.png", (name, relPath) => new GalleryInfo(this._projectPath, name, relPath));
         
-    private _projectFilePath: string;
-
-    constructor(projectFilePath: string) {
-        if(!fs.existsSync(projectFilePath)) {
+    constructor(private _projectPath: string, private _projectFilePath: string) {
+        if(!fs.existsSync(_projectFilePath)) {
             throw "Project file does not exist!";
         }
-        this._projectFilePath = projectFilePath;
         this.Reload();
-        this.Save();
     }
 
     public Reload(): void {
+        this.stls.clearList();
+        this.gallery.clearList();
+
         let projectJson = require(this._projectFilePath);
         for(var property in projectJson) {
             switch (property) {
                 case 'stls':
-                    this.stls.items.push(projectJson[property]);
+                    projectJson[property].forEach((element: any) => {
+                        this.stls.items.push(<StlInfo>StlInfo.fromObject(this._projectPath, element));
+                    });
                     break;
                 case 'gallery':
                     break;
@@ -48,31 +53,16 @@ export class ProjectFile {
             .forEach(property => {
                 switch(property) {
                     case 'stls':
-                        jsonObject['stls'] = this.stls.items;
+                        jsonObject['stls'] = this.stls.items.map(i => i.toObject());
                         break;
                     case 'gallery':
-                        jsonObject['gallery'] = this.gallery;
+                        jsonObject['gallery'] = this.gallery.items.map(i => i.toObject());
                         break;
                     default:
                         jsonObject[property] = Object.getOwnPropertyDescriptor(this, property)?.value;
                         break;
                 }
             });
-        fs.writeFileSync(this._projectFilePath, JSON.stringify(jsonObject), 'utf8');
+        fs.writeFileSync(this._projectFilePath, JSON.stringify(jsonObject, null, 4), 'utf8');
     }
-}
-
-export interface IStlInfo extends IInfoListItem {
-    color: number;
-    status: StlStatus;
-    notes: string;
-}
-
-export enum StlStatus {
-    WIP = "WIP",
-    Done = "Done",
-}
-
-export interface IGalleryInfo extends IInfoListItem {
-    visible: boolean;
 }

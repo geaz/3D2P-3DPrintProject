@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { Project } from '../project/Project';
 import { FileWatcher } from '../FileWatcher';
-import { IStlInfo } from '../project/ProjectFile';
+import { StlInfo } from '../project/model/StlInfo';
 
 export class StlTreeDataProvider implements vscode.TreeDataProvider<StlTreeItem> {
 
@@ -23,11 +23,8 @@ export class StlTreeDataProvider implements vscode.TreeDataProvider<StlTreeItem>
 
     getChildren(element?: StlTreeItem): vscode.ProviderResult<any[]> {
         let stlFiles = this._project.stls;
-        //this.updateProjectFile(stlFiles);
-
         let treeItems = new Array<StlTreeItem>();
-        stlFiles.items.forEach(stlFile => treeItems.push(new StlTreeItem(this._project.projectPath, stlFile)));
-
+        stlFiles.items.forEach(stlFile => treeItems.push(new StlTreeItem(stlFile)));
         return Promise.resolve(treeItems);
     }
 
@@ -37,16 +34,6 @@ export class StlTreeDataProvider implements vscode.TreeDataProvider<StlTreeItem>
         this._fileWatcher.StlFileWatcher.onDidDelete(() => this._didChangeTreeDataEvent.fire());
         this._fileWatcher.StlFileWatcher.onDidChange(() => this._didChangeTreeDataEvent.fire());
     }
-
-   /* private updateProjectFile(stlFiles: Array<string>): void {
-        stlFiles.forEach(stlFile => {
-            let stlInfo = this._projectFile.getStlInfo(stlFile);
-            if(stlInfo === undefined) {
-                this._projectFile.addStlInfo(stlFile);
-            }
-        });
-        this._projectFile.Save();
-    }*/
 }
 
 class StlTreeItem extends vscode.TreeItem {
@@ -55,11 +42,10 @@ class StlTreeItem extends vscode.TreeItem {
 
     public readonly command?: vscode.Command;
 
-    constructor(projectPath: string, stlInfo: IStlInfo) {
+    constructor(stlInfo: StlInfo) {
         super(stlInfo.name, vscode.TreeItemCollapsibleState.None);
-        console.dir(stlInfo);
 
-        let absoluteFilePath = path.resolve(projectPath, stlInfo.relativePath)
+        let absoluteFilePath = stlInfo.getAbsolutePath();
         let fileSizeInBytes = fs.statSync(absoluteFilePath).size;
         let fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
 
