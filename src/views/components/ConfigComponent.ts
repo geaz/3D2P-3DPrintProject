@@ -45,6 +45,7 @@ export interface IConfigDescription {
 export enum ConfigType {
     Input,
     Color,
+    Button,
     Picker
 }
 

@@ -1,7 +1,9 @@
 import { FileListItem } from "../fileList/FileListItem";
 
+export const DEFAULT_STL_COLOR: number = 0xF58026;
+
 export class StlInfo extends FileListItem {
-    public color: number = 0xF58026;
+    public color: number = DEFAULT_STL_COLOR;
     public status: StlStatus = StlStatus.WIP;
     public notes: string = "";
 

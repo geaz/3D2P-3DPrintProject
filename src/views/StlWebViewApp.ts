@@ -4,6 +4,7 @@ import htm from 'htm';
 const html = htm.bind(h);
 declare var acquireVsCodeApi;
 
+import { DEFAULT_STL_COLOR } from '../vsc/project/model/StlInfo';
 import { StlViewerComponent } from './components/StlViewerComponent';
 import { ConfigComponent, IConfigDescription, ConfigType } from './components/ConfigComponent';
 
@@ -13,23 +14,33 @@ interface AppState {
 }
 
 class App extends Component<{}, AppState> {
-    private _vscode = acquireVsCodeApi();
-    private _config = { color: 0xF58026, status: "" };
+    private _config: any;
     private _configDescription = new Array<IConfigDescription>();
+    private _vscode = acquireVsCodeApi();
 
     constructor() {
         super();
-        this.setState({ color: this._config.color });
+
+        this._config = { 
+            color: DEFAULT_STL_COLOR, 
+            colorReset: () => { 
+                this.setState({ color: DEFAULT_STL_COLOR }); 
+                this._config.color = DEFAULT_STL_COLOR;
+                this._onConfigChanged('color', DEFAULT_STL_COLOR); },
+            status: "" };
         this._configDescription.push(<IConfigDescription>{ property: 'color', type: ConfigType.Color });
+        this._configDescription.push(<IConfigDescription>{ property: 'colorReset', type: ConfigType.Button });
         this._configDescription.push(<IConfigDescription>{ property: 'status', type: ConfigType.Picker, options: ["WIP", "Done"] });
+
+        this.setState({ color: this._config.color });
     }
 
     componentWillMount() {
-        window.addEventListener('message', this._updateStlFilePath);
+        window.addEventListener('message', this._handleMessage);
     }
     
     componentWillUnmount() {
-        window.removeEventListener('message', this._updateStlFilePath);
+        window.removeEventListener('message', this._handleMessage);
     }
 
     render() {
@@ -41,7 +52,7 @@ class App extends Component<{}, AppState> {
     // Note: This is NOT a class method!
     // It is a private field holding a function for the event listener
     // (no reference to 'this' otherwise)
-    private _updateStlFilePath = (event: any): void => {
+    private _handleMessage = (event: any): void => {
         let message = event.data;
         switch (message.command) {
             case 'filechange':
