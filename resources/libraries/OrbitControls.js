@@ -762,6 +762,9 @@ var OrbitControls = function ( object, domElement ) {
         
 		if ( scope.enabled === false ) return;
 
+		// Stop autorotate onm first interaction
+		scope.autoRotate = false;
+
 		// Prevent the browser from scrolling.
 		event.preventDefault();
 

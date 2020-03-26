@@ -17,20 +17,26 @@ class App extends Component<{}, AppState> {
     private _config: any;
     private _configDescription = new Array<IConfigDescription>();
     private _vscode = acquireVsCodeApi();
+    private _stlViewerComponent: StlViewerComponent;
 
     constructor() {
         super();
 
         this._config = { 
             color: DEFAULT_STL_COLOR, 
-            colorReset: () => { 
+            status: "",
+            resetColor: () => { 
                 this.setState({ color: DEFAULT_STL_COLOR }); 
                 this._config.color = DEFAULT_STL_COLOR;
                 this._onConfigChanged('color', DEFAULT_STL_COLOR); },
-            status: "" };
+            resetCamera: () => {
+                this._stlViewerComponent.resetCamera();
+            }
+        };
         this._configDescription.push(<IConfigDescription>{ property: 'color', type: ConfigType.Color });
-        this._configDescription.push(<IConfigDescription>{ property: 'colorReset', type: ConfigType.Button });
         this._configDescription.push(<IConfigDescription>{ property: 'status', type: ConfigType.Picker, options: ["WIP", "Done"] });
+        this._configDescription.push(<IConfigDescription>{ property: 'resetColor', type: ConfigType.Button });
+        this._configDescription.push(<IConfigDescription>{ property: 'resetCamera', type: ConfigType.Button });
 
         this.setState({ color: this._config.color });
     }
@@ -46,7 +52,9 @@ class App extends Component<{}, AppState> {
     render() {
         return html
             `<${ConfigComponent} config=${this._config} configDescription=${this._configDescription} onChange=${this._onConfigChanged}/>
-            <${StlViewerComponent} color=${this.state.color} stlFilePath="${this.state.stlFilePath}"/>`;
+            <${StlViewerComponent} 
+                color=${this.state.color} stlFilePath="${this.state.stlFilePath}"
+                ref=${stlViewerComponent => this._stlViewerComponent = stlViewerComponent} />`;
     }
 
     // Note: This is NOT a class method!

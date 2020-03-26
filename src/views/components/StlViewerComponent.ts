@@ -18,13 +18,13 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     private _camera: THREE.PerspectiveCamera;
     private _renderer: THREE.WebGLRenderer;
 
-    async componentDidMount() {
+    public async componentDidMount() {
         this.initScene();
         this._currentStlFilePath = this.props.stlFilePath;
         this.updateSceneStl(await this.loadStl()); 
     }
 
-    async componentDidUpdate() {
+    public async componentDidUpdate() {
         if(this._currentStlFilePath !== this.props.stlFilePath) {
             this._currentStlFilePath = this.props.stlFilePath;
             this.updateSceneStl(await this.loadStl()); 
@@ -34,8 +34,16 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         }
     }
 
-    render() {
+    public render() {
         return html`<div id="stl-viewer"></div>`;
+    }
+
+    public resetCamera(): void {
+        let stlDimensions = new StlDimensions(this._mesh.geometry.boundingBox);
+        this._camera.position.set(0, stlDimensions.y / 2, stlDimensions.z * 5);
+        this._camera.lookAt(new THREE.Vector3(0, 0, 0));
+        this._controls.target.set(0, 0, 0);
+        this._controls.autoRotate = true;
     }
 
     private initScene(): void {
