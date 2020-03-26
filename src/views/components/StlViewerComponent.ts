@@ -54,9 +54,15 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 
         this._scene.add(new THREE.AmbientLight(0xFFFFFF, 0.9));
         this._scene.add(directionalLightTop);          
-        this._scene.add(directionalLightBottom);   
+        this._scene.add(directionalLightBottom);
         
-        this._camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);        
+        this._renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+        this.base.appendChild(this._renderer.domElement);
+        
+        let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
+
+        this._renderer.setSize(boundingBox.width, boundingBox.height - 5);
+        this._camera = new THREE.PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);        
         this._camera.lookAt(new THREE.Vector3(0, 0, 0));
         
         this._controls = new OrbitControls(this._camera, this.base);
@@ -64,16 +70,13 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._controls.autoRotate = true;
         this._controls.update(); 
 
-        this._renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
-        this._renderer.setSize(window.innerWidth, window.innerHeight - 5);
-
-        this.base.appendChild(this._renderer.domElement);
         this._animate();
 
-        this.base.addEventListener('resize', () => { 
-            this._camera.aspect = window.innerWidth / window.innerHeight;
+        window.addEventListener('resize', () => {            
+            let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
+            this._camera.aspect = boundingBox.width / boundingBox.height;
             this._camera.updateProjectionMatrix();
-            this._renderer.setSize( window.innerWidth, window.innerHeight - 5);
+            this._renderer.setSize(boundingBox.width, boundingBox.height - 5);
         }, false );
     }
 
