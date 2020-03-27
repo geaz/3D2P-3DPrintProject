@@ -1,10 +1,12 @@
-import { h, Component, render } from 'preact';
+import { h, Component } from 'preact';
+import { css } from 'emotion'
 import htm from 'htm';
 
 import * as THREE from 'three';
+
+import { Dimensions } from '../helpers/Dimensions';
 import { STLLoader } from '../../../resources/libraries/STLLoader.js';
 import { OrbitControls } from '../../../resources/libraries/OrbitControls.js';
-import { Vector3 } from 'three';
 
 const html = htm.bind(h);
 
@@ -35,12 +37,18 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     }
 
     public render() {
-        return html`<div id="stl-viewer"></div>`;
+        return html`<div className="${this.css()}"></div>`;
+    }
+
+    public css(): string {
+        return css`
+            flex-grow: 1;
+            background: radial-gradient(#FFFFFF, rgb(80, 80, 80));`;
     }
 
     public resetCamera(): void {
-        let stlDimensions = new StlDimensions(this._mesh.geometry.boundingBox);
-        let maxDimension = Math.max(stlDimensions.x, stlDimensions.y, stlDimensions.z);
+        let stlDimensions = new Dimensions(this._mesh.geometry.boundingBox);
+        let maxDimension = stlDimensions.MaxDimension;
         this._camera.lookAt(new THREE.Vector3(0, 0, 0));
         this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
         this._controls.target.set(0, 0, 0);
@@ -55,11 +63,11 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 
         let directionalLightTop = new THREE.DirectionalLight(0xFFFFFF, 0.5);
         directionalLightTop.position.set(1, 5, 1);
-        directionalLightTop.lookAt(new Vector3(0, 0, 0));
+        directionalLightTop.lookAt(new THREE.Vector3(0, 0, 0));
 
         let directionalLightBottom = new THREE.DirectionalLight(0xFFFFFF, 0.3);
         directionalLightBottom.position.set(1, -5, 1);
-        directionalLightBottom.lookAt(new Vector3(0, 0, 0));
+        directionalLightBottom.lookAt(new THREE.Vector3(0, 0, 0));
 
         this._scene.add(new THREE.AmbientLight(0xFFFFFF, 0.9));
         this._scene.add(directionalLightTop);          
@@ -79,7 +87,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._controls.autoRotate = true;
         this._controls.update(); 
 
-        this._animate();
+        this.animate();
 
         window.addEventListener('resize', () => {            
             let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
@@ -119,7 +127,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._mesh.geometry.computeBoundingBox();
         this._mesh.geometry.computeVertexNormals();
 
-        let stlDimensions = new StlDimensions(this._mesh.geometry.boundingBox);
+        let stlDimensions = new Dimensions(this._mesh.geometry.boundingBox);
         let originCorrection = stlDimensions.getOriginCorrection();
 
         this._mesh.geometry.translate(originCorrection.x, originCorrection.y, originCorrection.z);
@@ -131,14 +139,16 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 
         this._meshParent.add(this._mesh);
 
-        let maxDimension = Math.max(stlDimensions.x, stlDimensions.y, stlDimensions.z);
+        let maxDimension = stlDimensions.MaxDimension;
         this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
 
-        if(this.props.onSceneUpdated !== undefined) this.props.onSceneUpdated(this._camera, this._mesh);
+        if(this.props.onSceneUpdated !== undefined) {
+            this.props.onSceneUpdated(this._renderer, this._scene, this._camera, this._mesh);
+        }
     } 
 
-    private _animate = () => { 
-        requestAnimationFrame(this._animate);
+    private animate() { 
+        requestAnimationFrame(this.animate.bind(this));
         this._controls.update();
         this._renderer.render(this._scene, this._camera);
     };
@@ -147,26 +157,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 interface StlViewerProps {
     stlFilePath: string,
     color: number,
-    onSceneUpdated: (camera: THREE.PerspectiveCamera, mesh: THREE.Mesh) => { }
-}
-
-class StlDimensions {
-    public x: number;
-    public y: number;
-    public z: number;
-    
-    constructor(public box: THREE.Box3) {
-        this.x = box.max.x - box.min.x;
-        this.y = box.max.y - box.min.y;
-        this.z = box.max.z - box.min.z;
-    }
-
-    public getOriginCorrection(): { x: number, y: number, z: number } {
-        let originCorrection = (max, min) => ((min - max) / 2) - min;
-        return {
-            x: originCorrection(this.box.max.x, this.box.min.x),
-            y: originCorrection(this.box.max.y, this.box.min.y),
-            z: originCorrection(this.box.max.z, this.box.min.z)
-        };
-    }
+    onSceneUpdated: 
+        (renderer: THREE.WebGLRenderer, scene: THREE.Scene, 
+        camera: THREE.PerspectiveCamera, stlMesh: THREE.Mesh) => void
 }

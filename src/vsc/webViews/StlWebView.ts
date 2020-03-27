@@ -17,31 +17,29 @@ export class StlWebView {
 
         const webViewApp = this._panel.webview.asWebviewUri(
             vscode.Uri.file(path.join(__filename, '..', '..', '..', 'views', 'StlWebViewApp.js')));
-        const webViewAppCss = this._panel.webview.asWebviewUri(
-            vscode.Uri.file(path.join(__filename, '..', '..', '..', '..', 'resources', 'css', 'stlWebViewApp.css')));
         const stlFilePathViewUri = this._panel.webview.asWebviewUri(vscode.Uri.file(stlInfo.getAbsolutePath()));
 
         this._panel.webview.html = `<!DOCTYPE html>
-            <html lang="en">
+            <html lang="en" style="height:100%">
             <head>
                 <title>STL Viewer</title>
-                <link rel="stylesheet" type="text/css" href="${webViewAppCss}">
             </head>
             
-            <body>
-                <div id="app"></div>
+            <body style="padding:0;margin:0;height:100%;display:flex;">
+                <div id="app" style="flex-grow: 1;display: flex;"></div>
                 <script src="${webViewApp}"></script>
             </body>
             </html>`;
 
         this._panel.webview.postMessage({ command: 'filechange', data: stlFilePathViewUri.toString() });
-        this._panel.webview.postMessage({ command: 'setStlInfo', data: { color: stlInfo.color, status: stlInfo.status } });
+        this._panel.webview.postMessage({ command: 'setStlInfo', data: { color: stlInfo.color, status: stlInfo.status, annotations: stlInfo.annotations } });
 
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.command) {
                 case 'updateStlInfo':
                     stlInfo.color = message.data.color;
                     stlInfo.status = message.data.status;
+                    stlInfo.annotations = message.data.annotations;
                     project.Save();
                     break;
             }

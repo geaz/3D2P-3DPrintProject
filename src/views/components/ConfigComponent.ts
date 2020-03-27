@@ -1,10 +1,12 @@
 import { h, Component } from 'preact';
-import * as dat from 'dat.gui';
 import htm from 'htm';
+
+import * as dat from 'dat.gui';
+
 const html = htm.bind(h);
 
 export class ConfigComponent extends Component<IConfigComponentProps> {
-    componentDidMount() {
+    public componentDidMount() {
         let gui = new dat.GUI();
         let changeDelegate = (property: string, value: any) => {
             if(this.props.onChange !== undefined) {
@@ -31,7 +33,7 @@ export class ConfigComponent extends Component<IConfigComponentProps> {
         });
     }
     
-    render() {
+    public render() {
         return html``;
     }
 }
@@ -44,6 +46,7 @@ export interface IConfigDescription {
 
 export enum ConfigType {
     Input,
+    CheckBox,
     Color,
     Button,
     Picker
@@ -52,5 +55,5 @@ export enum ConfigType {
 interface IConfigComponentProps {
     config: object;
     configDescription: Array<IConfigDescription>;
-    onChange: (property: string, value: any) => {};
+    onChange: (property: string, value: any) => void;
 }
