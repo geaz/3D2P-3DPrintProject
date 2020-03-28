@@ -6,7 +6,7 @@ import * as dat from 'dat.gui';
 const html = htm.bind(h);
 
 export class ConfigComponent extends Component<IConfigComponentProps> {
-    public componentDidMount() {
+    public componentWillMount() {
         let gui = new dat.GUI({hideable: false});
         let changeDelegate = (property: string, value: any) => {
             if(this.props.onChange !== undefined) {

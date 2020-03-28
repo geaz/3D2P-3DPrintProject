@@ -14,7 +14,8 @@ const html = htm.bind(h);
 export class AnnotationsComponent extends Component<IAnnotationsComponentProps, IAnnotationsComponentState> {
     private _raycastListener: RaycasterEventListener;
 
-    public componentDidMount() {
+    public componentWillMount() {
+        this.setState({ annotationList: this.props.annotationList });
         this._raycastListener = new RaycasterEventListener(
             this.props.stlViewerContext,
             StlViewerContext.STLMESH_NAME,
@@ -30,8 +31,8 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         if(this.props.showAnnotations) {
             annotationItemList = this.state.annotationList?.map((annotation, index) =>
                 html`<${AnnotationItemComponent} 
-                    stlViewerContext=${this.props.stlViewerContext} 
-                    text=${annotation.text} index=${index+1} active=${this.state.activeAnnotation === index}
+                    stlViewerContext=${this.props.stlViewerContext} onClicked=${this.onAnnotationClicked.bind(this)}
+                    text=${annotation.text} index=${index} active=${this.state.activeAnnotation === index}
                     position=${new THREE.Vector3(annotation.x, annotation.y, annotation.z)}/>`
             );
         }
@@ -55,10 +56,16 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
             newAnnotationList.push(newAnnotation);
             this.setState({ annotationList: newAnnotationList, activeAnnotation: newAnnotationList.length - 1 });
         }        
-    };
+    }
+
+    private onAnnotationClicked(index: number): void {
+        if(this.state.activeAnnotation === index) this.setState({ activeAnnotation: -1 });
+        else this.setState({ activeAnnotation: index });
+    }
 }
 
 export interface IAnnotationsComponentProps {
+    annotationList: Array<IStlAnnotation>;
     showAnnotations: boolean;
     stlViewerContext: StlViewerContext;
 }
