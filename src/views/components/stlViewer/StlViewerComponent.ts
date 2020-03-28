@@ -4,9 +4,10 @@ import htm from 'htm';
 
 import * as THREE from 'three';
 
-import { Dimensions } from '../helpers/Dimensions';
-import { STLLoader } from '../../../resources/libraries/STLLoader.js';
-import { OrbitControls } from '../../../resources/libraries/OrbitControls.js';
+import { Dimensions } from './threejs/Dimensions';
+import { STLLoader } from './threejs/libs/STLLoader.js';
+import { OrbitControls } from './threejs/libs/OrbitControls.js';
+import { StlViewerContext } from './threejs/StlViewerContext';
 
 const html = htm.bind(h);
 
@@ -56,7 +57,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     }
 
     private initScene(): void {
-        this._meshParent = new THREE.Object3D();  
+        this._meshParent = new THREE.Object3D(); 
 
         this._scene = new THREE.Scene();
         this._scene.add(this._meshParent); 
@@ -87,14 +88,18 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._controls.autoRotate = true;
         this._controls.update(); 
 
-        this.animate();
-
         window.addEventListener('resize', () => {            
             let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
             this._camera.aspect = boundingBox.width / boundingBox.height;
             this._camera.updateProjectionMatrix();
             this._renderer.setSize(boundingBox.width, boundingBox.height - 5);
         }, false );
+
+        if(this.props.onViewerInitiated !== undefined) {
+            this.props.onViewerInitiated(new StlViewerContext(this._renderer, this._scene, this._camera));
+        }
+
+        this.animate();
     }
 
     private loadStl(): Promise<THREE.Mesh> {
@@ -124,6 +129,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         if(this._mesh !== undefined) this._meshParent.remove(this._mesh);
         
         this._mesh = stlMesh;
+        this._mesh.name = StlViewerContext.STLMESH_NAME; 
         this._mesh.geometry.computeBoundingBox();
         this._mesh.geometry.computeVertexNormals();
 
@@ -142,9 +148,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         let maxDimension = stlDimensions.MaxDimension;
         this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
 
-        if(this.props.onSceneUpdated !== undefined) {
-            this.props.onSceneUpdated(this._renderer, this._scene, this._camera, this._mesh);
-        }
+        this._scene.dispatchEvent({ type: 'stlLoaded' });
     } 
 
     private animate() { 
@@ -157,7 +161,5 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 interface StlViewerProps {
     stlFilePath: string,
     color: number,
-    onSceneUpdated: 
-        (renderer: THREE.WebGLRenderer, scene: THREE.Scene, 
-        camera: THREE.PerspectiveCamera, stlMesh: THREE.Mesh) => void
+    onViewerInitiated: (stlViewerContext: StlViewerContext) => void
 }

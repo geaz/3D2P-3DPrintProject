@@ -4,9 +4,10 @@ import htm from 'htm';
 import * as THREE from 'three';
 
 import { DEFAULT_STL_COLOR, IStlAnnotation } from '../vsc/project/model/StlInfo';
-import { StlViewerComponent } from './components/StlViewerComponent';
-import { AnnotationsComponent } from './components/annotations/AnnotationsComponent';
+import { StlViewerComponent } from './components/stlViewer/StlViewerComponent';
+import { AnnotationsComponent } from './components/stlViewer/AnnotationsComponent';
 import { ConfigComponent, IConfigDescription, ConfigType } from './components/ConfigComponent';
+import { StlViewerContext } from './components/stlViewer/threejs/StlViewerContext';
 
 declare var acquireVsCodeApi;
 const html = htm.bind(h);
@@ -35,16 +36,25 @@ class App extends Component<{}, AppState> {
     }
 
     public render() {
+        //Only render the annotations component, if the STL got loaded
+        let annotationsComponent = undefined;
+        if(this.state.stlViewerContext !== undefined) {
+            annotationsComponent = html
+                `<${AnnotationsComponent} 
+                    showAnnotations=${this.state.showAnnotations}
+                    stlViewerContext=${this.state.stlViewerContext} />`;
+        }
+
         return html
-            `<${ConfigComponent} 
-                config=${this._config} configDescription=${this._configDescription}
+            `${annotationsComponent}
+            <${ConfigComponent} 
+                config=${this._config} 
+                configDescription=${this._configDescription}
                 onChange=${this.onConfigChanged.bind(this)} />
-            <${AnnotationsComponent} showAnnotations=${this.state.showAnnotations}
-                stlMesh=${this.state.stlMesh} renderer=${this.state.renderer} 
-                scene=${this.state.scene} camera=${this.state.camera} />
             <${StlViewerComponent} ref=${sc => this._stlViewerComponent = sc}
-                color=${this.state.color} stlFilePath="${this.state.stlFilePath}"
-                onSceneUpdated=${this.onSceneUpdated.bind(this)} />`;
+                color=${this.state.color} 
+                stlFilePath="${this.state.stlFilePath}"
+                onViewerInitiated=${this.onViewerInitiated.bind(this)} />`;
     }
 
     private setupGuiConfig(): void {
@@ -99,8 +109,8 @@ class App extends Component<{}, AppState> {
         })
     };
 
-    private onSceneUpdated(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stlMesh: THREE.Mesh): void {
-        this.setState({ renderer: renderer, scene: scene, camera: camera, stlMesh: stlMesh });
+    private onViewerInitiated(stlViewerContext: StlViewerContext): void {
+        this.setState({ stlViewerContext: stlViewerContext });
     };
 }
 
@@ -109,10 +119,7 @@ interface AppState {
     stlFilePath: string;
     showAnnotations: boolean;
     annotations: Array<IStlAnnotation>;
-    renderer: THREE.WebGLRenderer;
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera;
-    stlMesh: THREE.Mesh;
+    stlViewerContext: StlViewerContext;
 }
 
 render(html`<${App}/>`, document.getElementById('app'));

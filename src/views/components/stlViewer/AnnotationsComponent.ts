@@ -4,9 +4,10 @@ import htm from 'htm';
 
 import * as THREE from 'three';
 
-import { RaycasterEventListener } from '../../helpers/RaycasterEventListener';
+import { RaycasterEventListener } from './threejs/RaycasterEventListener';
 import { IStlAnnotation } from '../../../vsc/project/model/StlInfo';
 import { AnnotationItemComponent } from './AnnotationItemComponent';
+import { StlViewerContext } from './threejs/StlViewerContext';
 
 const html = htm.bind(h);
 
@@ -14,19 +15,23 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
     private _raycastListener: RaycasterEventListener;
 
     public componentDidMount() {
-        this.init();
+        this._raycastListener = new RaycasterEventListener(
+            this.props.stlViewerContext,
+            StlViewerContext.STLMESH_NAME,
+            this.onIntersection.bind(this));
     }
 
-    public componentDidUpdate() {
-        this.init();
+    public componentWillUnmount() {
+        this._raycastListener.dispose();
     }
 
     public render() {
         let annotationItemList = undefined;
         if(this.props.showAnnotations) {
             annotationItemList = this.state.annotationList?.map((annotation, index) =>
-                html`<${AnnotationItemComponent} scene=${this.props.scene} 
-                    text=${annotation.text} index=${index+1} stlMesh=${this.props.stlMesh}
+                html`<${AnnotationItemComponent} 
+                    stlViewerContext=${this.props.stlViewerContext} 
+                    text=${annotation.text} index=${index+1} 
                     position=${new THREE.Vector3(annotation.x, annotation.y, annotation.z)}/>`
             );
         }
@@ -35,17 +40,6 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
 
     public css(): string {
         return css``;
-    }
-
-    private init() {
-        if(this.props.renderer !== undefined && this.props.camera !== undefined && this.props.stlMesh !== undefined) {
-            if(this._raycastListener !== undefined) this._raycastListener.dispose();
-            this._raycastListener = new RaycasterEventListener(
-                this.props.renderer, 
-                this.props.camera, 
-                this.props.stlMesh,
-                this.onIntersection.bind(this));
-        }
     }
 
     private onIntersection(x: number, y:number, intersection: THREE.Intersection): void {
@@ -66,10 +60,7 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
 
 export interface IAnnotationsComponentProps {
     showAnnotations: boolean;
-    renderer: THREE.WebGLRenderer;
-    camera: THREE.PerspectiveCamera;
-    scene: THREE.Scene;
-    stlMesh: THREE.Mesh;
+    stlViewerContext: StlViewerContext;
 }
 
 export interface IAnnotationsComponentState {
