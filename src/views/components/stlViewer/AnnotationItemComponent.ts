@@ -4,17 +4,23 @@ import htm from 'htm';
 
 import * as THREE from 'three';
 import { StlViewerContext } from './threejs/StlViewerContext';
+import { WebGLRenderer } from 'three';
 
 const html = htm.bind(h);
 
 export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps, IAnnotationItemComponentState> {
     private _sprite: THREE.Sprite;
     private _textareaElement: HTMLElement;
+    private _initHandler: () => void = this.initDepthSprite.bind(this);
+    private _mouseHandler: () => void = () => { if(this.props.active) this.onNumberClicked(); };
 
     public componentWillMount() {
         this.initDepthSprite();
         this.setState({ text: this.props.text });
-        this.props.stlViewerContext.addStlLoadedListener(this.initDepthSprite.bind(this));
+        
+        this.props.stlViewerContext.addStlLoadedListener(this._initHandler);
+        this.props.stlViewerContext.renderer.domElement.addEventListener('mousedown', this._mouseHandler);
+        this.props.stlViewerContext.renderer.domElement.addEventListener('wheel', this._mouseHandler);
     }
 
     public componentDidMount() {
@@ -29,7 +35,9 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(this._sprite !== undefined) {
             this.props.stlViewerContext.scene.remove(this._sprite);
         }
-        this.props.stlViewerContext.removeStlLoadedListener(this.initDepthSprite.bind(this));
+        this.props.stlViewerContext.removeStlLoadedListener(this._initHandler);
+        this.props.stlViewerContext.renderer.domElement.removeEventListener('mousedown', this._mouseHandler);
+        this.props.stlViewerContext.renderer.domElement.removeEventListener('wheel', this._mouseHandler);
     }
     
     public render() {
@@ -82,6 +90,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             }
             
             .annotation {
+                z-index: 1;
                 margin-left: 15px;
                 display:flex;
                 width: 200px;
@@ -137,34 +146,40 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         }
     }
 
-    private checkDepth(renderer, scene, camera, geometry, material, group): void {
-        let devicePos = this.DevicePos;
-        let raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera({x: devicePos.x, y: devicePos.y}, camera);
+    private checkDepth(renderer : THREE.WebGLRenderer, scene, camera, geometry, material, group): void {
+        if(this.ShouldShow) {
+            let devicePos = this.DevicePos;
+            let raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera({x: devicePos.x, y: devicePos.y}, camera);
 
-        let numberVisible = true;
-        let intersections = raycaster.intersectObjects([this.props.stlViewerContext.StlMesh, this._sprite], true);        
-        if(intersections.length > 0) {
-            let obj1 = intersections[0];
-            let obj2 = intersections[1];
+            let numberVisible = true;
+            let intersections = raycaster.intersectObjects([this.props.stlViewerContext.StlMesh, this._sprite], true);        
+            if(intersections.length > 0) {
+                let obj1 = intersections[0];
+                let obj2 = intersections[1];
 
-            // Even, if the depth tested sprite is not the first intersected object,
-            // it could be the case, that the sprite and the stl have the same distance.
-            // In this case the number should be visible too.
-            if(obj1.object.name !== this.Name) {
-                let distObj1 = raycaster.ray.origin.distanceTo(obj1.point).toFixed(4);
-                let distObj2 = raycaster.ray.origin.distanceTo(obj2.point).toFixed(4);
-                numberVisible = distObj1 === distObj2;
+                // Even, if the depth tested sprite is not the first intersected object,
+                // it could be the case, that the sprite and the stl have the same distance.
+                // In this case the number should be visible too.
+                if(obj1.object.name !== this.Name) {
+                    let distObj1 = raycaster.ray.origin.distanceTo(obj1.point).toFixed(4);
+                    let distObj2 = raycaster.ray.origin.distanceTo(obj2.point).toFixed(4);
+                    numberVisible = distObj1 === distObj2;
+                }
             }
+            
+            // Don't update the css by state updates of the component,
+            // to minimze the performance impact
+            let screenPos = this.ScreenPos;
+            (<HTMLElement>this.base).style.visibility = 'visible';
+            (<HTMLElement>this.base).style.left = (screenPos.x - 16) +'px';
+            (<HTMLElement>this.base).style.top = (screenPos.y - 16)+'px';
+            (<HTMLElement>this.base).style.opacity = numberVisible ? '1': '0.2';
+            (<HTMLElement>this.base).style.zIndex = numberVisible ? '1': '0';
         }
-        
-        // Don't update the css by state updates of the component,
-        // to minimze the performance impact
-        let screenPos = this.ScreenPos;
-        (<HTMLElement>this.base).style.left = (screenPos.x - 16) +'px';
-        (<HTMLElement>this.base).style.top = (screenPos.y - 16)+'px';
-        (<HTMLElement>this.base).style.opacity = numberVisible ? '1': '0.2';
-        (<HTMLElement>this.base).style.zIndex = numberVisible ? '1': '0';
+        else {            
+            (<HTMLElement>this.base).style.visibility = 'hidden';
+        }
     }
 
     private onTextChanged(e): void {
@@ -182,6 +197,12 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 
     get Name(): string {
         return `Annotation ${this.props.index + 1}`;
+    }
+
+    get ShouldShow(): boolean {
+        let devicePos = this.DevicePos;    
+        return devicePos.x >= -0.90 && devicePos.x <= 0.90 &&
+        devicePos.y >= -0.90 && devicePos.y <= 0.90;
     }
 
     get ScreenPos(): THREE.Vector2 {
