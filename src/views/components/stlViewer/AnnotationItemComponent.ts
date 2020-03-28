@@ -12,7 +12,6 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     private _sprite: THREE.Sprite;
     
     public componentDidMount() {
-        console.log("mounted");
         this.init();
         this.props.stlViewerContext.addStlLoadedListener(this.init.bind(this));
     }
@@ -21,7 +20,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(this._sprite !== undefined) {
             this.props.stlViewerContext.scene.remove(this._sprite);
         }
-        this.props.stlViewerContext.addStlLoadedListener(this.init.bind(this));
+        this.props.stlViewerContext.removeStlLoadedListener(this.init.bind(this));
     }
     
     public render() {
@@ -29,26 +28,54 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(true || this.state.annotationVisible) {
             annotationBox = html`
                 <div className=${this.css()}>
-                    <textarea></textarea>
+                    <div class="annotation">
+                        <textarea placeholder="Enter your annotation."></textarea>
+                    </div>
                 </div>`;
         }
         return html`${annotationBox}`;
     }
 
     public css() {
-        console.log(this.props.position.y);
         return css`
             position: absolute;
-            top: ${this.props.position.y}px;
-            left: ${this.props.position.x}px;
-            width: 450px;
-            height: 250px;
-            background: #404040;
-            border-radius: 5px;`;
+            top: ${this.state.annotationPos?.y - 145}px;
+            left: ${this.state.annotationPos?.x + 25}px;
+              
+            .annotation {
+                display:flex;
+                width: 200px;
+                height: 150px;
+                position:relative;
+                background: rgb(17, 17, 17, 0.8);
+            }
+              
+            .annotation::before {
+                content: '';
+                position:absolute;
+                right:100%;
+                bottom:0;
+                border-bottom: 5px solid transparent;
+                border-right: 5px solid rgb(17, 17, 17, 0.8);
+                border-top: 5px solid transparent;
+                clear: both;
+            }
+
+            textarea {
+                border:0;
+                flex-grow:1;
+                color: white;
+                margin: 10px;
+                resize: none;
+                background: transparent;
+            
+                &:focus {
+                    outline: none !important;
+                }
+            }`;
     }
 
     private init() {
-        console.log("test");
         if(this.props.stlViewerContext.StlMesh !== undefined) {
             let canvas = document.createElement('canvas');
             canvas.width = 64;
@@ -56,7 +83,8 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             let ctx = canvas.getContext('2d');
             
             // Circle
-            ctx.fillStyle = "rgb(0, 0, 0)";
+            if(this.props.active) ctx.fillStyle = "rgb(255, 0, 0)";
+            else ctx.fillStyle = "rgb(0, 0, 0)";
             ctx.beginPath();
             ctx.arc(32, 32, 30, 0, Math.PI * 2);
             ctx.fill();
@@ -68,7 +96,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             ctx.arc(32, 32, 30, 0, Math.PI * 2);
             ctx.stroke();
 
-            // Fill
+            // Text
             ctx.fillStyle = "rgb(255, 255, 255)";
             ctx.font = "bold 32px sans-serif";
             ctx.textAlign = "center";
@@ -91,21 +119,9 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             this._sprite.scale.set(maxDimension/16, maxDimension /16, 1);
 
             this._sprite.onBeforeRender = (renderer, scene, camera, geometry, material, group) => {
-                let boundingBox = renderer.domElement.getBoundingClientRect();
-                var width = boundingBox.width, height = boundingBox.height;
-                var widthHalf = width / 2, heightHalf = height / 2;
-
-                var pos = this._sprite.position.clone();
-                pos.project(camera);
-                console.log(pos.x + " " + pos.y);
-                // pos.x = ( pos.x * widthHalf ) + widthHalf;
-                // pos.y = - ( pos.y * heightHalf ) + heightHalf;
-
-                // let mouseX = (pos.x / boundingBox.width) * 2 - 1;
-                // let mouseY = -(pos.y / boundingBox.height) * 2 + 1;
-
+                let devicePos = this.DevicePos;
                 let raycaster = new THREE.Raycaster();
-                raycaster.setFromCamera({x: pos.x, y: pos.y}, camera);
+                raycaster.setFromCamera({x: devicePos.x, y: devicePos.y}, camera);
                 let intersections = raycaster.intersectObjects([this.props.stlViewerContext.StlMesh, this._sprite], true);
 
                 let spriteVisible = true;
@@ -120,32 +136,41 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
                     }
                 }
                 this._sprite.material.opacity = spriteVisible ? 1: 0.2;
+                this.setState({ annotationPos: this.ScreenPos });
             };
 
             this.props.stlViewerContext.scene.add(this._sprite);
         }
     }
 
-   /* get ScreenPos(): THREE.Vector2 {
-        return new THREE.Vector2(0, 0);
+    get ScreenPos(): THREE.Vector2 {
+        let boundingBox = this.props.stlViewerContext.renderer.domElement.getBoundingClientRect();
+        var width = boundingBox.width, height = boundingBox.height;
+        var widthHalf = width / 2, heightHalf = height / 2;
+
+        let devicePos = this.DevicePos;
+        return new THREE.Vector2(( devicePos.x * widthHalf ) + widthHalf, -( devicePos.y * heightHalf ) + heightHalf);
     }
 
-    get DevicePos(): THREE.Vector2 {
-
+    get DevicePos(): THREE.Vector3 {
+        var pos = this._sprite.position.clone();
+        return pos.project(this.props.stlViewerContext.camera);
     }
 
     get WorldPos(): THREE.Vector3 {
-        
-    }*/
+        return this._sprite.position;
+    }
 }
 
 export interface IAnnotationItemComponentProps {
     text: string;
     index: number;
+    active: boolean;
     position: THREE.Vector3;
     stlViewerContext: StlViewerContext;
 }
 
 export interface IAnnotationItemComponentState {
     annotationVisible: boolean;
+    annotationPos: THREE.Vector2;
 }

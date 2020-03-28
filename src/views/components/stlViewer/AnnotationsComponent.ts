@@ -31,7 +31,7 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
             annotationItemList = this.state.annotationList?.map((annotation, index) =>
                 html`<${AnnotationItemComponent} 
                     stlViewerContext=${this.props.stlViewerContext} 
-                    text=${annotation.text} index=${index+1} 
+                    text=${annotation.text} index=${index+1} active=${this.state.activeAnnotation === index}
                     position=${new THREE.Vector3(annotation.x, annotation.y, annotation.z)}/>`
             );
         }
@@ -53,7 +53,7 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
             if(newAnnotationList === undefined) newAnnotationList = new Array<IStlAnnotation>();
 
             newAnnotationList.push(newAnnotation);
-            this.setState({ annotationList: newAnnotationList });
+            this.setState({ annotationList: newAnnotationList, activeAnnotation: newAnnotationList.length - 1 });
         }        
     };
 }
@@ -64,5 +64,6 @@ export interface IAnnotationsComponentProps {
 }
 
 export interface IAnnotationsComponentState {
-    annotationList: Array<IStlAnnotation>
+    annotationList: Array<IStlAnnotation>;
+    activeAnnotation: number;
 }
