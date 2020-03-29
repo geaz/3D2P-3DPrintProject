@@ -47,17 +47,19 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
 
     private onIntersection(x: number, y:number, intersection: THREE.Intersection): void {
         if(this.props.showAnnotations) {
-            let newAnnotationList = this.state.annotationList;
-            if(newAnnotationList === undefined) newAnnotationList = new Array<IStlAnnotation>();
+            let annotationList = this.state.annotationList;
+            let id = annotationList.length === 0
+                ? 0
+                : Math.max.apply(Math, annotationList.map(function(o) { return o.id; })) + 1;
 
             let newAnnotation = <IStlAnnotation>{};
-            newAnnotation.id = Math.max.apply(Math, newAnnotationList.map(function(o) { return o.id; })) + 1;
+            newAnnotation.id = id;
             newAnnotation.x = intersection.point.x;
             newAnnotation.y = intersection.point.y;
             newAnnotation.z = intersection.point.z;
             
-            newAnnotationList.push(newAnnotation);
-            this.setState({ annotationList: newAnnotationList, activeAnnotation: newAnnotationList.length - 1 });
+            annotationList.push(newAnnotation);
+            this.setState({ annotationList: annotationList, activeAnnotation: annotationList.length - 1 });
         }        
     }
 
