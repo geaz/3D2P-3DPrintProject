@@ -15,7 +15,7 @@ export class FileList<T extends FileListItem> {
             let foundFilesInList = this._items.filter(info => info.relativePath === relativeFilePath);
             if(foundFilesInList.length === 0) {
                 let infoItem = this._typeFactory(
-                    path.basename(relativeFilePath, path.extname(relativeFilePath)), 
+                    path.basename(relativeFilePath), 
                     relativeFilePath);                
                 this._items.push(infoItem);
             }

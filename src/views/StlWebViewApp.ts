@@ -1,8 +1,6 @@
 import { h, Component, render } from 'preact';
 import htm from 'htm';
 
-import * as THREE from 'three';
-
 import { DEFAULT_STL_COLOR, IStlAnnotation } from '../vsc/project/model/StlInfo';
 import { StlViewerComponent } from './components/stlViewer/StlViewerComponent';
 import { AnnotationsComponent } from './components/stlViewer/AnnotationsComponent';

@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import { FileListItem } from "../fileList/FileListItem";
 
 export const DEFAULT_STL_COLOR: number = 0xF58026;
@@ -8,7 +10,7 @@ export class StlInfo extends FileListItem {
     public annotationList: Array<IStlAnnotation> = new Array<IStlAnnotation>();
 
     constructor(basePath: string, name: string, relativePath: string) {
-        super(basePath, name, relativePath);
+        super(basePath, path.basename(name, path.extname(name)), relativePath);
     }
 
     public static fromObject(basePath: string, object: any): FileListItem {

@@ -12,8 +12,8 @@ export class InitProjectQuestionnaire extends BaseQuestionnaire {
     public provider = new PickQuestion('Pick your git provider.', ['Github', 'Gitlab', 'Bitbucket', 'Custom']);
     public rawBasePath = new InputQuestion('Please enter the base path to access the raw files.', 'Example', this.provider, (provider) => provider === 'Custom');
 
-    private rootFolder: string = "";
-    private projectFilePath: string = "";
+    private _rootFolder: string = "";
+    private _projectFilePath: string = "";
 
     public async checkPrerequisite(): Promise<boolean> { 
         return new Promise((resolve, reject) => {
@@ -23,11 +23,11 @@ export class InitProjectQuestionnaire extends BaseQuestionnaire {
                 valid = false;
             }
             else {
-                this.rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-                this.projectFilePath = path.join(this.rootFolder, "3D2P.json");
+                this._rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+                this._projectFilePath = path.join(this._rootFolder, "3D2P.json");
             }           
 
-            if(valid && fs.existsSync(this.projectFilePath)) {
+            if(valid && fs.existsSync(this._projectFilePath)) {
                 vscode.window.showErrorMessage(`3D2P project file already exists! Delete it and try again, if you want to recreate it.`);
                 valid = false;
             }            
@@ -41,7 +41,7 @@ export class InitProjectQuestionnaire extends BaseQuestionnaire {
             (progress, token) => {
                 return new Promise(async (resolve, reject) => {
                     try{
-                        fs.writeFileSync(this.projectFilePath, `{ "name": "${this.projectName.answer}" }`, 'utf8');
+                        fs.writeFileSync(this._projectFilePath, `{ "name": "${this.projectName.answer}" }`, 'utf8');
                         //fs.writeFileSync(path.join(projectPath, "README.md"), `{ name: '${this.projectName.answer}' }`, 'utf8');
                         //fs.writeFileSync(path.join(projectPath, "LICENSE.md"), `{ name: '${this.projectName.answer}' }`, 'utf8');                       
                         resolve();

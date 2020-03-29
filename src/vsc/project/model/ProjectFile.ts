@@ -10,8 +10,7 @@ export class ProjectFile {
     public provider: string = "";
     public stls: FileList<StlInfo> = 
         new FileList<StlInfo>(".stl", (name, relPath) => new StlInfo(this._projectPath, name, relPath));
-    public gallery: FileList<GalleryInfo> = 
-        new FileList<GalleryInfo>(".jpg|.jpeg|.png", (name, relPath) => new GalleryInfo(this._projectPath, name, relPath));
+    public gallery: Array<GalleryInfo> = new Array<GalleryInfo>();
         
     constructor(private _projectPath: string, private _projectFilePath: string) {
         if(!fs.existsSync(_projectFilePath)) {
@@ -30,7 +29,7 @@ export class ProjectFile {
                         jsonObject['stls'] = this.stls.items.map(i => i.toObject());
                         break;
                     case 'gallery':
-                        jsonObject['gallery'] = this.gallery.items.map(i => i.toObject());
+                        jsonObject['gallery'] = this.gallery.map(i => i.toObject());
                         break;
                     default:
                         jsonObject[property] = Object.getOwnPropertyDescriptor(this, property)?.value;
@@ -50,6 +49,9 @@ export class ProjectFile {
                     });
                     break;
                 case 'gallery':
+                    projectJson[property].forEach((element: any) => {
+                        this.gallery.push(<GalleryInfo>GalleryInfo.fromObject(this._projectPath, element));
+                    });
                     break;
                 default:
                     let propertyDescriptor = Object.getOwnPropertyDescriptor(this, property);

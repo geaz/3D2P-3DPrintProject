@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import { Project } from '../project/Project';
@@ -7,7 +6,6 @@ import { FileWatcher } from '../FileWatcher';
 import { StlInfo, StlStatus } from '../project/model/StlInfo';
 
 export class StlTreeDataProvider implements vscode.TreeDataProvider<StlTreeItem> {
-
     private _didChangeTreeDataEvent: vscode.EventEmitter<StlTreeItem | undefined> = new vscode.EventEmitter<StlTreeItem | undefined>();
     
     public static TREEVIEW_ID: string = "3d2p.view.stl";
@@ -46,8 +44,6 @@ class StlTreeItem extends vscode.TreeItem {
         super(stlInfo.name, vscode.TreeItemCollapsibleState.None);
 
         let absoluteFilePath = stlInfo.getAbsolutePath();
-        //let fileSizeInBytes = fs.statSync(absoluteFilePath).size;
-        //let fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
 
         this._toolTip = absoluteFilePath;
         this._description = stlInfo.annotationList.length > 0 ? `${stlInfo.annotationList.length} Annotations` : '';

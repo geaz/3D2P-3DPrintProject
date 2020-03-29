@@ -9,6 +9,7 @@ import { StlTreeDataProvider } from './vsc/treeViews/StlTreeDataProvider';
 import { PromptEngine } from './vsc/prompts/promptEngine/promptEngine';
 import { InitProjectQuestionnaire } from './vsc/prompts/InitProjectQuestionnaire';
 import { StlWebView } from './vsc/webViews/StlWebView';
+import { AddGalleryImageQuestionnaire } from './vsc/prompts/AddGalleryImageQuestionnaire';
 
 /*
 	The extension gets only activated, if
@@ -60,7 +61,7 @@ function activationCheck(project: Project, fileWatcher: FileWatcher) {
 
 function add3D2PTreeViews(project: Project, fileWatcher: FileWatcher) {
 	vscode.window.registerTreeDataProvider(StlTreeDataProvider.TREEVIEW_ID, new StlTreeDataProvider(project, fileWatcher));
-	vscode.window.registerTreeDataProvider(GalleryTreeDataProvider.TREEVIEW_ID, new GalleryTreeDataProvider());
+	vscode.window.registerTreeDataProvider(GalleryTreeDataProvider.TREEVIEW_ID, new GalleryTreeDataProvider(project, fileWatcher));
 }
 
 function add3D2PCommands(project: Project, context: vscode.ExtensionContext) {
@@ -68,7 +69,11 @@ function add3D2PCommands(project: Project, context: vscode.ExtensionContext) {
     
     let initProjectCommand = vscode.commands.registerCommand(
         '3d2p.cmd.initProject', 
-        async() => { return promptEngine.start(new InitProjectQuestionnaire()); });
+		async() => { return promptEngine.start(new InitProjectQuestionnaire()); });
+		
+	let addGalleryImageCommand = vscode.commands.registerCommand(
+		'3d2p.cmd.addGalleryImage', 
+		async() => { return promptEngine.start(new AddGalleryImageQuestionnaire(project)); });
 
     let openStlWebviewCommand = vscode.commands.registerCommand(
         '3d2p.cmd.openStlWebview', 

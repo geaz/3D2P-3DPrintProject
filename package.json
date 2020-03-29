@@ -22,6 +22,18 @@
 				"title": "3D2P: Initialize 3D Print Project"
 			},
 			{
+				"command": "3d2p.cmd.addGalleryImage",
+				"title": "3D2P: Add image to gallery",
+				"icon": {
+					"light": "resources/images/icons/light/add.png",
+					"dark": "resources/images/icons/dark/add.png"
+				}
+			},
+			{
+				"command": "3d2p.cmd.removeGalleryImage",
+				"title": "Remove"
+			},
+			{
 				"command": "3d2p.cmd.openStlWebview",
 				"title": "3D2P: Open STL Webview"
 			}
@@ -29,8 +41,29 @@
 		"menus": {
 			"commandPalette": [
 				{
+					"command": "3d2p.cmd.addGalleryImage",
+					"when": "3d2p.context.activated"
+				},
+				{
+					"command": "3d2p.cmd.removeGalleryImage",
+					"when": "false"
+				},
+				{
 					"command": "3d2p.cmd.openStlWebview",
 					"when": "false"
+				}
+			],
+			"view/title": [
+				{
+				  "command": "3d2p.cmd.addGalleryImage",
+				  "when": "view == 3d2p.view.gallery",
+				  "group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+				  "command": "3d2p.cmd.removeGalleryImage",
+				  "when": "view == 3d2p.view.gallery"
 				}
 			]
 		},
