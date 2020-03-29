@@ -36,13 +36,16 @@ class App extends Component<{}, AppState> {
     }
 
     public render() {
-        //Only render the annotations component, if the STL got loaded
+        // Only render the annotations component, if the STL got loaded
+        // and VSCode send us the annoationList via 'postMessage'
         let annotationsComponent = undefined;
-        if(this.state.stlViewerContext !== undefined) {
+        if(this.state.stlViewerContext !== undefined && this.state.annotationList !== undefined) {
             annotationsComponent = html
                 `<${AnnotationsComponent} 
+                    annotationList=${this.state.annotationList}
                     showAnnotations=${this.state.showAnnotations}
-                    stlViewerContext=${this.state.stlViewerContext} />`;
+                    stlViewerContext=${this.state.stlViewerContext}
+                    onAnnotationListChanged=${(list) => this.onStlInfoChanged('annotationList', list)} />`;
         }
 
         return html
@@ -50,7 +53,7 @@ class App extends Component<{}, AppState> {
             <${ConfigComponent} 
                 config=${this._config} 
                 configDescription=${this._configDescription}
-                onChange=${this.onConfigChanged.bind(this)} />
+                onChange=${this.onStlInfoChanged.bind(this)} />
             <${StlViewerComponent} ref=${sc => this._stlViewerComponent = sc}
                 color=${this.state.color} 
                 stlFilePath="${this.state.stlFilePath}"
@@ -65,7 +68,7 @@ class App extends Component<{}, AppState> {
             resetColor: () => { 
                 this.setState({ color: DEFAULT_STL_COLOR }); 
                 this._config.color = DEFAULT_STL_COLOR;
-                this.onConfigChanged('color', DEFAULT_STL_COLOR); },
+                this.onStlInfoChanged('color', DEFAULT_STL_COLOR); },
             resetCamera: () => {
                 this._stlViewerComponent.resetCamera();
             }
@@ -84,29 +87,28 @@ class App extends Component<{}, AppState> {
                 this.setState({ stlFilePath: message.data });
                 break;
             case 'setStlInfo':
-                this.setState({ color: message.data.color, annotations: message.data.annotations });
+                this.setState({ color: message.data.color, annotationList: message.data.annotationList });
                 this._config.color = message.data.color;
                 this._config.status = message.data.status;
                 break;
         }
     };
 
-    private onConfigChanged(property: string, value: any): void {
-        if(property === 'color') {
-            this.setState({ color: value });
-        }
+    private onStlInfoChanged(property: string, value: any): void {
         if(property === 'showAnnotations') {
             this.setState({ showAnnotations: value });
         }
-
-        this._vscode.postMessage({
-            command: 'updateStlInfo',
-            data: {
-                color: this._config.color,
-                status: this._config.status,
-                annotations: this.state.annotations
-            }
-        })
+        else if(property === 'color') {
+            this.setState({ color: value });
+            this._vscode.postMessage({ command: 'updateStlColor', color: value });
+        }
+        else if(property === 'status') {
+            this._vscode.postMessage({ command: 'updateStlStatus', status: value });
+        }
+        else if(property === 'annotationList') {
+            this.setState({ annotationList: value });
+            this._vscode.postMessage({ command: 'updateStlAnnotationList', annotationList: value });
+        }
     };
 
     private onViewerInitiated(stlViewerContext: StlViewerContext): void {
@@ -118,7 +120,7 @@ interface AppState {
     color: number;
     stlFilePath: string;
     showAnnotations: boolean;
-    annotations: Array<IStlAnnotation>;
+    annotationList: Array<IStlAnnotation>;
     stlViewerContext: StlViewerContext;
 }
 

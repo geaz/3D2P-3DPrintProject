@@ -5,10 +5,11 @@ import htm from 'htm';
 import * as THREE from 'three';
 import { StlViewerContext } from './threejs/StlViewerContext';
 import { WebGLRenderer } from 'three';
+import { IStlAnnotation } from '../../../vsc/project/model/StlInfo';
 
 const html = htm.bind(h);
 
-export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps, IAnnotationItemComponentState> {
+export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps> {
     private _sprite: THREE.Sprite;
     private _textareaElement: HTMLElement;
     private _numberContainerElement: HTMLElement;
@@ -16,9 +17,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     private _mouseHandler: () => void = () => { if(this.props.active) this.onNumberClicked(); };
 
     public componentWillMount() {
-        this.initDepthSprite();
-        this.setState({ text: this.props.text });
-        
+        this.initDepthSprite();        
         this.props.stlViewerContext.addStlLoadedListener(this._initHandler);
         this.props.stlViewerContext.renderer.domElement.addEventListener('mousedown', this._mouseHandler);
         this.props.stlViewerContext.renderer.domElement.addEventListener('wheel', this._mouseHandler);
@@ -46,8 +45,8 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(this.props.active) {
             annotationBox = html
                 `<div class="annotation">
-                    <textarea placeholder="Annotation" oninput=${this.onTextChanged.bind(this)}
-                        ref=${(textarea) => { this._textareaElement = textarea; }}>${this.state.text}</textarea>
+                    <textarea placeholder="Annotation" oninput=${this.onAnnotationChanged.bind(this)}
+                        ref=${(textarea) => { this._textareaElement = textarea; }}>${this.props.annotation.text}</textarea>
                 </div>`;
         }
 
@@ -144,7 +143,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             this._sprite = new THREE.Sprite(spriteMaterial);
             this._sprite.name = this.Name;
             this._sprite.onBeforeRender = this.checkDepth.bind(this);
-            this._sprite.position.set(this.props.position.x, this.props.position.y, this.props.position.z);
+            this._sprite.position.set(this.props.annotation.x, this.props.annotation.y, this.props.annotation.z);
 
             this.props.stlViewerContext.scene.add(this._sprite);
         }
@@ -186,10 +185,10 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         }
     }
 
-    private onTextChanged(e): void {
-        this.setState({ text: e.target.value });
-        if(this.props.onTextChanged !== undefined) {
-            this.props.onTextChanged(e.target.value);
+    private onAnnotationChanged(e): void {
+        this.props.annotation.text = e.target.value;
+        if(this.props.onAnnotationChanged !== undefined) {
+            this.props.onAnnotationChanged(this.props.annotation);
         }
     }
 
@@ -229,15 +228,10 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 }
 
 export interface IAnnotationItemComponentProps {
-    text: string;
     index: number;
     active: boolean;
-    position: THREE.Vector3;
+    annotation: IStlAnnotation;
     stlViewerContext: StlViewerContext;
     onClicked: (index: number) => void;
-    onTextChanged: (text: string) => void;
-}
-
-export interface IAnnotationItemComponentState {
-    text: string;
+    onAnnotationChanged: (annotation: IStlAnnotation) => void;
 }

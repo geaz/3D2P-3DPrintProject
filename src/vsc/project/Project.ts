@@ -19,6 +19,9 @@ export class Project {
 
         this._projectPath = projectPath;
         this._projectFile = new ProjectFile(projectPath, path.join(projectPath, PROJECTFILE_NAME));
+
+        // To save updates of the file list
+		this.Save();
     }
 
     public Save(): void {

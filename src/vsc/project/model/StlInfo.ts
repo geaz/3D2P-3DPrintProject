@@ -5,7 +5,7 @@ export const DEFAULT_STL_COLOR: number = 0xF58026;
 export class StlInfo extends FileListItem {
     public color: number = DEFAULT_STL_COLOR;
     public status: StlStatus = StlStatus.WIP;
-    public annotations: Array<IStlAnnotation> = new Array<IStlAnnotation>();
+    public annotationList: Array<IStlAnnotation> = new Array<IStlAnnotation>();
 
     constructor(basePath: string, name: string, relativePath: string) {
         super(basePath, name, relativePath);
@@ -15,7 +15,7 @@ export class StlInfo extends FileListItem {
         let stlInfo = new StlInfo(basePath, object['name'], object['relativePath']);
         stlInfo.color = object['color'];
         stlInfo.status = object['status'];
-        stlInfo.annotations = object['annotations'];
+        stlInfo.annotationList = object['annotationList'];
 
         return stlInfo;
     }
@@ -27,6 +27,7 @@ export enum StlStatus {
 }
 
 export interface IStlAnnotation {
+    id: number;
     x: number;
     y: number;
     z: number;

@@ -31,9 +31,10 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         if(this.props.showAnnotations) {
             annotationItemList = this.state.annotationList?.map((annotation, index) =>
                 html`<${AnnotationItemComponent} 
-                    stlViewerContext=${this.props.stlViewerContext} onClicked=${this.onAnnotationClicked.bind(this)}
-                    text=${annotation.text} index=${index} active=${this.state.activeAnnotation === index}
-                    position=${new THREE.Vector3(annotation.x, annotation.y, annotation.z)}/>`
+                    stlViewerContext=${this.props.stlViewerContext} annotation=${annotation}
+                    index=${index} active=${this.state.activeAnnotation === index}
+                    onClicked=${this.onAnnotationClicked.bind(this)}
+                    onAnnotationChanged=${this.onAnnotationChanged.bind(this)}/>`
             );
         }
         return html`${annotationItemList}`;
@@ -45,14 +46,15 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
 
     private onIntersection(x: number, y:number, intersection: THREE.Intersection): void {
         if(this.props.showAnnotations) {
+            let newAnnotationList = this.state.annotationList;
+            if(newAnnotationList === undefined) newAnnotationList = new Array<IStlAnnotation>();
+
             let newAnnotation = <IStlAnnotation>{};
+            newAnnotation.id = newAnnotationList.length;
             newAnnotation.x = intersection.point.x;
             newAnnotation.y = intersection.point.y;
             newAnnotation.z = intersection.point.z;
             
-            let newAnnotationList = this.state.annotationList;
-            if(newAnnotationList === undefined) newAnnotationList = new Array<IStlAnnotation>();
-
             newAnnotationList.push(newAnnotation);
             this.setState({ annotationList: newAnnotationList, activeAnnotation: newAnnotationList.length - 1 });
         }        
@@ -62,12 +64,23 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         if(this.state.activeAnnotation === index) this.setState({ activeAnnotation: -1 });
         else this.setState({ activeAnnotation: index });
     }
+
+    private onAnnotationChanged(annotation: IStlAnnotation): void {
+        let changedAnnotation = this.state.annotationList.filter(a => a.id == annotation.id);
+        if(changedAnnotation.length === 1) {
+            changedAnnotation[0].text = annotation.text;
+            if(this.props.onAnnotationListChanged !== undefined) {
+                this.props.onAnnotationListChanged(this.state.annotationList);
+            }
+        }
+    }
 }
 
 export interface IAnnotationsComponentProps {
     annotationList: Array<IStlAnnotation>;
     showAnnotations: boolean;
     stlViewerContext: StlViewerContext;
+    onAnnotationListChanged: (annotationList: Array<IStlAnnotation>) => void;
 }
 
 export interface IAnnotationsComponentState {

@@ -32,14 +32,25 @@ export class StlWebView {
             </html>`;
 
         this._panel.webview.postMessage({ command: 'filechange', data: stlFilePathViewUri.toString() });
-        this._panel.webview.postMessage({ command: 'setStlInfo', data: { color: stlInfo.color, status: stlInfo.status, annotations: stlInfo.annotations } });
+        this._panel.webview.postMessage({ 
+            command: 'setStlInfo', 
+            data: { color: stlInfo.color, status: stlInfo.status, annotationList: stlInfo.annotationList } });
 
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.command) {
-                case 'updateStlInfo':
-                    stlInfo.color = message.data.color;
-                    stlInfo.status = message.data.status;
-                    stlInfo.annotations = message.data.annotations;
+                case 'updateStlColor':
+                    stlInfo.color = message.color;
+                    console.dir(message);
+                    project.Save();
+                    break;
+                case 'updateStlStatus':
+                    stlInfo.status = message.status;
+                    console.dir(message);
+                    project.Save();
+                    break;
+                case 'updateStlAnnotationList':
+                    stlInfo.annotationList = message.annotationList;
+                    console.dir(message);
                     project.Save();
                     break;
             }
