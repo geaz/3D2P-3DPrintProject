@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { Project } from '../project/Project';
 import { FileWatcher } from '../FileWatcher';
-import { StlInfo } from '../project/model/StlInfo';
+import { StlInfo, StlStatus } from '../project/model/StlInfo';
 
 export class StlTreeDataProvider implements vscode.TreeDataProvider<StlTreeItem> {
 
@@ -46,16 +46,28 @@ class StlTreeItem extends vscode.TreeItem {
         super(stlInfo.name, vscode.TreeItemCollapsibleState.None);
 
         let absoluteFilePath = stlInfo.getAbsolutePath();
-        let fileSizeInBytes = fs.statSync(absoluteFilePath).size;
-        let fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
+        //let fileSizeInBytes = fs.statSync(absoluteFilePath).size;
+        //let fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
 
         this._toolTip = absoluteFilePath;
-        this._description = `${fileSizeInMegabytes.toFixed(2)} MB`;
+        this._description = stlInfo.annotationList.length > 0 ? `${stlInfo.annotationList.length} Annotations` : '';
         this.command = {
             command: '3d2p.cmd.openStlWebview',
             title: 'Open STL',
             arguments: [absoluteFilePath]
         };
+        if(stlInfo.status === StlStatus.WIP) {
+            this.iconPath = {
+                light: path.join(__filename, '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'wip.png'),
+                dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'wip.png'),
+            };
+        }
+        else {
+            this.iconPath = {
+                light: path.join(__filename, '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'done.png'),
+                dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'done.png'),
+            };
+        }
     }
   
     get tooltip(): string {
@@ -65,9 +77,4 @@ class StlTreeItem extends vscode.TreeItem {
     get description(): string {
         return this._description;
     }
-  
-    iconPath = {
-        light: path.join(__filename, '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'wip.png'),
-        dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'wip.png'),
-    };
 }
