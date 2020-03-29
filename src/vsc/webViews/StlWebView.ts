@@ -40,17 +40,14 @@ export class StlWebView {
             switch (message.command) {
                 case 'updateStlColor':
                     stlInfo.color = message.color;
-                    console.dir(message);
                     project.Save();
                     break;
                 case 'updateStlStatus':
                     stlInfo.status = message.status;
-                    console.dir(message);
                     project.Save();
                     break;
                 case 'updateStlAnnotationList':
                     stlInfo.annotationList = message.annotationList;
-                    console.dir(message);
                     project.Save();
                     break;
             }

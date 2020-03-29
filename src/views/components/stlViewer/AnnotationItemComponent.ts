@@ -2,22 +2,24 @@ import { h, Component } from 'preact';
 import { css } from 'emotion'
 import htm from 'htm';
 
+import md from 'markdown-it';
 import * as THREE from 'three';
 import { StlViewerContext } from './threejs/StlViewerContext';
-import { WebGLRenderer } from 'three';
 import { IStlAnnotation } from '../../../vsc/project/model/StlInfo';
 
 const html = htm.bind(h);
 
-export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps> {
+export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps, IAnnotationItemComponentState> {
+    private _mdRenderer = new md();
     private _sprite: THREE.Sprite;
     private _textareaElement: HTMLElement;
     private _numberContainerElement: HTMLElement;
+    private _mouseHandler: () => void = this.onMouseControl.bind(this);
     private _initHandler: () => void = this.initDepthSprite.bind(this);
-    private _mouseHandler: () => void = () => { if(this.props.active) this.onNumberClicked(); };
 
     public componentWillMount() {
         this.initDepthSprite();        
+        this.setState({ isEditMode: this.props.annotation.text === undefined });
         this.props.stlViewerContext.addStlLoadedListener(this._initHandler);
         this.props.stlViewerContext.renderer.domElement.addEventListener('mousedown', this._mouseHandler);
         this.props.stlViewerContext.renderer.domElement.addEventListener('wheel', this._mouseHandler);
@@ -29,6 +31,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 
     public componentDidUpdate() {
         this._textareaElement?.focus();
+        this._sprite.position.set(this.props.annotation.x, this.props.annotation.y, this.props.annotation.z);
     }
 
     public componentWillUnmount() {
@@ -45,8 +48,21 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(this.props.active) {
             annotationBox = html
                 `<div class="annotation">
-                    <textarea placeholder="Annotation" oninput=${this.onAnnotationChanged.bind(this)}
+                    ${this.state.isEditMode && html
+                        `<textarea placeholder="Annotation" oninput=${(e) => this.props.annotation.text = e.target.value}
                         ref=${(textarea) => { this._textareaElement = textarea; }}>${this.props.annotation.text}</textarea>
+                        <div class="button-container">
+                            <div class="button" onclick=${this.onAnnotationSaved.bind(this)}>Save</div>
+                            <div class="button" onclick=${this.onAnnotationDeleted.bind(this)}>Delete</div>
+                        </div>`
+                    }
+                    ${!this.state.isEditMode && html
+                        `<div class="annotation-content" dangerouslySetInnerHTML=${{__html:this._mdRenderer.render(this.props.annotation.text)}}></div>
+                        <div class="button-container">
+                            <div class="button" onclick=${() => this.setState({ isEditMode: true })}>Edit</div>
+                            <div class="button" onclick=${this.onAnnotationDeleted.bind(this)}>Delete</div>
+                        </div>`
+                    }                    
                 </div>`;
         }
 
@@ -59,73 +75,6 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
                 </div>
                 ${annotationBox}
             </div>`;
-    }
-
-    public css() {
-        return css`
-            display:flex;
-            position: absolute;
-
-            .number-container {
-                z-index: 1;
-                width:32px;
-                height:32px;
-                color: #eee;
-                border-radius: 5px;
-                border: 1px solid #eee;
-                background: rgb(0, 0, 0, 0.8);
-
-                ${this.props.active && css
-                    `color: red;`}
-
-                &:hover {
-                    color: red;
-                    cursor: pointer;
-                }
-            }
-            
-            .number {
-                font-size: 18px;
-                font-weight: bold;
-                text-align:center;
-                line-height:32px;
-                font-family: sans-serif;
-            }
-            
-            .annotation {
-                z-index: 2;
-                margin-left: 15px;
-                display:flex;
-                width: 200px;
-                height: 150px;
-                position:relative;
-                background: rgb(17, 17, 17, 0.8);
-
-                &::before {
-                    content: '';
-                    position:absolute;
-                    right:100%;
-                    top: 10px;
-                    border-bottom: 5px solid transparent;
-                    border-right: 5px solid rgb(17, 17, 17, 0.8);
-                    border-top: 5px solid transparent;
-                    clear: both;
-                }
-            }
-
-            textarea {
-                border:0;
-                flex-grow:1;
-                color: white;
-                margin: 10px;
-                resize: none;
-                font-size: 1rem;
-                background: transparent;
-            
-                &:focus {
-                    outline: none !important;
-                }
-            }`;
     }
 
     private initDepthSprite(): void {
@@ -185,10 +134,25 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         }
     }
 
-    private onAnnotationChanged(e): void {
-        this.props.annotation.text = e.target.value;
-        if(this.props.onAnnotationChanged !== undefined) {
-            this.props.onAnnotationChanged(this.props.annotation);
+    private onMouseControl(): void {
+        if(this.props.active) {
+            this.onNumberClicked();
+            this.onAnnotationSaved();
+        }
+    }
+
+    private onAnnotationSaved(): void {
+        this.setState({ isEditMode: false });
+        if(this.props.annotation.text === undefined) this.props.annotation.text = '';
+        
+        if(this.props.onAnnotationSaved !== undefined) {
+            this.props.onAnnotationSaved(this.props.annotation);
+        }        
+    }
+
+    private onAnnotationDeleted(): void {
+        if(this.props.onAnnotationDeleted !== undefined) {
+            this.props.onAnnotationDeleted(this.props.annotation);
         }
     }
 
@@ -225,13 +189,123 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     get WorldPos(): THREE.Vector3 {
         return this._sprite.position;
     }
+
+    private css() {
+        return css`
+            display:flex;
+            position: absolute;
+            font: 1rem monospace;
+            align-items: flex-start;
+
+            .number-container {
+                z-index: 1;
+                color: #eee;
+                border-radius: 5px;
+                border: 1px solid #eee;
+                background: rgb(0, 0, 0, 0.8);
+
+                ${this.props.active && css
+                    `color: red;`}
+
+                &:hover {
+                    color: red;
+                    cursor: pointer;
+                }
+            }
+            
+            .number {
+                width: 32px;
+                line-height:32px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 1.2rem;
+            }
+            
+            .annotation {
+                z-index: 2;
+                color: #eee;
+                display:block;                
+                max-width: 200px; 
+                padding: 10px;                 
+                margin-left: 15px;
+                position:relative;
+                background: rgb(17, 17, 17, 0.8);
+
+                &::before {
+                    content: '';
+                    position:absolute;
+                    right:100%;
+                    top: 12px;
+                    border-bottom: 5px solid transparent;
+                    border-right: 5px solid rgb(17, 17, 17, 0.8);
+                    border-top: 5px solid transparent;
+                    clear: both;
+                }
+
+                .annotation-content {
+                    display: block;
+                    
+                    p:first-child { margin-top: 0; }
+                    p:last-child { margin-bottom: 15px; }
+                    a { 
+                        color: white; 
+                        text-decoration: underline;
+                        
+                        &:hover {
+                            color: #F58026;
+                        }
+                    }
+                }        
+                
+                .button-container {
+                    display: flex;
+
+                    .button {
+                        color: #B2B2B2;
+                        padding-right: 15px;
+                        font-weight: bold;
+                        font-size: 0.7rem;
+
+                        &:hover {
+                            cursor: pointer;
+                            color: #F58026;
+                        }
+
+                        &:last-child {
+                            padding-right: 0;
+                        }
+                    }
+                }
+            }
+            
+            textarea {
+                border:0;
+                flex-grow:1;
+                color: #eee;   
+                width: 200px;        
+                height: 250px;
+                resize: vertical;
+                background: transparent;
+                font-size: 1rem!important;
+                font-family: monospace!important;
+            
+                &:focus {
+                    outline: none !important;
+                }
+            }`;
+    }
 }
 
-export interface IAnnotationItemComponentProps {
+interface IAnnotationItemComponentProps {
     index: number;
     active: boolean;
     annotation: IStlAnnotation;
     stlViewerContext: StlViewerContext;
     onClicked: (index: number) => void;
-    onAnnotationChanged: (annotation: IStlAnnotation) => void;
+    onAnnotationSaved: (annotation: IStlAnnotation) => void;
+    onAnnotationDeleted: (annotation: IStlAnnotation) => void;
+}
+
+interface IAnnotationItemComponentState {
+    isEditMode: boolean;
 }

@@ -29,12 +29,13 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
     public render() {
         let annotationItemList = undefined;
         if(this.props.showAnnotations) {
-            annotationItemList = this.state.annotationList?.map((annotation, index) =>
-                html`<${AnnotationItemComponent} 
+            annotationItemList = this.state.annotationList?.map((annotation, index) => {
+                return html`<${AnnotationItemComponent} 
                     stlViewerContext=${this.props.stlViewerContext} annotation=${annotation}
                     index=${index} active=${this.state.activeAnnotation === index}
                     onClicked=${this.onAnnotationClicked.bind(this)}
-                    onAnnotationChanged=${this.onAnnotationChanged.bind(this)}/>`
+                    onAnnotationSaved=${this.onAnnotationSaved.bind(this)}
+                    onAnnotationDeleted=${this.onAnnotationDeleted.bind(this)} />`;}
             );
         }
         return html`${annotationItemList}`;
@@ -50,7 +51,7 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
             if(newAnnotationList === undefined) newAnnotationList = new Array<IStlAnnotation>();
 
             let newAnnotation = <IStlAnnotation>{};
-            newAnnotation.id = newAnnotationList.length;
+            newAnnotation.id = Math.max.apply(Math, newAnnotationList.map(function(o) { return o.id; })) + 1;
             newAnnotation.x = intersection.point.x;
             newAnnotation.y = intersection.point.y;
             newAnnotation.z = intersection.point.z;
@@ -65,14 +66,26 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         else this.setState({ activeAnnotation: index });
     }
 
-    private onAnnotationChanged(annotation: IStlAnnotation): void {
-        let changedAnnotation = this.state.annotationList.filter(a => a.id == annotation.id);
-        if(changedAnnotation.length === 1) {
-            changedAnnotation[0].text = annotation.text;
+    private onAnnotationSaved(annotation: IStlAnnotation): void {
+        let savedAnnotation = this.state.annotationList.filter(a => a.id == annotation.id);
+        if(savedAnnotation.length === 1) {
+            savedAnnotation[0].text = annotation.text;
             if(this.props.onAnnotationListChanged !== undefined) {
                 this.props.onAnnotationListChanged(this.state.annotationList);
             }
         }
+    }
+
+    private onAnnotationDeleted(annotation: IStlAnnotation): void {
+        let newAnnotationList = this.state.annotationList;
+        newAnnotationList.forEach((item, index) => {
+            if(item.id === annotation.id) {
+                newAnnotationList.splice(index, 1);
+                return;
+            }
+        });
+        this.props.onAnnotationListChanged(newAnnotationList);
+        this.setState({ annotationList: newAnnotationList, activeAnnotation: -1 });
     }
 }
 
