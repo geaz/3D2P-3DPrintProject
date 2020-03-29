@@ -14,15 +14,12 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     private _sprite: THREE.Sprite;
     private _textareaElement: HTMLElement;
     private _numberContainerElement: HTMLElement;
-    private _mouseHandler: () => void = this.onMouseControl.bind(this);
     private _initHandler: () => void = this.initDepthSprite.bind(this);
 
     public componentWillMount() {
         this.initDepthSprite();        
         this.setState({ isEditMode: this.props.annotation.text === undefined });
         this.props.stlViewerContext.addStlLoadedListener(this._initHandler);
-        this.props.stlViewerContext.renderer.domElement.addEventListener('mousedown', this._mouseHandler);
-        this.props.stlViewerContext.renderer.domElement.addEventListener('wheel', this._mouseHandler);
     }
 
     public componentDidMount() {
@@ -39,8 +36,6 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             this.props.stlViewerContext.scene.remove(this._sprite);
         }
         this.props.stlViewerContext.removeStlLoadedListener(this._initHandler);
-        this.props.stlViewerContext.renderer.domElement.removeEventListener('mousedown', this._mouseHandler);
-        this.props.stlViewerContext.renderer.domElement.removeEventListener('wheel', this._mouseHandler);
     }
     
     public render() {
@@ -134,13 +129,6 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         }
     }
 
-    private onMouseControl(): void {
-        if(this.props.active) {
-            this.onNumberClicked();
-            this.onAnnotationSaved();
-        }
-    }
-
     private onAnnotationSaved(): void {
         this.setState({ isEditMode: false });
         if(this.props.annotation.text === undefined) this.props.annotation.text = '';
@@ -194,7 +182,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         return css`
             display:flex;
             position: absolute;
-            font: 1rem monospace;
+            font: 1rem sans-serif;
             align-items: flex-start;
 
             .number-container {
