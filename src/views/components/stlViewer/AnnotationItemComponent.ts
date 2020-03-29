@@ -11,6 +11,7 @@ const html = htm.bind(h);
 export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps, IAnnotationItemComponentState> {
     private _sprite: THREE.Sprite;
     private _textareaElement: HTMLElement;
+    private _numberContainerElement: HTMLElement;
     private _initHandler: () => void = this.initDepthSprite.bind(this);
     private _mouseHandler: () => void = () => { if(this.props.active) this.onNumberClicked(); };
 
@@ -52,7 +53,9 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 
         return html
             `<div className=${this.css()}>
-                <div class="number-container" onclick="${this.onNumberClicked.bind(this)}">
+                <div class="number-container" 
+                ref=${(numberContainer) => { this._numberContainerElement = numberContainer; }}
+                onclick="${this.onNumberClicked.bind(this)}">
                     <div class="number">${this.props.index + 1}</div>
                 </div>
                 ${annotationBox}
@@ -65,6 +68,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             position: absolute;
 
             .number-container {
+                z-index: 1;
                 width:32px;
                 height:32px;
                 color: #eee;
@@ -90,7 +94,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             }
             
             .annotation {
-                z-index: 1;
+                z-index: 2;
                 margin-left: 15px;
                 display:flex;
                 width: 200px;
@@ -175,7 +179,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             (<HTMLElement>this.base).style.left = (screenPos.x - 16) +'px';
             (<HTMLElement>this.base).style.top = (screenPos.y - 16)+'px';
             (<HTMLElement>this.base).style.opacity = numberVisible ? '1': '0.2';
-            (<HTMLElement>this.base).style.zIndex = numberVisible ? '1': '0';
+            this._numberContainerElement.style.zIndex = numberVisible ? '1': '0';
         }
         else {            
             (<HTMLElement>this.base).style.visibility = 'hidden';
