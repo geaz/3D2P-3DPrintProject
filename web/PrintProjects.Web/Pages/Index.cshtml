@@ -1,0 +1,15 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="row">
+    @foreach (var project in Model.ProjectList)
+    {
+        <div>
+            <h1>@project.Name</h1>
+            <a asp-page="/Project" asp-route-shortId="@project.ShortId">Link</a>
+        </div>
+    }
+</div>

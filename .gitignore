@@ -4,3 +4,6 @@ node_modules
 .vscode-test/
 *.vsix
 components/lib
+web/PrintProjects.Web/wwwroot/css/
+bin
+obj

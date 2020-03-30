@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 3D2P - 3D Print Projects</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="row">
+                <a id="logo" asp-page="/Index"><img src="~/logo.svg" alt="3D2P" /></a>
+            </div>            
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <small>No shitty ads, cookies (f*** cookie banners), 3rd party ressources or tracking.</small>
+        </div>
+    </footer>
+</body>
+</html>

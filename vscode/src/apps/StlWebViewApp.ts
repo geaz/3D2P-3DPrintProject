@@ -35,7 +35,7 @@ class App extends Component<{}, AppState> {
 
     public render() {
         // Only render the annotations component, if the STL got loaded
-        // and VSCode send us the annoationList via 'postMessage'
+        // and VSCode sent us the annoationList via 'postMessage'
         let annotationsComponent = undefined;
         if(this.state.stlViewerContext !== undefined && this.state.annotationList !== undefined) {
             annotationsComponent = html

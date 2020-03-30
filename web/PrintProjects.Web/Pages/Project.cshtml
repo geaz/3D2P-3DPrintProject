@@ -1,0 +1,27 @@
+﻿@page "{shortId}"
+@model ProjectModel
+@{
+    ViewData["Title"] = Model.Project.Name;
+}
+
+<section id="project">
+    <div class="title">
+        <h1>@Model.Project.Name</h1>
+        <small>ID: @Model.Project.ShortId</small>
+    </div>
+    <div class="row">
+        <article class="summary">
+            @Html.Raw(Model.ReadmeHtml)
+        </article>
+        <aside>
+            <div>
+                @foreach (var commitInfo in Model.Project.LatestCommitInfos)
+                {
+                    <div>
+                        <p>@commitInfo.Message</p>
+                    </div>
+                }
+            </div>
+        </aside>
+    </div>
+</section>

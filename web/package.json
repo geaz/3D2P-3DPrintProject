@@ -1,0 +1,30 @@
+{
+  "name": "3d2p.web",
+  "version": "0.5.0",
+  "description": "The 3D2P website",
+  "main": "index.js",
+  "scripts": {
+    "test": "dotnet test ./Tests/PrintProject.Core.Tests/PrintProject.Core.Tests.csproj",
+    "dev": "npx concurrently \"npm run dev:sass\" \"npm run dev:server\"",
+    "dev:sass": "npx node-sass -w ./PrintProjects.Web/wwwroot/sass/ -o ./PrintProjects.Web/wwwroot/css/",
+    "dev:server": "dotnet watch --project ./PrintProjects.Web/PrintProjects.Web.csproj run",
+    "build": "npx npm-run-all build:*",
+    "build:sass": "npx node-sass ./PrintProjects.Web/wwwroot/sass/ -o ./PrintProjects.Web/wwwroot/css/ --output-style compressed",
+    "build:server": "dotnet publish ./PrintProjects.Web/PrintProjects.Web.csproj"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geaz/3D2P-3DPrintProjects.git"
+  },
+  "author": "Gerrit 'Geaz' Gazic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geaz/3D2P-3DPrintProjects/issues"
+  },
+  "homepage": "https://github.com/geaz/3D2P-3DPrintProjects#readme",
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "node-sass": "^4.13.1",
+    "npm-run-all": "^4.1.5"
+  }
+}

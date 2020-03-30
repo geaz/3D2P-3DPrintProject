@@ -1,0 +1,8 @@
+﻿@page "{code?}"
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1>Error.</h1>
+<h2>@RouteData.Values["code"]</h2>
