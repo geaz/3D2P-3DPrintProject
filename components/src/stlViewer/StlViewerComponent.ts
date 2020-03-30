@@ -2,24 +2,28 @@ import { h, Component } from 'preact';
 import { css } from 'emotion'
 import htm from 'htm';
 
-import * as THREE from 'three';
+import { WebGLRenderer, Vector3, Object3D, Scene, BufferGeometry,
+        Mesh, MeshPhongMaterial, PerspectiveCamera, 
+        DirectionalLight, AmbientLight, DoubleSide } from 'three';
 
 import { Dimensions } from './threejs/Dimensions';
-import { STLLoader } from './threejs/libs/STLLoader.js';
-import { OrbitControls } from './threejs/libs/OrbitControls.js';
+// @ts-ignore
+import { STLLoader } from '../../threeLibs/STLLoader.js';
+// @ts-ignore
+import { OrbitControls } from '../../threeLibs/OrbitControls.js';
 import { StlViewerContext } from './threejs/StlViewerContext';
 
 const html = htm.bind(h);
 
 export class StlViewerComponent extends Component<StlViewerProps> {
-    private _currentStlFilePath: string;
-    private _mesh: THREE.Mesh;
-    private _scene: THREE.Scene;
-    private _meshParent: THREE.Object3D;
-    private _material: THREE.MeshPhongMaterial;
-    private _controls: OrbitControls;
-    private _camera: THREE.PerspectiveCamera;
-    private _renderer: THREE.WebGLRenderer;
+    private _currentStlFilePath?: string;
+    private _mesh?: Mesh;
+    private _scene?: Scene;
+    private _meshParent?: Object3D;
+    private _material?: MeshPhongMaterial;
+    private _controls?: OrbitControls;
+    private _camera?: PerspectiveCamera;
+    private _renderer?: WebGLRenderer;
 
     public async componentDidMount() {
         this.initScene();
@@ -48,40 +52,44 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     }
 
     public resetCamera(): void {
-        let stlDimensions = new Dimensions(this._mesh.geometry.boundingBox);
+        if(this._mesh === undefined || this._camera === undefined || this._camera === undefined) {
+            throw 'Viewer was not initialized correctly!';
+        }
+
+        let stlDimensions = new Dimensions(this._mesh.geometry);
         let maxDimension = stlDimensions.MaxDimension;
-        this._camera.lookAt(new THREE.Vector3(0, 0, 0));
+        this._camera.lookAt(new Vector3(0, 0, 0));
         this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
         this._controls.target.set(0, 0, 0);
         this._controls.autoRotate = true;
     }
 
     private initScene(): void {
-        this._meshParent = new THREE.Object3D(); 
+        this._meshParent = new Object3D(); 
 
-        this._scene = new THREE.Scene();
+        this._scene = new Scene();
         this._scene.add(this._meshParent); 
 
-        let directionalLightTop = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+        let directionalLightTop = new DirectionalLight(0xFFFFFF, 0.5);
         directionalLightTop.position.set(1, 5, 1);
-        directionalLightTop.lookAt(new THREE.Vector3(0, 0, 0));
+        directionalLightTop.lookAt(new Vector3(0, 0, 0));
 
-        let directionalLightBottom = new THREE.DirectionalLight(0xFFFFFF, 0.3);
+        let directionalLightBottom = new DirectionalLight(0xFFFFFF, 0.3);
         directionalLightBottom.position.set(1, -5, 1);
-        directionalLightBottom.lookAt(new THREE.Vector3(0, 0, 0));
+        directionalLightBottom.lookAt(new Vector3(0, 0, 0));
 
-        this._scene.add(new THREE.AmbientLight(0xFFFFFF, 0.9));
+        this._scene.add(new AmbientLight(0xFFFFFF, 0.9));
         this._scene.add(directionalLightTop);          
         this._scene.add(directionalLightBottom);
         
-        this._renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
-        this.base.appendChild(this._renderer.domElement);
+        this._renderer = new WebGLRenderer( { antialias: true, alpha: true } );
+        this.base!.appendChild(this._renderer.domElement);
         
         let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
 
         this._renderer.setSize(boundingBox.width, boundingBox.height - 5);
-        this._camera = new THREE.PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);        
-        this._camera.lookAt(new THREE.Vector3(0, 0, 0));
+        this._camera = new PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);        
+        this._camera.lookAt(new Vector3(0, 0, 0));
         
         this._controls = new OrbitControls(this._camera, this.base);
         this._controls.target.set(0, 0, 0);
@@ -89,6 +97,10 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._controls.update(); 
 
         window.addEventListener('resize', () => {            
+            if(this._renderer === undefined || this._camera === undefined) {
+                throw 'Viewer was not initialized correctly!';
+            }
+
             let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
             this._camera.aspect = boundingBox.width / boundingBox.height;
             this._camera.updateProjectionMatrix();
@@ -102,20 +114,20 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this.animate();
     }
 
-    private loadStl(): Promise<THREE.Mesh> {
+    private loadStl(): Promise<Mesh> {
         return new Promise((resolve) => {
             if(this.props.stlFilePath !== undefined)
             {
                 let that = this;
-                let loader = new STLLoader();
-                loader.load(this.props.stlFilePath, function (geometry: THREE.BufferGeometry) {                    
-                    that._material = new THREE.MeshPhongMaterial({
+                let loader: any = new STLLoader();
+                loader.load(this.props.stlFilePath, function (geometry: BufferGeometry) {                    
+                    that._material = new MeshPhongMaterial({
                         color: that.props.color,
                         specular: 0x1F1F1F,
                         shininess: 25,
-                        side: THREE.DoubleSide
+                        side: DoubleSide
                     });                    
-                    resolve(new THREE.Mesh(geometry, that._material));
+                    resolve(new Mesh(geometry, that._material));
                 });
             }
             else {
@@ -124,7 +136,11 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         });        
     }
 
-    private updateSceneStl(stlMesh: THREE.Mesh): void {
+    private updateSceneStl(stlMesh: Mesh): void {
+        if(this._meshParent === undefined || this._camera === undefined || this._scene === undefined) {
+            throw 'Viewer was not initialized correctly!';
+        }
+
         if(stlMesh === undefined) return;
         if(this._mesh !== undefined) this._meshParent.remove(this._mesh);
         
@@ -133,7 +149,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._mesh.geometry.computeBoundingBox();
         this._mesh.geometry.computeVertexNormals();
 
-        let stlDimensions = new Dimensions(this._mesh.geometry.boundingBox);
+        let stlDimensions = new Dimensions(this._mesh.geometry);
         let originCorrection = stlDimensions.getOriginCorrection();
 
         this._mesh.geometry.translate(originCorrection.x, originCorrection.y, originCorrection.z);
@@ -152,6 +168,11 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     } 
 
     private animate() { 
+        if(this._renderer === undefined || this._camera === undefined 
+            || this._controls === undefined || this._scene === undefined) {
+            throw 'Viewer was not initialized correctly!';
+        }
+
         requestAnimationFrame(this.animate.bind(this));
         this._controls.update();
         this._renderer.render(this._scene, this._camera);

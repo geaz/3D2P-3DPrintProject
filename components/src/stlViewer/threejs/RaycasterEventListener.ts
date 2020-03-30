@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Raycaster, Intersection } from 'three';
 import { StlViewerContext } from './StlViewerContext';
 
 export class RaycasterEventListener {
@@ -8,7 +8,7 @@ export class RaycasterEventListener {
     constructor(
         private _stlViewerContext: StlViewerContext,
         private _objectName: string,
-        private _onIntersection: (mouseX: number, mouseY: number, intersection: THREE.Intersection) => void) {
+        private _onIntersection: (mouseX: number, mouseY: number, intersection: Intersection) => void) {
             this._rendererDom = this._stlViewerContext.renderer.domElement;
             this._rendererDom.addEventListener('dblclick', this._mouseHandler);
     }
@@ -26,7 +26,7 @@ export class RaycasterEventListener {
             let mouseX = (event.clientX / boundingBox.width) * 2 - 1;
             let mouseY = -(event.clientY / boundingBox.height) * 2 + 1;
 
-            let raycaster = new THREE.Raycaster();
+            let raycaster = new Raycaster();
             raycaster.setFromCamera({x: mouseX, y: mouseY}, this._stlViewerContext.camera);
 
             let intersections = raycaster.intersectObject(relevantObject);

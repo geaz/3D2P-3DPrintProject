@@ -2,17 +2,15 @@ import { h, Component } from 'preact';
 import { css } from 'emotion'
 import htm from 'htm';
 
-import * as THREE from 'three';
-
+import { Intersection } from 'three';
 import { RaycasterEventListener } from './threejs/RaycasterEventListener';
-import { IStlAnnotation } from '../../../vsc/project/model/StlInfo';
-import { AnnotationItemComponent } from './AnnotationItemComponent';
+import { IStlAnnotation, AnnotationItemComponent } from './AnnotationItemComponent';
 import { StlViewerContext } from './threejs/StlViewerContext';
 
 const html = htm.bind(h);
 
 export class AnnotationsComponent extends Component<IAnnotationsComponentProps, IAnnotationsComponentState> {
-    private _raycastListener: RaycasterEventListener;
+    private _raycastListener?: RaycasterEventListener;
 
     public componentWillMount() {
         this.setState({ annotationList: this.props.annotationList });
@@ -23,7 +21,9 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
     }
 
     public componentWillUnmount() {
-        this._raycastListener.dispose();
+        if(this._raycastListener !== undefined){
+            this._raycastListener.dispose();
+        }        
     }
 
     public render() {
@@ -45,7 +45,7 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         return css``;
     }
 
-    private onIntersection(x: number, y:number, intersection: THREE.Intersection): void {
+    private onIntersection(x: number, y:number, intersection: Intersection): void {
         if(this.props.showAnnotations) {
             let annotationList = this.state.annotationList;
             let id = annotationList.length === 0
@@ -91,14 +91,14 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
     }
 }
 
-export interface IAnnotationsComponentProps {
+interface IAnnotationsComponentProps {
     annotationList: Array<IStlAnnotation>;
     showAnnotations: boolean;
     stlViewerContext: StlViewerContext;
     onAnnotationListChanged: (annotationList: Array<IStlAnnotation>) => void;
 }
 
-export interface IAnnotationsComponentState {
+interface IAnnotationsComponentState {
     annotationList: Array<IStlAnnotation>;
     activeAnnotation: number;
 }

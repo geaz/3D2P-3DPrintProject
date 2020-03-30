@@ -1,12 +1,12 @@
-import * as THREE from 'three';
+import { WebGLRenderer, Scene, Camera, Mesh } from 'three';
 
 export class StlViewerContext {
     public static STLMESH_NAME: string = 'STL Mesh';
 
     constructor(
-        public renderer: THREE.WebGLRenderer,
-        public scene: THREE.Scene,
-        public camera: THREE.Camera
+        public renderer: WebGLRenderer,
+        public scene: Scene,
+        public camera: Camera
     ) { }
 
     public addStlLoadedListener(callback: () => void) : void {
@@ -17,7 +17,7 @@ export class StlViewerContext {
         this.scene.removeEventListener('stlLoaded', callback);
     }
 
-    get StlMesh(): THREE.Mesh {
-        return <THREE.Mesh>this.scene.getObjectByName(StlViewerContext.STLMESH_NAME);
+    get StlMesh(): Mesh {
+        return <Mesh>this.scene.getObjectByName(StlViewerContext.STLMESH_NAME);
     }
 }

@@ -1,13 +1,13 @@
 import { h, Component, render } from 'preact';
 import htm from 'htm';
 
-import { DEFAULT_STL_COLOR, IStlAnnotation } from '../vsc/project/model/StlInfo';
-import { StlViewerComponent } from './components/stlViewer/StlViewerComponent';
-import { AnnotationsComponent } from './components/stlViewer/AnnotationsComponent';
-import { ConfigComponent, IConfigDescription, ConfigType } from './components/ConfigComponent';
-import { StlViewerContext } from './components/stlViewer/threejs/StlViewerContext';
+import { DEFAULT_STL_COLOR } from '../vsc/project/model/StlInfo';
+import { 
+    StlViewerComponent, AnnotationsComponent, ConfigComponent, 
+    IConfigDescription, ConfigType, StlViewerContext, IStlAnnotation
+} from '3d2p.preact.components';
 
-declare var acquireVsCodeApi;
+declare var acquireVsCodeApi: any;
 const html = htm.bind(h);
 
 class App extends Component<{}, AppState> {
@@ -16,7 +16,7 @@ class App extends Component<{}, AppState> {
     private _configDescription = new Array<IConfigDescription>();
 
     private _config: any;
-    private _stlViewerComponent: StlViewerComponent;
+    private _stlViewerComponent?: StlViewerComponent;
 
     constructor() {
         super();
@@ -43,7 +43,7 @@ class App extends Component<{}, AppState> {
                     annotationList=${this.state.annotationList}
                     showAnnotations=${this.state.showAnnotations}
                     stlViewerContext=${this.state.stlViewerContext}
-                    onAnnotationListChanged=${(list) => this.onStlInfoChanged('annotationList', list)} />`;
+                    onAnnotationListChanged=${(list: Array<IStlAnnotation>) => this.onStlInfoChanged('annotationList', list)} />`;
         }
 
         return html
@@ -52,7 +52,7 @@ class App extends Component<{}, AppState> {
                 config=${this._config} 
                 configDescription=${this._configDescription}
                 onChange=${this.onStlInfoChanged.bind(this)} />
-            <${StlViewerComponent} ref=${sc => this._stlViewerComponent = sc}
+            <${StlViewerComponent} ref=${(sc: StlViewerComponent) => this._stlViewerComponent = sc}
                 color=${this.state.color} 
                 stlFilePath="${this.state.stlFilePath}"
                 onViewerInitiated=${this.onViewerInitiated.bind(this)} />`;
@@ -68,7 +68,7 @@ class App extends Component<{}, AppState> {
                 this._config.color = DEFAULT_STL_COLOR;
                 this.onStlInfoChanged('color', DEFAULT_STL_COLOR); },
             resetCamera: () => {
-                this._stlViewerComponent.resetCamera();
+                this._stlViewerComponent!.resetCamera();
             }
         };
         this._configDescription.push(<IConfigDescription>{ property: 'color', type: ConfigType.Color });
@@ -122,4 +122,4 @@ interface AppState {
     stlViewerContext: StlViewerContext;
 }
 
-render(html`<${App}/>`, document.getElementById('app'));
+render(html`<${App}/>`, document.getElementById('stl-viewer-app')!);

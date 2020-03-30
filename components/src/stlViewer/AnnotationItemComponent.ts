@@ -3,17 +3,25 @@ import { css } from 'emotion'
 import htm from 'htm';
 
 import md from 'markdown-it';
-import * as THREE from 'three';
+import { WebGLRenderer, CanvasTexture, Sprite, SpriteMaterial, Raycaster, Camera,
+        Vector2, Vector3, Group, Material, Geometry, BufferGeometry, Scene } from 'three';
 import { StlViewerContext } from './threejs/StlViewerContext';
-import { IStlAnnotation } from '../../../vsc/project/model/StlInfo';
 
 const html = htm.bind(h);
 
+export interface IStlAnnotation {
+    id: number;
+    x: number;
+    y: number;
+    z: number;
+    text: string;
+}
+
 export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps, IAnnotationItemComponentState> {
     private _mdRenderer = new md();
-    private _sprite: THREE.Sprite;
-    private _textareaElement: HTMLElement;
-    private _numberContainerElement: HTMLElement;
+    private _sprite?: Sprite;
+    private _textareaElement?: HTMLElement;
+    private _numberContainerElement?: HTMLElement;
     private _initHandler: () => void = this.initDepthSprite.bind(this);
 
     public componentWillMount() {
@@ -27,6 +35,10 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     }
 
     public componentDidUpdate() {
+        if(this._sprite === undefined) {
+            throw 'Annotation Item was not initialized correctly during mount phase!';
+        }
+
         this._textareaElement?.focus();
         this._sprite.position.set(this.props.annotation.x, this.props.annotation.y, this.props.annotation.z);
     }
@@ -44,8 +56,8 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             annotationBox = html
                 `<div class="annotation">
                     ${this.state.isEditMode && html
-                        `<textarea placeholder="Annotation" oninput=${(e) => this.props.annotation.text = e.target.value}
-                        ref=${(textarea) => { this._textareaElement = textarea; }}>${this.props.annotation.text}</textarea>
+                        `<textarea placeholder="Annotation" oninput=${(e: any) => this.props.annotation.text = e.target.value}
+                        ref=${(textarea: HTMLElement) => { this._textareaElement = textarea; }}>${this.props.annotation.text}</textarea>
                         <div class="button-container">
                             <div class="button" onclick=${this.onAnnotationSaved.bind(this)}>Save</div>
                             <div class="button" onclick=${this.onAnnotationDeleted.bind(this)}>Delete</div>
@@ -64,7 +76,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         return html
             `<div className=${this.css()}>
                 <div class="number-container" 
-                ref=${(numberContainer) => { this._numberContainerElement = numberContainer; }}
+                ref=${(numberContainer: HTMLElement) => { this._numberContainerElement = numberContainer; }}
                 onclick="${this.onNumberClicked.bind(this)}">
                     <div class="number">${this.props.index + 1}</div>
                 </div>
@@ -78,13 +90,16 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             canvas.width = 64;
             canvas.height = 64;
 
-            let ctx = canvas.getContext('2d');
+            let ctx : CanvasRenderingContext2D | null = canvas.getContext('2d');
+            if(ctx === null) {
+                throw 'Couldnt get canvas context!';
+            }
             ctx.fillRect(0, 0, 64, 64);
 
-            let numberTexture = new THREE.CanvasTexture(canvas);
-            let spriteMaterial = new THREE.SpriteMaterial({ map: numberTexture, opacity: 0 });
+            let numberTexture = new CanvasTexture(canvas);
+            let spriteMaterial = new SpriteMaterial({ map: numberTexture, opacity: 0 });
 
-            this._sprite = new THREE.Sprite(spriteMaterial);
+            this._sprite = new Sprite(spriteMaterial);
             this._sprite.name = this.Name;
             this._sprite.onBeforeRender = this.checkDepth.bind(this);
             this._sprite.position.set(this.props.annotation.x, this.props.annotation.y, this.props.annotation.z);
@@ -93,14 +108,16 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         }
     }
 
-    private checkDepth(renderer : THREE.WebGLRenderer, scene, camera, geometry, material, group): void {
+    private checkDepth(renderer : WebGLRenderer, scene: Scene, camera: Camera, 
+                        geometry: Geometry | BufferGeometry, material: Material, 
+                        group: Group): void {
         if(this.ShouldShow) {
             let devicePos = this.DevicePos;
-            let raycaster = new THREE.Raycaster();
+            let raycaster = new Raycaster();
             raycaster.setFromCamera({x: devicePos.x, y: devicePos.y}, camera);
 
             let numberVisible = true;
-            let intersections = raycaster.intersectObjects([this.props.stlViewerContext.StlMesh, this._sprite], true);        
+            let intersections = raycaster.intersectObjects([this.props.stlViewerContext.StlMesh, this._sprite!], true);        
             if(intersections.length > 0) {
                 let obj1 = intersections[0];
                 let obj2 = intersections[1];
@@ -122,7 +139,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             (<HTMLElement>this.base).style.left = (screenPos.x - 16) +'px';
             (<HTMLElement>this.base).style.top = (screenPos.y - 16)+'px';
             (<HTMLElement>this.base).style.opacity = numberVisible ? '1': '0.2';
-            this._numberContainerElement.style.zIndex = numberVisible ? '1': '0';
+            this._numberContainerElement!.style.zIndex = numberVisible ? '1': '0';
         }
         else {            
             (<HTMLElement>this.base).style.visibility = 'hidden';
@@ -160,21 +177,27 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         devicePos.y >= -0.90 && devicePos.y <= 0.90;
     }
 
-    get ScreenPos(): THREE.Vector2 {
+    get ScreenPos(): Vector2 {
         let boundingBox = this.props.stlViewerContext.renderer.domElement.getBoundingClientRect();
         var width = boundingBox.width, height = boundingBox.height;
         var widthHalf = width / 2, heightHalf = height / 2;
 
         let devicePos = this.DevicePos;
-        return new THREE.Vector2(( devicePos.x * widthHalf ) + widthHalf, -( devicePos.y * heightHalf ) + heightHalf);
+        return new Vector2(( devicePos.x * widthHalf ) + widthHalf, -( devicePos.y * heightHalf ) + heightHalf);
     }
 
-    get DevicePos(): THREE.Vector3 {
+    get DevicePos(): Vector3 {
+        if(this._sprite === undefined) {
+            throw 'Annotation Item was not initialized correctly during mount phase!';
+        }
         var pos = this._sprite.position.clone();
         return pos.project(this.props.stlViewerContext.camera);
     }
 
-    get WorldPos(): THREE.Vector3 {
+    get WorldPos(): Vector3 {
+        if(this._sprite === undefined) {
+            throw 'Annotation Item was not initialized correctly during mount phase!';
+        }
         return this._sprite.position;
     }
 

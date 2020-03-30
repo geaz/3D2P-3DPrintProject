@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+import { IStlAnnotation } from '3d2p.preact.components';
 import { FileListItem } from "../fileList/FileListItem";
 
 export const DEFAULT_STL_COLOR: number = 0xF58026;
@@ -26,12 +27,4 @@ export class StlInfo extends FileListItem {
 export enum StlStatus {
     WIP = "WIP",
     Done = "Done",
-}
-
-export interface IStlAnnotation {
-    id: number;
-    x: number;
-    y: number;
-    z: number;
-    text: string;
 }

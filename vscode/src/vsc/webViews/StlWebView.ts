@@ -16,7 +16,7 @@ export class StlWebView {
         );
 
         const webViewApp = this._panel.webview.asWebviewUri(
-            vscode.Uri.file(path.join(__filename, '..', '..', '..', 'views', 'StlWebViewApp.js')));
+            vscode.Uri.file(path.join(__filename, '..', '..', '..', 'apps', 'StlWebViewApp.js')));
         const stlFilePathViewUri = this._panel.webview.asWebviewUri(vscode.Uri.file(stlInfo.getAbsolutePath()));
 
         this._panel.webview.html = `<!DOCTYPE html>
@@ -26,7 +26,7 @@ export class StlWebView {
             </head>
             
             <body style="padding:0;margin:0;height:100%;display:flex;">
-                <div id="app" style="flex-grow: 1;display: flex;"></div>
+                <div id="stl-viewer-app" style="flex-grow: 1;display: flex;"></div>
                 <script src="${webViewApp}"></script>
             </body>
             </html>`;

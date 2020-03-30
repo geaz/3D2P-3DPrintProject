@@ -16,6 +16,6 @@
 	"exclude": [
 		"node_modules",
 		".vscode-test",
-		"src/views"
+		"src/apps/*"
 	]
 }
