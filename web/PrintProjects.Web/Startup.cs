@@ -1,7 +1,9 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -14,17 +16,17 @@ namespace PrintProjects.Web
     {
         public Startup(IConfiguration configuration)
         {
+            Settings = new Settings();
             Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var settings = new Settings();
             new ConfigureFromConfigurationOptions<Settings>(Configuration.GetSection("3D2P"))
-                .Configure(settings);
+                .Configure(Settings);
 
-            services.AddSingleton(settings);
-            services.AddSingleton<IDatabase>(new MongoDatabase(settings.ConnectionString, settings.Database));
+            services.AddSingleton(Settings);
+            services.AddSingleton<IDatabase>(new MongoDatabase(Settings.ConnectionString, Settings.Database));
 
             services.AddRazorPages(); 
             services.AddControllers();
@@ -46,14 +48,19 @@ namespace PrintProjects.Web
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Settings.ProjectTargetPath),
+                RequestPath = "/ProjectFiles"
+            });
             app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "3D2P API V1");
             });
             app.UseEndpoints(endpoints =>
             {
@@ -62,6 +69,7 @@ namespace PrintProjects.Web
             });
         }
 
-        public IConfiguration Configuration { get; }
+        public Settings Settings { get; }
+        public IConfiguration Configuration { get;}
     }
 }
