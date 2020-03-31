@@ -2,10 +2,9 @@
   "name": "3d2p.web",
   "version": "0.5.0",
   "description": "The 3D2P website",
-  "main": "index.js",
   "scripts": {
     "test": "dotnet test ./Tests/PrintProject.Core.Tests/PrintProject.Core.Tests.csproj",
-    "dev": "npx concurrently \"npm run dev:sass\" \"npm run dev:server\"",
+    "dev": "npx -c \"concurrently \\\"npm run dev:sass\\\" \\\"npm run dev:server\\\"\"",
     "dev:sass": "npx node-sass -w ./PrintProjects.Web/wwwroot/sass/ -o ./PrintProjects.Web/wwwroot/css/",
     "dev:server": "dotnet watch --project ./PrintProjects.Web/PrintProjects.Web.csproj run",
     "build": "npx npm-run-all build:*",
