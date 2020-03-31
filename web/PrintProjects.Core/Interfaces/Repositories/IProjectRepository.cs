@@ -5,6 +5,7 @@ namespace PrintProjects.Core.Interfaces.Repositories
 {
     public interface IProjectRepository : IRepository<Project>
     {
-        Task<Project> Get(string shortId);
+        Task<Project> GetByRepositoryUrl(string repositoryUrl);
+        Task<Project> GetByShortId(string shortId);
     }
 }

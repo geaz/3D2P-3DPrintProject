@@ -15,7 +15,6 @@ namespace PrintProjects.Core.Tests.Model
             //Act
             var project = Project.Create
             (
-                name: "simplyRetro", 
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
                 rawRepositoryUrl: null,
                 downloadBasePath: null
@@ -32,9 +31,8 @@ namespace PrintProjects.Core.Tests.Model
             //Act
             var project = Project.Create
             (
-                name: "simplyRetro", 
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master",
+                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master/",
                 downloadBasePath: "C:\\NOTTHERE"
             );
 
@@ -51,30 +49,26 @@ namespace PrintProjects.Core.Tests.Model
             //Act
             var project = Project.Create
             (
-                name: "simplyRetro", 
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master",
+                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master/",
                 downloadBasePath: downloadBasePath
             );
 
             //Assert
-            Assert.IsFalse(string.IsNullOrEmpty(project.Name));
             Assert.IsFalse(string.IsNullOrEmpty(project.ShortId));
             Assert.IsTrue(Directory.Exists(project.DataPath));
             Assert.IsNotNull(project.CodeRepository);
         }
-        
+
         [TestMethod]
-        [ExpectedException(typeof(ModelException))]
-        public void ShouldThrowExceptionOnNonExistingProjectFile()
+        public void ShouldUpdateProjectSuccessfully()
         {
             //Arrange
             var downloadBasePath = Path.GetTempPath();
             var project = Project.Create
             (
-                name: "3D2P - 3D Print Projects", 
-                repositoryUrl: "https://github.com/geaz/3D2P-3DPrintProjects",
-                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/3D2P-3DPrintProjects/master",
+                repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
+                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master/",
                 downloadBasePath: downloadBasePath
             );
 
@@ -82,7 +76,10 @@ namespace PrintProjects.Core.Tests.Model
             project.Update();
 
             //Assert
-            //Exception thrown
+            Assert.IsTrue(Directory.Exists(project.DataPath));
+            Assert.IsTrue(Directory.GetFiles(project.DataPath).Length > 0);
+            Assert.IsFalse(string.IsNullOrEmpty(project.Readme));
+            Assert.IsFalse(string.IsNullOrEmpty(project.License));
         }
     }
 }

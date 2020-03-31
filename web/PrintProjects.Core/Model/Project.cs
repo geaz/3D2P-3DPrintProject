@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PrintProjects.Core.Interfaces;
 
 namespace PrintProjects.Core.Model
 {
+    public sealed class ProjectStatus
+    {
+        public static readonly string WIP = "WIP";
+        public static readonly string DONE = "Done";
+    }
+
     /// <summary>
     /// The Project class represents a git based 3D Print Project.
     /// It has a private constructor and the crucial properties have private setters.
@@ -12,16 +20,12 @@ namespace PrintProjects.Core.Model
     /// </summary>
     public sealed class Project : IEntity
     {
-        public static string ProjectFileName = "3D2P.json";
+        public static string PROJECT_FILE_NAME = "3D2P.json";
 
         private Project() { }
 
-        public static Project Create(
-            string name, string repositoryUrl, 
-            string rawRepositoryUrl, string downloadBasePath)
+        public static Project Create(string repositoryUrl, string rawRepositoryUrl, string downloadBasePath)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("Please provide a name for the project!");
             if (string.IsNullOrEmpty(repositoryUrl))
                 throw new ArgumentNullException("Please provide a repository url!");
             if (string.IsNullOrEmpty(rawRepositoryUrl))
@@ -33,12 +37,11 @@ namespace PrintProjects.Core.Model
 
             var project = new Project()
             {
-                Name = name,
                 CodeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl)
             };
             project.ShortId = project.Id.GetShortGuid();
             project.DataPath = Path.Combine(downloadBasePath, project.ShortId);
-            
+
             if(!Directory.Exists(project.DataPath))
                 Directory.CreateDirectory(project.DataPath);
 
@@ -50,10 +53,22 @@ namespace PrintProjects.Core.Model
         /// </summary>
         public void Update()
         {
-            if(!CodeRepository.ProjectFileExists())
-                throw new ModelException($"The project file was not found in the repository!");
+            var projectFile = CodeRepository.DownloadProjectFile(DataPath);
 
+            Name = projectFile.Name;
+            Status = projectFile.Status;
+            StlInfoList = projectFile.StlInfoList;
+            GalleryInfoList = projectFile.GalleryInfoList;
             LastUpdate = DateTime.Now;
+
+            CodeRepository.DownloadMultiple(StlInfoList.Select(s => s.RelativePath).ToList(), DataPath);
+            CodeRepository.DownloadMultiple(GalleryInfoList.Select(s => s.RelativePath).ToList(), DataPath);
+
+            if(CodeRepository.RemoteFileExists("README")) Readme = CodeRepository.ReadRemoteFile("README", DataPath);
+            else if(CodeRepository.RemoteFileExists("README.md")) Readme = CodeRepository.ReadRemoteFile("README.md", DataPath);
+
+            if(CodeRepository.RemoteFileExists("LICENSE")) License = CodeRepository.ReadRemoteFile("LICENSE", DataPath);
+            else if(CodeRepository.RemoteFileExists("LICENSE.md")) License = CodeRepository.ReadRemoteFile("LICENSE.md", DataPath);
         }
 
         public Guid Id { get; private set; } = Guid.NewGuid();
@@ -62,11 +77,17 @@ namespace PrintProjects.Core.Model
 
         public string Name { get; private set; }
 
+        public string Status { get; private set; }
+
         public string Readme { get; private set; }
 
         public string License { get; private set; }
 
         public string DataPath {get; private set; }
+
+        public List<StlInfo> StlInfoList { get; private set; }
+
+        public List<GalleryInfo> GalleryInfoList { get; private set; }
 
         public DateTime LastUpdate { get; private set; }
 

@@ -18,11 +18,16 @@ namespace PrintProjects.Mongo.Repositories
             _collection = collection;
         }
 
-        public async Task<ReadOnlyCollection<T>> GetPaged(int page)
+        public async Task<long> Count()
+        {
+            return await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
+        }
+
+        public virtual async Task<ReadOnlyCollection<T>> GetPaged(int page)
         {
             var result = await _collection.Find(x => true)
-                    .Skip(page * 50)
                     .Limit(50)
+                    .Skip(page * 50)
                     .ToListAsync();
             return new ReadOnlyCollection<T>(result.Cast<T>().ToList());
         }

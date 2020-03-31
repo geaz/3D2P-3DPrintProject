@@ -1,15 +1,35 @@
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+
 namespace PrintProjects.Core.Model
 {
-    public class ProjectFile
+    public sealed class ProjectFile
     {
-        public ProjectFile(string projectFilePath)
+        public static ProjectFile Load(string projectFilePath)
         {
+            if(!File.Exists(projectFilePath))
+                throw new ModelException("Given project file does not exist!");
 
+            return JsonConvert.DeserializeObject<ProjectFile>(File.ReadAllText(projectFilePath));
         }
 
-        private void Load()
-        {
-            
-        }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("repositoryUrl")]
+        public string RepositoryUrl { get; set; }
+
+        [JsonProperty("rawRepositoryUrl")]
+        public string RawRepositoryUrl { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("stls")]
+        public List<StlInfo> StlInfoList { get; set; } = new List<StlInfo>();
+
+        [JsonProperty("gallery")]
+        public List<GalleryInfo> GalleryInfoList { get; set; } = new List<GalleryInfo>();
     }
 }
