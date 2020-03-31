@@ -1,0 +1,109 @@
+@import '../var';
+
+.done {
+    border-top: 2px solid #008000;
+}
+
+.wip {    
+    border-top: 2px solid #e2d300;
+}
+
+.project {
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    background: #f9f9f9;
+
+    .header, .footer {
+        padding: 15px;
+    }
+
+    .title {
+        margin:0;
+        display:block;
+        overflow: hidden;
+        font-size: 1.5rem;
+        white-space: nowrap;
+        text-decoration: none;
+        text-overflow: ellipsis;
+    }
+
+    .header {
+        small {
+            font-size: 70%;
+            color: #777777;
+        }
+    }
+
+    .footer {
+        i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .info {
+            font-size: 80%;
+        }
+    }
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+
+    .pagination {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        border-radius: 2px;
+        background: white;
+        border: 1px solid black;
+
+        .active {
+            color: $primary-color;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 5px 10px;     
+            border-left: 1px solid black;
+        
+            &:first-child {
+                border: 0;
+            }
+        }
+    }
+}
+
+.flex-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px 0 15px -15px;
+}
+
+.flex-cell {
+    flex: 1;
+    max-width: 25%;
+    padding: 15px 0 0 15px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 375px) {
+    .flex-cell {
+        flex: 0 0 100%;
+    }
+}
+
+@media (min-width: 650px) {
+    .flex-cell {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 960px) {
+    .flex-cell {
+        flex: 1;
+        max-width: 25%;
+    }
+}

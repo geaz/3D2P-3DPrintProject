@@ -23,7 +23,7 @@ namespace PrintProjects.Web.Pages
         {
             var result = (IActionResult) RedirectToPage("/Error", new { code = "404" });
 
-            Project = await _database.ProjectRepository.Get(shortId);
+            Project = await _database.ProjectRepository.GetByShortId(shortId);
             if(Project != null)
             {
                 ReadmeHtml = Markdown.ToHtml(Project.Readme);

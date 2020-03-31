@@ -22,11 +22,11 @@ namespace PrintProjects.Mongo.Repositories
             return await _collection.Find(f => f.ShortId == shortId).FirstOrDefaultAsync();
         }
 
-        public override async Task<ReadOnlyCollection<Project>> GetPaged(int page)
+        public override async Task<ReadOnlyCollection<Project>> GetPaged(int page, int pageSize)
         {
             var result = await _collection.Find(x => true)
-                    .Limit(2)
-                    .Skip(page * 2)
+                    .Limit(pageSize)
+                    .Skip(page * pageSize)
                     .SortByDescending(p => p.LastUpdate)
                     .ToListAsync();
             return new ReadOnlyCollection<Project>(result.ToList());

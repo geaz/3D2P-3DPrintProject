@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 3D2P - 3D Print Projects</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Styles", false)
 </head>
 <body>
     <header>
-        <nav class="container">
-            <div class="row">
-                <a id="logo" asp-page="/Index"><img src="~/logo.svg" alt="3D2P" /></a>
-            </div>            
-        </nav>
+        <div class="container">            
+            <a id="logo" asp-page="/Index"><img src="~/logo.svg" alt="3D2P" /></a>       
+        </div>
     </header>
     <main>
         <div class="container">
