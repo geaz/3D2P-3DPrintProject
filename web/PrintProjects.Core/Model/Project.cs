@@ -1,108 +1,75 @@
-﻿using PrintProjects.Core.Interfaces;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.IO;
-using System.Linq;
+using PrintProjects.Core.Interfaces;
 
 namespace PrintProjects.Core.Model
 {
     /// <summary>
     /// The Project class represents a git based 3D Print Project.
     /// It has a private constructor and the crucial properties have private setters.
-    /// By using static 'Create' and 'Load' methods is is ensured, that a constructed
+    /// By using static 'Create' and 'Load' methods it is ensured, that a constructed
     /// project object is always valid.
     /// </summary>
-    sealed public class Project : IEntity
+    public sealed class Project : IEntity
     {
-        private readonly GitClient _gitClient = new GitClient();
+        public static string ProjectFileName = "3D2P.json";
 
         private Project() { }
 
-        public static Project Create(string name, string repositoryUrl, string repositoryBasePath)
+        public static Project Create(
+            string name, string repositoryUrl, 
+            string rawRepositoryUrl, string downloadBasePath)
         {
-            if (name == null)
+            if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("Please provide a name for the project!");
             if (string.IsNullOrEmpty(repositoryUrl))
                 throw new ArgumentNullException("Please provide a repository url!");
-            if (string.IsNullOrEmpty(repositoryBasePath))
-                throw new ArgumentNullException("Please provide a base path!");
-            if (!Directory.Exists(repositoryBasePath))
-                throw new ModelException("The given repository base path was not found!");
+            if (string.IsNullOrEmpty(rawRepositoryUrl))
+                throw new ArgumentNullException("Please provide a raw repository url!");
+            if (string.IsNullOrEmpty(downloadBasePath))
+                throw new ArgumentNullException("Please provide a base path for the project download!");
+            if (!Directory.Exists(downloadBasePath))
+                throw new ModelException("The given download base path was not found!");
 
             var project = new Project()
             {
                 Name = name,
-                RepositoryUrl = repositoryUrl
+                CodeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl)
             };
             project.ShortId = project.Id.GetShortGuid();
-            project.RepositoryPath = Path.Combine(repositoryBasePath, project.ShortId);
+            project.DataPath = Path.Combine(downloadBasePath, project.ShortId);
+            
+            if(!Directory.Exists(project.DataPath))
+                Directory.CreateDirectory(project.DataPath);
 
             return project;
         }
 
         /// <summary>
-        /// Clones/Pulls the project from the repository url.
+        /// Downloads and processes the 3d2p.json of the given repository.
         /// </summary>
         public void Update()
         {
-            var repositoryDirectory = new DirectoryInfo(RepositoryPath);
-            if (repositoryDirectory.Exists)
-            {
-                _gitClient.Pull(RepositoryPath);
-            }
-            else
-            {
-                repositoryDirectory.Create();
-                _gitClient.Clone(RepositoryPath, RepositoryUrl);
-            }
-            ParseProjectFiles();
+            if(!CodeRepository.ProjectFileExists())
+                throw new ModelException($"The project file was not found in the repository!");
 
-            LatestCommitInfos = _gitClient.GetLatestCommitInfos(RepositoryPath, 5);
-            LastCommit = _gitClient.GetLastCommitDate(RepositoryPath);
             LastUpdate = DateTime.Now;
-        }
-
-        private void ParseProjectFiles()
-        {
-            var repositoryDirectory = new DirectoryInfo(RepositoryPath);
-
-            var licenseFile = repositoryDirectory.GetFiles("license.md", SearchOption.TopDirectoryOnly).SingleOrDefault();
-            License = licenseFile != null
-                ? File.ReadAllText(licenseFile.FullName)
-                : string.Empty;
-
-            var readmeFile = repositoryDirectory.GetFiles("readme.md", SearchOption.TopDirectoryOnly).SingleOrDefault();
-            Readme = readmeFile != null
-                ? File.ReadAllText(readmeFile.FullName)
-                : string.Empty;
         }
 
         public Guid Id { get; private set; } = Guid.NewGuid();
 
         public string ShortId { get; private set; }
 
-        public string RepositoryPath { get; private set; }
-
         public string Name { get; private set; }
-
-        public string RepositoryUrl { get; private set; }
 
         public string Readme { get; private set; }
 
         public string License { get; private set; }
 
-        public Guid UserId { get; private set; }
+        public string DataPath {get; private set; }
 
         public DateTime LastUpdate { get; private set; }
 
-        public DateTime LastCommit { get; private set; }
-
-        public ReadOnlyCollection<CommitInfo> LatestCommitInfos { get; private set; }
-
-        public DirectoryInfo ImageDirectory => new DirectoryInfo(Path.Combine(RepositoryPath, "images"));
-
-        public DirectoryInfo CadDirectory => new DirectoryInfo(Path.Combine(RepositoryPath, "cad"));
-
-        public DirectoryInfo StlDirectory => new DirectoryInfo(Path.Combine(RepositoryPath, "stl"));
+        public CodeRepository CodeRepository { get; private set; }
     }
 }

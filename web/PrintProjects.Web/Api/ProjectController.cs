@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PrintProjects.Core.Interfaces;
@@ -22,21 +23,28 @@ namespace PrintProjects.Web.Api
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateProject(string name, string repositoryUrl)
+        public async Task<IActionResult> CreateProject(string name, string repositoryUrl, string rawRepositoryUrl)
         {
+            IActionResult result = Ok();
+            try
+            {
+                var project = Project.Create
+                (
+                    name: name,
+                    repositoryUrl: repositoryUrl,
+                    rawRepositoryUrl: rawRepositoryUrl,
+                    downloadBasePath: _settings.RepositoryTargetPath
+                );
+                project.Update();
 
-            var project = Project.Create
-            (
-                name: name,
-                repositoryUrl: repositoryUrl,
-                repositoryBasePath: _settings.RepositoryTargetPath
-            );
-            project.Update();
-
-            _database.ProjectRepository.Insert(project);
-            await _database.Commit();
-
-            return Ok();
+                _database.ProjectRepository.Insert(project);
+                await _database.Commit();
+            }
+            catch(Exception ex)
+            {
+                result = BadRequest(ex.Message);
+            }
+            return result;
         }
     }
 }

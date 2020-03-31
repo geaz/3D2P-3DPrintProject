@@ -10,7 +10,7 @@ The **vscode** folder contains the whole code for the Visual Studio Code Extensi
 
 1. Execute *'npm install'* inside the **components** and **vscode** folder.
 2. Execute *'npm run compile:apps'* inside the **vscode** folder.
-3. Open the **vscode** folder in Visual Studio Code and press *F5* to run and debug the extension in a ned VS Code instance.
+3. Open the **vscode** folder in Visual Studio Code and press *F5* to run and debug the extension in a new VS Code instance.
 
 ### Server
 

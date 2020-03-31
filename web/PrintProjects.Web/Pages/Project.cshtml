@@ -14,14 +14,6 @@
             @Html.Raw(Model.ReadmeHtml)
         </article>
         <aside>
-            <div>
-                @foreach (var commitInfo in Model.Project.LatestCommitInfos)
-                {
-                    <div>
-                        <p>@commitInfo.Message</p>
-                    </div>
-                }
-            </div>
         </aside>
     </div>
 </section>

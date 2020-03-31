@@ -1,6 +1,7 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PrintProjects.Core.Model;
+using System;
 using System.IO;
+using PrintProjects.Core.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PrintProjects.Core.Tests.Model
 {
@@ -8,26 +9,80 @@ namespace PrintProjects.Core.Tests.Model
     public class ProjectTests
     {
         [TestMethod]
-        public void ShouldCloneProjectSuccessfully()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ShouldThrowExceptionOnNullArguments()
         {
-            //Arrange
-            var clonePath = Path.GetTempPath();
+            //Act
             var project = Project.Create
             (
                 name: "simplyRetro", 
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                repositoryBasePath: clonePath
+                rawRepositoryUrl: null,
+                downloadBasePath: null
+            );
+
+            //Assert
+            //Exception thrown
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ModelException))]
+        public void ShouldThrowExceptionOnNonExistingBasePath()
+        {
+            //Act
+            var project = Project.Create
+            (
+                name: "simplyRetro", 
+                repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
+                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master",
+                downloadBasePath: "C:\\NOTTHERE"
+            );
+
+            //Assert
+            //Exception thrown
+        }
+
+        [TestMethod]
+        public void ShouldCreateProjectSuccessfully()
+        {
+            //Arrange
+            var downloadBasePath = Path.GetTempPath();
+
+            //Act
+            var project = Project.Create
+            (
+                name: "simplyRetro", 
+                repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
+                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master",
+                downloadBasePath: downloadBasePath
+            );
+
+            //Assert
+            Assert.IsFalse(string.IsNullOrEmpty(project.Name));
+            Assert.IsFalse(string.IsNullOrEmpty(project.ShortId));
+            Assert.IsTrue(Directory.Exists(project.DataPath));
+            Assert.IsNotNull(project.CodeRepository);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ModelException))]
+        public void ShouldThrowExceptionOnNonExistingProjectFile()
+        {
+            //Arrange
+            var downloadBasePath = Path.GetTempPath();
+            var project = Project.Create
+            (
+                name: "3D2P - 3D Print Projects", 
+                repositoryUrl: "https://github.com/geaz/3D2P-3DPrintProjects",
+                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/3D2P-3DPrintProjects/master",
+                downloadBasePath: downloadBasePath
             );
 
             //Act
             project.Update();
 
             //Assert
-            Assert.IsNotNull(project.LastCommit);
-            Assert.IsNotNull(project.LatestCommitInfos);
-            Assert.IsTrue(Directory.Exists(project.RepositoryPath));
-            Assert.IsFalse(string.IsNullOrEmpty(project.Readme));
-            Assert.IsFalse(string.IsNullOrEmpty(project.License));
+            //Exception thrown
         }
     }
 }

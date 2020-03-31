@@ -5,5 +5,6 @@ node_modules
 *.vsix
 components/lib
 web/PrintProjects.Web/wwwroot/css/
+web/Tests/**/TestResults
 bin
 obj
