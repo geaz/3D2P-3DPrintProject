@@ -50,10 +50,7 @@ class App extends Component<{}, AppState> {
 
     private css(): string {
         return css
-            `display: flex;
-            height: 450px;
-            
-            .gallery-image {
+            `.gallery-image {
                 text-align: center;
                 background: #f7f7f7;
                 border-left: 1px solid rgba(0,0, 0, 0.05);

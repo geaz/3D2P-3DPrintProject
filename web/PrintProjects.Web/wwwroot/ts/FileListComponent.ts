@@ -19,7 +19,7 @@ export class FileListComponent extends Component<FileListComponentProps> {
             </button>`
         );
         return html
-            `<div className=${this.css()}>
+            `<div className="file-list-component ${this.css()}">
                 ${fileList}
             </div>`;
     }
@@ -32,9 +32,7 @@ export class FileListComponent extends Component<FileListComponentProps> {
 
     private css(): string {
         return css
-            `width: 250px;
-            flex-shrink: 0;
-            overflow-y: auto;
+            `overflow-y: auto;
             overflow-x: hidden;
             background: #f7f7f7;
 

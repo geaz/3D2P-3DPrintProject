@@ -109,11 +109,7 @@ class App extends Component<{}, AppState> {
 
     private css(): string {
         return css
-            `display: flex;
-            height: 450px;
-            
-            .stl-wrapper {
-                flex: 1;
+            `.stl-wrapper {
                 position: relative;
             }
             

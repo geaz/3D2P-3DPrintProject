@@ -9,6 +9,10 @@
     <script>
         window.shortId = '@Model.Project.ShortId';
         window.projectFile = JSON.parse('@Html.Raw(Model.ProjectFileContent)');
+
+        // The Stl Viewer and Gallery are not displayed by default.
+        // It will only be visible on browsers with activated javascript.
+        document.getElementById('js-app').style.display = 'block';
     </script>
     <script src="~/js/GalleryApp.js"></script>
     <script src="~/js/StlViewerApp.js"></script>
@@ -20,19 +24,34 @@
         <small>ID: @Model.Project.ShortId</small>
     </div>
 
-    <div class="data @Model.Project.Status.ToLower()">     
-        <input name="data-tabs" id="tab-button-stls" class="tab-input" type="radio" checked />
-        <label for="tab-button-stls">STLs</label>
+    <noscript>
+        <div class="data @Model.Project.Status.ToLower()">
+            <div class="data-footer">
+                <div class="data-info-item">Please activate Javascript to use the STL Viewer and Gallery.</div>
+                <div class="data-info">
+                    <div class="data-info-item">@Model.Project.LastUpdate.ToShortDateString()</div>
+                    <div class="data-info-item">@Model.Project.Status</div>
+                    <a class="data-info-item" target="_blank" href="@Model.Project.CodeRepository.RepositoryUrl" title="Repository Link">
+                        <i class="fa fa-code-fork" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </noscript>
+
+    <div id="js-app" class="data @Model.Project.Status.ToLower()">     
+        <input name="data-tabs" id="tab-button-stls" class="tab-input desktop" type="radio" checked />
+        <label for="tab-button-stls" class="desktop">STLs</label>
 
         <input name="data-tabs" id="tab-button-gallery" class="tab-input" type="radio" />
         <label for="tab-button-gallery">Gallery</label>
         
-        <div id="tab-stls" class="tab-content">
-            <noscript><div class="noscript">Please activate Javascript to use the STL Viewer.</div></noscript>
+        <div id="tab-stls" class="tab-content desktop">
             <div id="stl-viewer-app"></div>
         </div>
 
         <div id="tab-gallery" class="tab-content">
+            <noscript><div class="noscript">Please activate Javascript to use the Gallery.</div></noscript>
             <div id="gallery-app"></div>
         </div>
 
@@ -45,7 +64,6 @@
                 </a>
             </div>
         </div>
-        
     </div>
 
     <article class="summary">
