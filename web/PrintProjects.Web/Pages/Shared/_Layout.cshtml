@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 3D2P - 3D Print Projects</title>
     <link rel="stylesheet" href="~/css/site.css" />
-    @RenderSection("Styles", false)
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
@@ -23,5 +23,7 @@
             <small>No shitty ads, cookies (f*** cookie banners), 3rd party ressources or tracking.</small>
         </div>
     </footer>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

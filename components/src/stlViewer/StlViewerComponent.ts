@@ -4,7 +4,7 @@ import htm from 'htm';
 
 import { WebGLRenderer, Vector3, Object3D, Scene, BufferGeometry,
         Mesh, MeshPhongMaterial, PerspectiveCamera, 
-        DirectionalLight, AmbientLight, DoubleSide } from 'three';
+        DirectionalLight, AmbientLight, DoubleSide, Vector2 } from 'three';
 
 import { Dimensions } from './threejs/Dimensions';
 // @ts-ignore
@@ -24,31 +24,32 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     private _controls?: OrbitControls;
     private _camera?: PerspectiveCamera;
     private _renderer?: WebGLRenderer;
+    private _resizeHandler: () => void = this.resizeRenderer.bind(this);
 
     public async componentDidMount() {
         this.initScene();
         this._currentStlFilePath = this.props.stlFilePath;
-        this.updateSceneStl(await this.loadStl()); 
+        this.updateSceneStl(await this.loadStl());        
+        window.addEventListener('resize', this._resizeHandler);
     }
 
     public async componentDidUpdate() {
         if(this._currentStlFilePath !== this.props.stlFilePath) {
             this._currentStlFilePath = this.props.stlFilePath;
             this.updateSceneStl(await this.loadStl()); 
+            this.resetCamera();
         }
         if(this._material !== undefined && this._material.color.getHex() !== this.props.color) {
             this._material.color.setHex(this.props.color);
         }
     }
 
-    public render() {
-        return html`<div className="${this.css()}"></div>`;
+    public componentWillUnmount() {        
+        window.removeEventListener('resize', this._resizeHandler);
     }
 
-    public css(): string {
-        return css`
-            flex-grow: 1;
-            background: radial-gradient(#FFFFFF, rgb(80, 80, 80));`;
+    public render() {
+        return html`<div className="${this.css()}"></div>`;
     }
 
     public resetCamera(): void {
@@ -59,9 +60,20 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         let stlDimensions = new Dimensions(this._mesh.geometry);
         let maxDimension = stlDimensions.MaxDimension;
         this._camera.lookAt(new Vector3(0, 0, 0));
-        this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
+        this._camera.position.set(0, maxDimension / 2, maxDimension);
         this._controls.target.set(0, 0, 0);
         this._controls.autoRotate = true;
+    }
+
+    public resizeRenderer(): void {
+        if(this._renderer === undefined || this._camera === undefined) {
+            throw 'Viewer was not initialized correctly!';
+        }
+
+        let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
+        this._camera.aspect = boundingBox.width / boundingBox.height;
+        this._camera.updateProjectionMatrix();
+        this._renderer.setSize(boundingBox.width, boundingBox.height);
     }
 
     private initScene(): void {
@@ -87,7 +99,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         
         let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
 
-        this._renderer.setSize(boundingBox.width, boundingBox.height - 5);
+        this._renderer.setSize(boundingBox.width, boundingBox.height);
         this._camera = new PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);        
         this._camera.lookAt(new Vector3(0, 0, 0));
         
@@ -96,21 +108,9 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._controls.autoRotate = true;
         this._controls.update(); 
 
-        window.addEventListener('resize', () => {            
-            if(this._renderer === undefined || this._camera === undefined) {
-                throw 'Viewer was not initialized correctly!';
-            }
-
-            let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
-            this._camera.aspect = boundingBox.width / boundingBox.height;
-            this._camera.updateProjectionMatrix();
-            this._renderer.setSize(boundingBox.width, boundingBox.height - 5);
-        }, false );
-
         if(this.props.onViewerInitiated !== undefined) {
             this.props.onViewerInitiated(new StlViewerContext(this._renderer, this._scene, this._camera));
         }
-
         this.animate();
     }
 
@@ -162,21 +162,37 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         this._meshParent.add(this._mesh);
 
         let maxDimension = stlDimensions.MaxDimension;
-        this._camera.position.set(0, maxDimension / 2, maxDimension * 2);
+        this._camera.position.set(0, maxDimension / 2, maxDimension);
 
         this._scene.dispatchEvent({ type: 'stlLoaded' });
     } 
 
-    private animate() { 
+    private animate(): void { 
         if(this._renderer === undefined || this._camera === undefined 
             || this._controls === undefined || this._scene === undefined) {
             throw 'Viewer was not initialized correctly!';
+        }
+        
+        // If the viewer is not visible during the initialization,
+        // the renderer couldn't be set to the correct size (display:none boundingbox = 0).
+        // Thats why we check each animation frame, if the renderer was set.
+        let target: Vector2 = new Vector2(0, 0);
+        this._renderer.getSize(target);
+        if(target.width === 0) {
+            this.resizeRenderer();
         }
 
         requestAnimationFrame(this.animate.bind(this));
         this._controls.update();
         this._renderer.render(this._scene, this._camera);
-    };
+    }    
+
+    private css(): string {
+        return css`
+            flex-grow: 1;
+            height: 100%;
+            background: radial-gradient(#FFFFFF, rgb(80, 80, 80));`;
+    }
 }
 
 interface StlViewerProps {

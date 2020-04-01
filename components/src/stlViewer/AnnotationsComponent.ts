@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import { css } from 'emotion'
 import htm from 'htm';
 
 import { Intersection } from 'three';
@@ -11,19 +10,17 @@ const html = htm.bind(h);
 
 export class AnnotationsComponent extends Component<IAnnotationsComponentProps, IAnnotationsComponentState> {
     private _raycastListener?: RaycasterEventListener;
+    private _initHandler: () => void = this.initComponent.bind(this);
 
     public componentWillMount() {
-        this.setState({ annotationList: this.props.annotationList });
-        this._raycastListener = new RaycasterEventListener(
-            this.props.stlViewerContext,
-            StlViewerContext.STLMESH_NAME,
-            this.onIntersection.bind(this));
+        this.props.stlViewerContext.addStlLoadedListener(this._initHandler);
     }
 
     public componentWillUnmount() {
         if(this._raycastListener !== undefined){
             this._raycastListener.dispose();
-        }        
+        }     
+        this.props.stlViewerContext.removeStlLoadedListener(this._initHandler);   
     }
 
     public render() {
@@ -31,6 +28,7 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         if(this.props.showAnnotations) {
             annotationItemList = this.state.annotationList?.map((annotation, index) => {
                 return html`<${AnnotationItemComponent} 
+                    isEditable=${this.props.isEditable}
                     stlViewerContext=${this.props.stlViewerContext} annotation=${annotation}
                     index=${index} active=${this.state.activeAnnotation === index}
                     onClicked=${this.onAnnotationClicked.bind(this)}
@@ -41,12 +39,22 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
         return html`${annotationItemList}`;
     }
 
-    public css(): string {
-        return css``;
+    private initComponent(): void {
+        if(this._raycastListener !== undefined){
+            this._raycastListener.dispose();
+        } 
+        this._raycastListener = new RaycasterEventListener(
+            this.props.stlViewerContext,
+            StlViewerContext.STLMESH_NAME,
+            this.onIntersection.bind(this));
+        this.setState({
+            activeAnnotation: -1, 
+            annotationList: this.props.annotationList 
+        });
     }
 
     private onIntersection(x: number, y:number, intersection: Intersection): void {
-        if(this.props.showAnnotations) {
+        if(this.props.showAnnotations && this.props.isEditable) {
             let annotationList = this.state.annotationList;
             let id = annotationList.length === 0
                 ? 0
@@ -86,15 +94,18 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
                 return;
             }
         });
-        this.props.onAnnotationListChanged(newAnnotationList);
+        if(this.props.onAnnotationListChanged !== undefined) {
+            this.props.onAnnotationListChanged(newAnnotationList);
+        }
         this.setState({ annotationList: newAnnotationList, activeAnnotation: -1 });
     }
 }
 
 interface IAnnotationsComponentProps {
-    annotationList: Array<IStlAnnotation>;
+    isEditable: boolean;
     showAnnotations: boolean;
     stlViewerContext: StlViewerContext;
+    annotationList: Array<IStlAnnotation>;
     onAnnotationListChanged: (annotationList: Array<IStlAnnotation>) => void;
 }
 

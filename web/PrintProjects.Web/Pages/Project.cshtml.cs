@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
-using Markdig;
+﻿using Markdig;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using PrintProjects.Core.Interfaces;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using IO = System.IO;
 using Model = PrintProjects.Core.Model;
 
 namespace PrintProjects.Web.Pages
@@ -22,11 +24,18 @@ namespace PrintProjects.Web.Pages
         public async Task<IActionResult> OnGet(string shortId)
         {
             var result = (IActionResult) RedirectToPage("/Error", new { code = "404" });
-
+            
             Project = await _database.ProjectRepository.GetByShortId(shortId);
             if(Project != null)
             {
                 ReadmeHtml = Markdown.ToHtml(Project.Readme);
+                // Escape Backslashes and remove newlines
+                // This way we are able to include the json into the html (see scryipt section in cshtml file)
+                ProjectFileContent = IO.File
+                    .ReadAllText(IO.Path.Combine(Project.DataPath, Model.Project.PROJECT_FILE_NAME))
+                    .Replace("\\", "\\\\");
+                ProjectFileContent = Regex.Replace(ProjectFileContent, @"\r\n?|\n", string.Empty);
+
                 result = Page();
             }
 
@@ -34,7 +43,7 @@ namespace PrintProjects.Web.Pages
         }
 
         public Model.Project Project { get; private set; }
-
         public string ReadmeHtml { get; private set; }
+        public string ProjectFileContent { get; private set; }
     }
 }

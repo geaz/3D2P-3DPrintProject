@@ -51,6 +51,10 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     }
     
     public render() {
+        let annotationText = this.props.annotation.text === undefined || this.props.annotation.text === ''
+            ? '<small>Marked</small>'
+            : this._mdRenderer.render(this.props.annotation.text);
+
         let annotationBox = undefined;
         if(this.props.active) {
             annotationBox = html
@@ -64,11 +68,12 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
                         </div>`
                     }
                     ${!this.state.isEditMode && html
-                        `<div class="annotation-content" dangerouslySetInnerHTML=${{__html:this._mdRenderer.render(this.props.annotation.text)}}></div>
-                        <div class="button-container">
+                        `<div class="annotation-content" dangerouslySetInnerHTML=${{__html:annotationText}}></div>
+                        ${this.props.isEditable && html
+                        `<div class="button-container">
                             <div class="button" onclick=${() => this.setState({ isEditMode: true })}>Edit</div>
                             <div class="button" onclick=${this.onAnnotationDeleted.bind(this)}>Delete</div>
-                        </div>`
+                        </div>`}`
                     }                    
                 </div>`;
         }
@@ -86,6 +91,10 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 
     private initDepthSprite(): void {
         if(this.props.stlViewerContext.StlMesh !== undefined) {
+            if(this._sprite !== undefined) {
+                this.props.stlViewerContext.scene.remove(this._sprite);
+            }
+            
             let canvas = document.createElement('canvas');
             canvas.width = 64;
             canvas.height = 64;
@@ -257,7 +266,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
                     display: block;
                     
                     p:first-child { margin-top: 0; }
-                    p:last-child { margin-bottom: 15px; }
+                    p:last-child { margin-bottom: 0px; }
                     a { 
                         color: white; 
                         text-decoration: underline;
@@ -270,6 +279,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
                 
                 .button-container {
                     display: flex;
+                    margin-top: 15px;
 
                     .button {
                         color: #B2B2B2;
@@ -310,6 +320,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 interface IAnnotationItemComponentProps {
     index: number;
     active: boolean;
+    isEditable: boolean;
     annotation: IStlAnnotation;
     stlViewerContext: StlViewerContext;
     onClicked: (index: number) => void;

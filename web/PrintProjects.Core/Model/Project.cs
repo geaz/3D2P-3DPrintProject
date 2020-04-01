@@ -42,9 +42,6 @@ namespace PrintProjects.Core.Model
             project.ShortId = project.Id.GetShortGuid();
             project.DataPath = Path.Combine(downloadBasePath, project.ShortId);
 
-            if(!Directory.Exists(project.DataPath))
-                Directory.CreateDirectory(project.DataPath);
-
             return project;
         }
 
@@ -53,6 +50,10 @@ namespace PrintProjects.Core.Model
         /// </summary>
         public void Update()
         {
+            // Delete the old data first
+            if(Directory.Exists(DataPath)) Directory.Delete(DataPath);
+            Directory.CreateDirectory(DataPath);
+
             var projectFile = CodeRepository.DownloadProjectFile(DataPath);
 
             Name = projectFile.Name;

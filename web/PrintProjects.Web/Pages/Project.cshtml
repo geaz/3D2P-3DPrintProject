@@ -1,10 +1,17 @@
 ﻿@page "{shortId}"
 @model ProjectModel
-@{
-    ViewData["Title"] = Model.Project.Name;
-}
+
+@{ ViewData["Title"] = Model.Project.Name; }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/project.css" />
+}
+@section Scripts {
+    <script>
+        window.shortId = '@Model.Project.ShortId';
+        window.projectFile = JSON.parse('@Html.Raw(Model.ProjectFileContent)');
+    </script>
+    <script src="~/js/GalleryApp.js"></script>
+    <script src="~/js/StlViewerApp.js"></script>
 }
 
 <section id="project">
@@ -12,11 +19,36 @@
         <h1>@Model.Project.Name</h1>
         <small>ID: @Model.Project.ShortId</small>
     </div>
-    <div class="row">
-        <article class="summary">
-            @Html.Raw(Model.ReadmeHtml)
-        </article>
-        <aside>
-        </aside>
+
+    <div class="data @Model.Project.Status.ToLower()">     
+        <input name="data-tabs" id="tab-button-stls" class="tab-input" type="radio" checked />
+        <label for="tab-button-stls">STLs</label>
+
+        <input name="data-tabs" id="tab-button-gallery" class="tab-input" type="radio" />
+        <label for="tab-button-gallery">Gallery</label>
+        
+        <div id="tab-stls" class="tab-content">
+            <noscript><div class="noscript">Please activate Javascript to use the STL Viewer.</div></noscript>
+            <div id="stl-viewer-app"></div>
+        </div>
+
+        <div id="tab-gallery" class="tab-content">
+            <div id="gallery-app"></div>
+        </div>
+
+        <div class="data-footer">
+            <div class="data-info">
+                <div class="data-info-item">@Model.Project.LastUpdate.ToShortDateString()</div>
+                <div class="data-info-item">@Model.Project.Status</div>
+                <a class="data-info-item" target="_blank" href="@Model.Project.CodeRepository.RepositoryUrl" title="Repository Link">
+                    <i class="fa fa-code-fork" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        
     </div>
+
+    <article class="summary">
+        @Html.Raw(Model.ReadmeHtml)
+    </article>
 </section>

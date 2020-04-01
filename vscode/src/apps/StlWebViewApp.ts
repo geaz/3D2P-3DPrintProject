@@ -39,7 +39,8 @@ class App extends Component<{}, AppState> {
         let annotationsComponent = undefined;
         if(this.state.stlViewerContext !== undefined && this.state.annotationList !== undefined) {
             annotationsComponent = html
-                `<${AnnotationsComponent} 
+                `<${AnnotationsComponent}
+                    isEditable=${true}
                     annotationList=${this.state.annotationList}
                     showAnnotations=${this.state.showAnnotations}
                     stlViewerContext=${this.state.stlViewerContext}
@@ -48,7 +49,7 @@ class App extends Component<{}, AppState> {
 
         return html
             `${annotationsComponent}
-            <${ConfigComponent} 
+            <${ConfigComponent}
                 config=${this._config} 
                 configDescription=${this._configDescription}
                 onChange=${this.onStlInfoChanged.bind(this)} />
@@ -90,7 +91,7 @@ class App extends Component<{}, AppState> {
                 this._config.status = message.data.status;
                 break;
         }
-    };
+    }
 
     private onStlInfoChanged(property: string, value: any): void {
         if(property === 'showAnnotations') {
@@ -107,11 +108,11 @@ class App extends Component<{}, AppState> {
             this.setState({ annotationList: value });
             this._vscode.postMessage({ command: 'updateStlAnnotationList', annotationList: value });
         }
-    };
+    }
 
     private onViewerInitiated(stlViewerContext: StlViewerContext): void {
         this.setState({ stlViewerContext: stlViewerContext });
-    };
+    }
 }
 
 interface AppState {
