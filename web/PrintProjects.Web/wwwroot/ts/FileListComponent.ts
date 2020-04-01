@@ -4,10 +4,7 @@ import htm from 'htm';
 
 const html = htm.bind(h);
 
-export class FileListComponent extends Component<FileListComponentProps> {    
-    componentWillMount() {
-    }
-
+export class FileListComponent extends Component<FileListComponentProps> {
     public render() {
         let fileList = this.props.fileList.map(f =>
             html
@@ -18,10 +15,7 @@ export class FileListComponent extends Component<FileListComponentProps> {
                     ${f.description !== undefined ? html`<br/><small>${f.description}</small>` : ''}
             </button>`
         );
-        return html
-            `<div className="file-list-component ${this.css()}">
-                ${fileList}
-            </div>`;
+        return html`<div className="file-list-component ${this.css()}">${fileList}</div>`;
     }
 
     private onFileSelected(relativePath: string): void {

@@ -17,9 +17,7 @@ class App extends Component<{}, AppState> {
         this._projectShortId = (<any>window).shortId;
         this._projectFolderUrl = url.resolve('/ProjectFiles/', this._projectShortId! + '/');
 
-        if(this._projectFile === undefined 
-            || this._projectShortId === undefined 
-            || this._projectFolderUrl === undefined) {
+        if(this._projectFile === undefined || this._projectShortId === undefined || this._projectFolderUrl === undefined) {
             throw 'Component was not initilized correctly. Missing window variables!';
         }
         this.setState({ 

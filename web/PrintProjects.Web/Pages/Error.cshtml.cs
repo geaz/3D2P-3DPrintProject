@@ -14,8 +14,6 @@ namespace PrintProjects.Web.Pages
             _logger = logger;
         }
 
-        public void OnGet() { }
-
         [BindProperty(SupportsGet = true)]
         public int Code { get; set; }
     }

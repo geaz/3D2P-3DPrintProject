@@ -22,16 +22,16 @@ class App extends Component<{}, AppState> {
         this._projectFile = (<any>window).projectFile;
         this._projectShortId = (<any>window).shortId;
         this._projectFolderUrl = url.resolve('/ProjectFiles/', this._projectShortId! + '/');
-        if(this._projectFile === undefined || this._projectShortId === undefined)
+        if(this._projectFile === undefined || this._projectShortId === undefined) {
             throw 'Component was not initilized correctly. Missing window variables!';
-
+        }
         this.setStlDescriptions();
         this.setState({ 
             showAnnotations: true,
             selectedStl: this._projectFile.stls[0], 
             stlFileUrl: url.resolve(this._projectFolderUrl, this._projectFile.stls[0].relativePath)
         });
-
+        
         this._config = { 
             showAnnotations: true,
             resetCamera: () => {
