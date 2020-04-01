@@ -7,11 +7,10 @@ export class Dimensions {
     public box: Box3;
     
     constructor(public geometry: Geometry | BufferGeometry) {
-        let box = geometry.boundingBox;
-        if(box === null) {
+        if(geometry.boundingBox === null) {
             geometry.computeBoundingBox();
-            box = geometry.boundingBox;
         }
+        let box = geometry.boundingBox;
 
         if(box === null) {
             throw 'Error while getting bounding box of geometry!';

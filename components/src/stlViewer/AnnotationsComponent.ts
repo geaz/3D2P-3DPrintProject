@@ -29,8 +29,10 @@ export class AnnotationsComponent extends Component<IAnnotationsComponentProps, 
             annotationItemList = this.state.annotationList?.map((annotation, index) => {
                 return html`<${AnnotationItemComponent} 
                     isEditable=${this.props.isEditable}
-                    stlViewerContext=${this.props.stlViewerContext} annotation=${annotation}
-                    index=${index} active=${this.state.activeAnnotation === index}
+                    annotation=${annotation}
+                    stlViewerContext=${this.props.stlViewerContext}
+                    index=${index}
+                    active=${this.state.activeAnnotation === index}
                     onClicked=${this.onAnnotationClicked.bind(this)}
                     onAnnotationSaved=${this.onAnnotationSaved.bind(this)}
                     onAnnotationDeleted=${this.onAnnotationDeleted.bind(this)} />`;}

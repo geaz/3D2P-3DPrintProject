@@ -27,8 +27,8 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     private _resizeHandler: () => void = this.resizeRenderer.bind(this);
 
     public async componentDidMount() {
-        this.initScene();
         this._currentStlFilePath = this.props.stlFilePath;
+        this.initScene();
         this.updateSceneStl(await this.loadStl());        
         window.addEventListener('resize', this._resizeHandler);
     }
@@ -118,16 +118,15 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         return new Promise((resolve) => {
             if(this.props.stlFilePath !== undefined)
             {
-                let that = this;
                 let loader: any = new STLLoader();
-                loader.load(this.props.stlFilePath, function (geometry: BufferGeometry) {                    
-                    that._material = new MeshPhongMaterial({
-                        color: that.props.color,
+                loader.load(this.props.stlFilePath, (geometry: BufferGeometry) => {                    
+                    this._material = new MeshPhongMaterial({
+                        color: this.props.color,
                         specular: 0x1F1F1F,
                         shininess: 25,
                         side: DoubleSide
                     });                    
-                    resolve(new Mesh(geometry, that._material));
+                    resolve(new Mesh(geometry, this._material));
                 });
             }
             else {
@@ -189,7 +188,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 
     private css(): string {
         return css`
-            flex-grow: 1;
+            width: 100%;
             height: 100%;
             background: radial-gradient(#FFFFFF, rgb(80, 80, 80));`;
     }

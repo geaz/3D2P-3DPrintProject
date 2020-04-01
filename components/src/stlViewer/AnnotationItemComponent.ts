@@ -38,7 +38,6 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(this._sprite === undefined) {
             throw 'Annotation Item was not initialized correctly during mount phase!';
         }
-
         this._textareaElement?.focus();
         this._sprite.position.set(this.props.annotation.x, this.props.annotation.y, this.props.annotation.z);
     }
@@ -60,8 +59,11 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             annotationBox = html
                 `<div class="annotation">
                     ${this.state.isEditMode && html
-                        `<textarea placeholder="Annotation" oninput=${(e: any) => this.props.annotation.text = e.target.value}
-                        ref=${(textarea: HTMLElement) => { this._textareaElement = textarea; }}>${this.props.annotation.text}</textarea>
+                        `<textarea 
+                            placeholder="Annotation" 
+                            oninput=${(e: any) => this.props.annotation.text = e.target.value}
+                            ref=${(textarea: HTMLElement) => { this._textareaElement = textarea; }}>${this.props.annotation.text}
+                        </textarea>
                         <div class="button-container">
                             <div class="button" onclick=${this.onAnnotationSaved.bind(this)}>Save</div>
                             <div class="button" onclick=${this.onAnnotationDeleted.bind(this)}>Delete</div>
@@ -89,6 +91,10 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
             </div>`;
     }
 
+    // Thie method creates a sprite for depth checks
+    // in the 'checkDepth' method. The sprite will be hidden in the scene.
+    // Its only purpose is the depth check. The annotation itself will
+    // be rendered by HTML and CSS.
     private initDepthSprite(): void {
         if(this.props.stlViewerContext.StlMesh !== undefined) {
             if(this._sprite !== undefined) {
@@ -117,6 +123,8 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         }
     }
 
+    // This method checks on each render, if the curreent Annotation is 
+    // behind the STL Mesh, by using a Raycaster.
     private checkDepth(renderer : WebGLRenderer, scene: Scene, camera: Camera, 
                         geometry: Geometry | BufferGeometry, material: Material, 
                         group: Group): void {

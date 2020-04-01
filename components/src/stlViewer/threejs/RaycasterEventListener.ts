@@ -2,8 +2,8 @@ import { Raycaster, Intersection } from 'three';
 import { StlViewerContext } from './StlViewerContext';
 
 export class RaycasterEventListener {
-    private _mouseHandler = this.handleDblClick.bind(this);
     private _rendererDom: HTMLElement;
+    private _mouseHandler = this.handleDblClick.bind(this);
 
     constructor(
         private _stlViewerContext: StlViewerContext,
