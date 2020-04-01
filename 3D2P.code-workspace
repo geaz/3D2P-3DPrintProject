@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "components"
+		},
+		{
+			"path": "vscode"
+		},
+		{
+			"path": "web"
+		}
+	],
+	"settings": {}
+}
