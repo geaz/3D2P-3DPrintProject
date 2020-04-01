@@ -44,6 +44,10 @@
             font-size: 80%;
         }
     }
+
+    &:hover .title {
+        color: $primary-color;
+    }
 }
 
 .pagination-wrapper {
