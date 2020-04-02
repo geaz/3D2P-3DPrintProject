@@ -3,13 +3,14 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PrintProjects.Core.Interfaces;
 using PrintProjects.Core.Model;
 
 namespace PrintProjects.Web.Api
 {
     [ApiController]
-    [Route("Projects")]
+    [Route("api/projects")]
     public class ProjectController : ControllerBase
     {
         private readonly ILogger<ProjectController> _logger;
@@ -24,16 +25,16 @@ namespace PrintProjects.Web.Api
         }
 
         [HttpGet]
-        [Route("RemoteExists")]
+        [Route("remoteExists")]
         public IActionResult RemoteExists(string repositoryUrl, string rawRepositoryUrl)
         {
-            IActionResult result = Ok(false);
+            IActionResult result = Ok(JsonConvert.SerializeObject(new { result = false }));
             try
             {
                 var codeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl);
                 if(codeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
                 {
-                    result = Ok(true);
+                    result = Ok(JsonConvert.SerializeObject(new { result = true }));
                 }                
             }
             catch(Exception ex)
@@ -44,57 +45,37 @@ namespace PrintProjects.Web.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject(string repositoryUrl, string rawRepositoryUrl)
+        public async Task<IActionResult> UploadProject(string repositoryUrl, string rawRepositoryUrl)
         {
-            IActionResult result = Ok();
+            IActionResult result = BadRequest();
             try
             {
-                var project = await _database.ProjectRepository.GetByRepositoryUrl(repositoryUrl);
-                if(project != null)
+                var codeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl);
+                if(!codeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
                 {
-                    result = BadRequest($"Project with repository url {repositoryUrl} already exists!");
-                }
-                else
+                    result = BadRequest($"Remote Repository doesn't contain a 3D2P.json file! Can't upload the project!");
+                } 
+                else 
                 {
-                    project = Project.Create
-                    (
-                        repositoryUrl: repositoryUrl,
-                        rawRepositoryUrl: rawRepositoryUrl,
-                        downloadBasePath: _settings.ProjectTargetPath
-                    );
-                    project.Update();
-
-                    _database.ProjectRepository.Insert(project);
+                    var project = await _database.ProjectRepository.GetByRepositoryUrl(repositoryUrl);
+                    if(project == null)
+                    {
+                        project = Project.Create
+                        (
+                            repositoryUrl: repositoryUrl,
+                            rawRepositoryUrl: rawRepositoryUrl,
+                            downloadBasePath: _settings.ProjectTargetPath
+                        );
+                        project.Update();
+                        _database.ProjectRepository.Insert(project);
+                    }
+                    else
+                    {
+                        project.Update();
+                        _database.ProjectRepository.Update(project);
+                    }
                     await _database.Commit();
-                }   
-            }
-            catch(Exception ex)
-            {
-                result = BadRequest(ex.Message);
-            }
-            return result;
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateProject(string repositoryUrl)
-        {
-            IActionResult result = Ok();
-            try
-            {
-                var project = await _database.ProjectRepository.GetByRepositoryUrl(repositoryUrl);
-                if(project == null)
-                {
-                    result = BadRequest($"Project with repository url {repositoryUrl} doesn't exist!");
-                }
-                else if(project.CodeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
-                {
-                    result = BadRequest($"Remote Repository doesn't contain a 3D2P.json file! Can't update the project!");
-                }
-                else
-                {
-                    project.Update();
-                    _database.ProjectRepository.Update(project);
-                    await _database.Commit();
+                    result = Ok(JsonConvert.SerializeObject(new { shortId = project.ShortId }));
                 }
             }
             catch(Exception ex)

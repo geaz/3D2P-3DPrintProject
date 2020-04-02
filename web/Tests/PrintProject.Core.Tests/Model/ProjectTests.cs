@@ -56,7 +56,6 @@ namespace PrintProjects.Core.Tests.Model
 
             //Assert
             Assert.IsFalse(string.IsNullOrEmpty(project.ShortId));
-            Assert.IsTrue(Directory.Exists(project.DataPath));
             Assert.IsNotNull(project.CodeRepository);
         }
 

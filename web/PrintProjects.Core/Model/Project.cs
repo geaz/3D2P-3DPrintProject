@@ -51,7 +51,7 @@ namespace PrintProjects.Core.Model
         public void Update()
         {
             // Delete the old data first
-            if(Directory.Exists(DataPath)) Directory.Delete(DataPath);
+            if(Directory.Exists(DataPath)) Directory.Delete(DataPath, true);
             Directory.CreateDirectory(DataPath);
 
             var projectFile = CodeRepository.DownloadProjectFile(DataPath);

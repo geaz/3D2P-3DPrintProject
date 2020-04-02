@@ -196,8 +196,8 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
 
     get ScreenPos(): Vector2 {
         let boundingBox = this.props.stlViewerContext.renderer.domElement.getBoundingClientRect();
-        var width = boundingBox.width, height = boundingBox.height;
-        var widthHalf = width / 2, heightHalf = height / 2;
+        let width = boundingBox.width, height = boundingBox.height;
+        let widthHalf = width / 2, heightHalf = height / 2;
 
         let devicePos = this.DevicePos;
         return new Vector2(( devicePos.x * widthHalf ) + widthHalf, -( devicePos.y * heightHalf ) + heightHalf);
@@ -207,7 +207,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
         if(this._sprite === undefined) {
             throw 'Annotation Item was not initialized correctly during mount phase!';
         }
-        var pos = this._sprite.position.clone();
+        let pos = this._sprite.position.clone();
         return pos.project(this.props.stlViewerContext.camera);
     }
 
