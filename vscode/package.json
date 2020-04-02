@@ -22,10 +22,14 @@
 			{
 				"command": "3d2p.cmd.initProject",
 				"title": "3D2P: Initialize 3D Print Project"
-			},			
+			},
 			{
 				"command": "3d2p.cmd.uploadProject",
 				"title": "3D2P: Upload Project"
+			},	
+			{
+				"command": "3d2p.cmd.deleteProject",
+				"title": "3D2P: Delete Project"
 			},
 			{
 				"command": "3d2p.cmd.addGalleryImage",
@@ -48,6 +52,10 @@
 			"commandPalette": [
 				{
 					"command": "3d2p.cmd.uploadProject",
+					"when": "3d2p.context.activated"
+				},
+				{
+					"command": "3d2p.cmd.deleteProject",
 					"when": "3d2p.context.activated"
 				},
 				{

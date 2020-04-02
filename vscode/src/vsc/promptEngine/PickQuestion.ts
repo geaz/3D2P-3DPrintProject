@@ -1,9 +1,17 @@
 import * as vscode from 'vscode';
-
 import { BaseQuestion } from './BaseQuestion';
 
+/**
+ * List Picker Question Type.
+ * This question type shows a vscode picker list prompt. 
+ */
 export class PickQuestion extends BaseQuestion {
-    constructor(public question: string, public options: Array<string>, dependendQuestion?: BaseQuestion, shouldShowDelegate?: (value: string) => boolean) { 
+    constructor(
+        public question: string,
+        public options: Array<string>,
+        dependendQuestion?: BaseQuestion,
+        shouldShowDelegate?: (value: string) => boolean
+    ) {
         super(dependendQuestion, shouldShowDelegate);
     }
 

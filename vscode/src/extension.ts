@@ -12,6 +12,7 @@ import { StlWebView } from './vsc/extensions/webViews/StlWebView';
 import { AddGalleryImageQuestionnaire } from './vsc/questionnaires/AddGalleryImageQuestionnaire';
 import { GalleryTreeItem } from './vsc/extensions/treeViews/treeItems/GalleryTreeItem';
 import { UploadProjectQuestionnaire } from './vsc/questionnaires/UploadProjectQuestionnaire';
+import { DeleteProjectQuestionnaire } from './vsc/questionnaires/DeleteProjectQuestionnaire';
 
 /*
 	The extension gets only activated, if
@@ -30,6 +31,7 @@ import { UploadProjectQuestionnaire } from './vsc/questionnaires/UploadProjectQu
 	Everything related to getting pathes from the workspace should be handled here. This way this resposibility
 	is not shared across multiple components! For example NO access to vscode.workspace.workspaceFolders
 	should be done outside of this file! Every component should be sure, that a 3D2P project is loaded, if it is accessed.
+	Only exception: InitProjectQuestionnaire - Because it is the only command which works before! a project is loaded.
 */
 export function activate(context: vscode.ExtensionContext) {
 	let fileWatcher = new FileWatcher();
@@ -83,7 +85,11 @@ function add3D2PCommands(
 
 		let uploadProjectCommand = vscode.commands.registerCommand(
 			'3d2p.cmd.uploadProject', 			
-			async() => { return promptEngine.start(new UploadProjectQuestionnaire(project)); });;
+			async() => { return promptEngine.start(new UploadProjectQuestionnaire(project)); });
+
+		let deleteProjectCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.deleteProject', 			
+			async() => { return promptEngine.start(new DeleteProjectQuestionnaire(project)); });
 
 		let openStlWebviewCommand = vscode.commands.registerCommand(
 			'3d2p.cmd.openStlWebview', 
@@ -96,5 +102,6 @@ function add3D2PCommands(
 		context.subscriptions.push(addGalleryImageCommand);
 		context.subscriptions.push(removeGalleryImageCommand);
 		context.subscriptions.push(uploadProjectCommand);
+		context.subscriptions.push(deleteProjectCommand);
 		context.subscriptions.push(openStlWebviewCommand);
 }
