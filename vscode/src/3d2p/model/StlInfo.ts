@@ -11,7 +11,7 @@ export class StlInfo extends FileListItem {
     public annotationList: Array<IStlAnnotation> = new Array<IStlAnnotation>();
 
     constructor(basePath: string, name: string, relativePath: string) {
-        super(basePath, path.basename(name, path.extname(name)), relativePath);
+        super(basePath, name, relativePath);
     }
 
     public static fromObject(basePath: string, object: any): FileListItem {
