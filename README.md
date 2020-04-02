@@ -1,5 +1,35 @@
 # 3D2P - 3D Print Projects
 
+[TODO]
+
+## Code Structure
+
+This section will give a brief overview of the repository code/folder structure and which technologies and frameworks were used.
+Hopefully this will help potential contributers.
+
+### Used Framworks / Technologies
+
+[ASP.NET Core Razor Pages](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1), C#, [Typescript](https://www.typescriptlang.org/), [Preact](https://preactjs.com/), [HTM - HTML templates](https://github.com/developit/htm), [Emotion - CSS](https://emotion.sh), Node.js, NPM
+
+### components
+
+This folder contains all [preact](https://preactjs.com/) components used by the **vscode extension** and the **website**.
+It is designed as a local NPM package. This way the **vscode extension** and the **website** are able to share some *preact* components.
+
+The package includes three major components:
+
+- **ConfigComponent.ts**
+- **StlViewerComponent.ts**
+- **AnnotationsComponent.ts** *uses the AnnotationItemComponent as a subcomponent*
+
+### vscode
+
+[TODO]
+
+### web
+
+[TODO]
+
 ## Development Build Instructions
 
 To get a consistent build, all build tasks are designed as npm scripts.
@@ -22,3 +52,15 @@ The **web** folder contains the code for the *webapi* and the *homepage* of **3D
 ## Credits
 
 The icons used in the Visual Studio Code Extension are taken from [Freepik](https://www.flaticon.com/) and [Icons8](https://icons8.com/)
+
+## TODOs
+
+- Search
+- Extension Lending Page
+
+- Delete Command in VS Code
+- VS Code Gallery functionality
+
+- Refactoring and Documentation
+
+- Finish Readme
