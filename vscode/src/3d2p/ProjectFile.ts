@@ -6,9 +6,10 @@ import { StlInfo } from './model/StlInfo';
 import { GalleryInfo } from './model/GalleryInfo';
 
 export class ProjectFile {
-    public name: string = "";
-    public repositoryUrl: string = "";
-    public rawRepositoryUrl: string = "";
+    public name: string = '';
+    public repositoryUrl: string = '';
+    public rawRepositoryUrl: string = '';
+    public status: string = '';
     public stls: FileList<StlInfo> = 
         new FileList<StlInfo>(".stl", (name, relPath) => new StlInfo(this._projectPath, name, relPath));
     public gallery: Array<GalleryInfo> = new Array<GalleryInfo>();
@@ -37,11 +38,11 @@ export class ProjectFile {
                         break;
                 }
             });
-        fs.writeFileSync(this._projectFilePath, JSON.stringify(jsonObject, null, 4), 'utf8');
+        fs.writeFileSync(this._projectFilePath, JSON.stringify(jsonObject), 'utf8');
     }
 
     private Load(): void {
-        let projectJson = require(this._projectFilePath);
+        let projectJson = JSON.parse(fs.readFileSync(this._projectFilePath, 'utf8'));
         for(let property in projectJson) {
             switch (property) {
                 case 'stls':
