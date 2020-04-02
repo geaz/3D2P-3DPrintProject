@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { Project } from '../project/Project';
-import { StlInfo } from '../project/model/StlInfo';
+import { Project } from '../../../3d2p/Project';
+import { StlInfo } from '../../../3d2p/model/StlInfo';
 
 export class StlWebView {
     private readonly _panel: vscode.WebviewPanel;
@@ -16,7 +16,7 @@ export class StlWebView {
         );
 
         const webViewApp = this._panel.webview.asWebviewUri(
-            vscode.Uri.file(path.join(__filename, '..', '..', '..', 'apps', 'StlWebViewApp.js')));
+            vscode.Uri.file(path.join(__filename, '..', '..', '..', '..', 'apps', 'StlWebViewApp.js')));
         const stlFilePathViewUri = this._panel.webview.asWebviewUri(vscode.Uri.file(stlInfo.getAbsolutePath()));
 
         this._panel.webview.html = `<!DOCTYPE html>

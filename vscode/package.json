@@ -22,6 +22,10 @@
 			{
 				"command": "3d2p.cmd.initProject",
 				"title": "3D2P: Initialize 3D Print Project"
+			},			
+			{
+				"command": "3d2p.cmd.uploadProject",
+				"title": "3D2P: Upload Project"
 			},
 			{
 				"command": "3d2p.cmd.addGalleryImage",
@@ -42,6 +46,10 @@
 		],
 		"menus": {
 			"commandPalette": [
+				{
+					"command": "3d2p.cmd.uploadProject",
+					"when": "3d2p.context.activated"
+				},
 				{
 					"command": "3d2p.cmd.addGalleryImage",
 					"when": "3d2p.context.activated"
@@ -91,7 +99,28 @@
 					"when": "3d2p.context.activated"
 				}
 			]
-		}
+		},
+		"configuration": {
+            "type": "object",
+            "title": "3D2P Configuration",
+            "properties": {
+                "3d2p.apiEndpoint": {
+                    "type": "string",
+                    "default": "localhost",
+                    "description": "The url of the api endpoint of 3D2P. Normally it is not necessary to change this."
+				},
+				"3d2p.apiPort": {
+                    "type": "number",
+                    "default": 5001,
+                    "description": "The port of the api endpoint of 3D2P. Normally it is not necessary to change this."
+                },
+				"3d2p.strictSSL": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Should the SSL certificate be strictly checked during api calls?"
+                }
+            }
+        }
 	},
 	"scripts": {
 		"vscode:prepublish": "npx npm-run-all compile:*",

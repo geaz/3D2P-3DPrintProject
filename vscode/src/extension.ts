@@ -2,14 +2,16 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { PROJECTFILE_NAME, Project } from './vsc/project/Project';
+import { PROJECTFILE_NAME, Project } from './3d2p/Project';
 import { FileWatcher } from './vsc/FileWatcher';
-import { GalleryTreeDataProvider } from './vsc/treeViews/GalleryTreeDataProvider';
-import { StlTreeDataProvider } from './vsc/treeViews/StlTreeDataProvider';
-import { PromptEngine } from './vsc/prompts/promptEngine/promptEngine';
-import { InitProjectQuestionnaire } from './vsc/prompts/InitProjectQuestionnaire';
-import { StlWebView } from './vsc/webViews/StlWebView';
-import { AddGalleryImageQuestionnaire } from './vsc/prompts/AddGalleryImageQuestionnaire';
+import { GalleryTreeDataProvider } from './vsc/extensions/treeViews/GalleryTreeDataProvider';
+import { StlTreeDataProvider } from './vsc/extensions/treeViews/StlTreeDataProvider';
+import { PromptEngine } from './vsc/promptEngine/promptEngine';
+import { InitProjectQuestionnaire } from './vsc/questionnaires/InitProjectQuestionnaire';
+import { StlWebView } from './vsc/extensions/webViews/StlWebView';
+import { AddGalleryImageQuestionnaire } from './vsc/questionnaires/AddGalleryImageQuestionnaire';
+import { GalleryTreeItem } from './vsc/extensions/treeViews/treeItems/GalleryTreeItem';
+import { UploadProjectQuestionnaire } from './vsc/questionnaires/UploadProjectQuestionnaire';
 
 /*
 	The extension gets only activated, if
@@ -33,9 +35,11 @@ export function activate(context: vscode.ExtensionContext) {
 	let fileWatcher = new FileWatcher();
 	let project = initProject(fileWatcher);
 
+	let stlTreeDataProvider = new StlTreeDataProvider(project, fileWatcher);
+	let galleryTreeDataProvider = new GalleryTreeDataProvider(project, fileWatcher);
+
 	activationCheck(project, fileWatcher);
-	add3D2PTreeViews(project, fileWatcher);
-	add3D2PCommands(project, context);	
+	add3D2PCommands(project, context, galleryTreeDataProvider);	
 }
 
 function initProject(fileWatcher: FileWatcher): Project {
@@ -59,29 +63,38 @@ function activationCheck(project: Project, fileWatcher: FileWatcher) {
 	}
 }
 
-function add3D2PTreeViews(project: Project, fileWatcher: FileWatcher) {
-	vscode.window.registerTreeDataProvider(StlTreeDataProvider.TREEVIEW_ID, new StlTreeDataProvider(project, fileWatcher));
-	vscode.window.registerTreeDataProvider(GalleryTreeDataProvider.TREEVIEW_ID, new GalleryTreeDataProvider(project, fileWatcher));
-}
-
-function add3D2PCommands(project: Project, context: vscode.ExtensionContext) {
-	let promptEngine = new PromptEngine();
-    
-    let initProjectCommand = vscode.commands.registerCommand(
-        '3d2p.cmd.initProject', 
-		async() => { return promptEngine.start(new InitProjectQuestionnaire()); });
+function add3D2PCommands(
+	project: Project, 
+	context: vscode.ExtensionContext,
+	galleryTreeDataProvider: GalleryTreeDataProvider) {
+		let promptEngine = new PromptEngine();
 		
-	let addGalleryImageCommand = vscode.commands.registerCommand(
-		'3d2p.cmd.addGalleryImage', 
-		async() => { return promptEngine.start(new AddGalleryImageQuestionnaire(project)); });
+		let initProjectCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.initProject', 
+			async() => { return promptEngine.start(new InitProjectQuestionnaire()); });
+			
+		let addGalleryImageCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.addGalleryImage', 
+			async() => { return promptEngine.start(new AddGalleryImageQuestionnaire(project, galleryTreeDataProvider)); });
 
-    let openStlWebviewCommand = vscode.commands.registerCommand(
-        '3d2p.cmd.openStlWebview', 
-        async(filePath: string) => {
-			let stlInfo = project.stls.getItemByRelativePath(path.relative(project.projectPath, filePath));
-			return new StlWebView(project, stlInfo); 
-		});
+		let removeGalleryImageCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.removeGalleryImage',		
+			(galleryTreeItem: GalleryTreeItem) => { galleryTreeDataProvider.removeGalleryItem(galleryTreeItem.relativePath); });
 
-    context.subscriptions.push(initProjectCommand);
-    context.subscriptions.push(openStlWebviewCommand);
+		let uploadProjectCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.uploadProject', 			
+			async() => { return promptEngine.start(new UploadProjectQuestionnaire(project)); });;
+
+		let openStlWebviewCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.openStlWebview', 
+			async(filePath: string) => {
+				let stlInfo = project.stls.getItemByRelativePath(path.relative(project.projectPath, filePath));
+				return new StlWebView(project, stlInfo); 
+			});
+
+		context.subscriptions.push(initProjectCommand);
+		context.subscriptions.push(addGalleryImageCommand);
+		context.subscriptions.push(removeGalleryImageCommand);
+		context.subscriptions.push(uploadProjectCommand);
+		context.subscriptions.push(openStlWebviewCommand);
 }

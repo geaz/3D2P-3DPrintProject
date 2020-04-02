@@ -1,15 +1,16 @@
 import * as vscode from 'vscode';
 
-import { BaseQuestionnaire } from './promptEngine/BaseQuestionnaire';
-import { PickQuestion } from './promptEngine/PickQuestion';
-import { Project } from '../project/Project';
-import { GalleryInfo } from '../project/model/GalleryInfo';
+import { BaseQuestionnaire } from '../promptEngine/BaseQuestionnaire';
+import { PickQuestion } from '../promptEngine/PickQuestion';
+import { Project } from '../../3d2p/Project';
+import { GalleryInfo } from '../../3d2p/model/GalleryInfo';
+import { GalleryTreeDataProvider } from '../extensions/treeViews/GalleryTreeDataProvider';
 
 export class AddGalleryImageQuestionnaire extends BaseQuestionnaire {
     
     public image: PickQuestion;
 
-    constructor(private _project: Project) {
+    constructor(private _project: Project, private _galleryTreeDataProvider: GalleryTreeDataProvider) {
         super();
         
         let imageList = new Array<GalleryInfo>();
@@ -29,9 +30,7 @@ export class AddGalleryImageQuestionnaire extends BaseQuestionnaire {
             (progress, token) => {
                 return new Promise(async (resolve, reject) => {
                     try{
-                        let galleryInfo = this._project.images.getItemByRelativePath(<string>this.image.answer);
-                        this._project.gallery.push(galleryInfo);
-                        this._project.Save();                       
+                        this._galleryTreeDataProvider.addGalleryItem(<string>this.image.answer);
                         resolve();
                     }
                     catch(ex) {

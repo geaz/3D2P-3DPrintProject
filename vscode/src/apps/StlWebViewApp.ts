@@ -1,7 +1,7 @@
 import { h, Component, render } from 'preact';
 import htm from 'htm';
 
-import { DEFAULT_STL_COLOR } from '../vsc/project/model/StlInfo';
+import { DEFAULT_STL_COLOR } from '../3d2p/model/StlInfo';
 import { 
     StlViewerComponent, AnnotationsComponent, ConfigComponent, 
     IConfigDescription, ConfigType, StlViewerContext, IStlAnnotation

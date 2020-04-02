@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ProjectFile } from './model/ProjectFile';
+import { ProjectFile } from './ProjectFile';
 import { FileList } from './fileList/FileList';
 import { StlInfo } from './model/StlInfo';
 import { GalleryInfo } from './model/GalleryInfo';
@@ -37,6 +37,11 @@ export class Project {
         this._projectPath = undefined;
         this._projectFile = undefined;
         this._imageList = undefined;
+    }
+
+    public get projectFile(): ProjectFile {
+        if(this._projectFile === undefined) throw "No project loaded!";
+        return this._projectFile;
     }
 
     public get projectPath(): string {

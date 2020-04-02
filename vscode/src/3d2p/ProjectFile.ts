@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { FileList } from "../fileList/FileList";
-import { StlInfo } from './StlInfo';
-import { GalleryInfo } from './GalleryInfo';
+import { FileList } from "./fileList/FileList";
+import { StlInfo } from './model/StlInfo';
+import { GalleryInfo } from './model/GalleryInfo';
 
 export class ProjectFile {
     public name: string = "";
@@ -42,7 +42,7 @@ export class ProjectFile {
 
     private Load(): void {
         let projectJson = require(this._projectFilePath);
-        for(var property in projectJson) {
+        for(let property in projectJson) {
             switch (property) {
                 case 'stls':
                     projectJson[property].forEach((element: any) => {

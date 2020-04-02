@@ -50,10 +50,6 @@ export class FileList<T extends FileListItem> {
         return foundFiles;
     }
 
-    public toJSON(): string {
-        return JSON.stringify(this._items.map(i => JSON.stringify(i)));
-    }
-
     get items() {
         return this._items;
     }
