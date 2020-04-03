@@ -18,6 +18,10 @@ export class UploadProjectQuestionnaire extends BaseQuestionnaire {
                 '3D2P.json file does not exists in repository. Make sure you pushed all your changes. \
                 If you want to delete the project from the 3D2P homepage instead, use the delete command.', true);
         }
+
+        if(this._project.gallery.length === 0) {
+            return new PromptResult('Add at least on image to the gallery!', true);
+        }
         
         let gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git')?.exports;
         if(gitExtension === undefined) {
