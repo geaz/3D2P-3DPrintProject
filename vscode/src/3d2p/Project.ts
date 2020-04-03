@@ -20,10 +20,10 @@ export class Project {
 
         this._projectPath = projectPath;
         this._projectFile = new ProjectFile(projectPath, path.join(projectPath, PROJECTFILE_NAME));
-
         this._imageList = new FileList<GalleryInfo>(".jpg|.jpeg|.png", (name, relPath) => new GalleryInfo(projectPath, name, relPath));
-        this._imageList.updateListFromDisk(this._projectPath);
 
+        this.stls.updateListFromDisk(this._projectPath);
+        this.images.updateListFromDisk(this._projectPath);
         // To save updates of the file list
 		this.Save();
     }

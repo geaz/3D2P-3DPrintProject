@@ -46,6 +46,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 function initProject(fileWatcher: FileWatcher): Project {
 	let project = new Project();
+	fileWatcher.StlFileWatcher.onDidCreate(() => { project.stls.updateListFromDisk(project.projectPath); project.Save(); });
+	fileWatcher.StlFileWatcher.onDidDelete(() => { project.stls.updateListFromDisk(project.projectPath); project.Save(); });
+	fileWatcher.GalleryFileWatcher.onDidCreate(() => project.images.updateListFromDisk(project.projectPath));
+	fileWatcher.GalleryFileWatcher.onDidDelete(() => project.images.updateListFromDisk(project.projectPath));
 	fileWatcher.ProjectFileWatcher.onDidCreate((projectFile: vscode.Uri) => project.Load(path.dirname(projectFile.fsPath)));
 	fileWatcher.ProjectFileWatcher.onDidDelete(() => project.Close());
 	
@@ -81,7 +85,15 @@ function add3D2PCommands(
 
 		let removeGalleryImageCommand = vscode.commands.registerCommand(
 			'3d2p.cmd.removeGalleryImage',		
-			(galleryTreeItem: GalleryTreeItem) => { galleryTreeDataProvider.removeGalleryItem(galleryTreeItem.relativePath); });
+			(galleryTreeItem: GalleryTreeItem) => { galleryTreeDataProvider.removeGalleryItem(galleryTreeItem.galleryInfo); });
+
+		let upGalleryImageCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.upGalleryImage',		
+			(galleryTreeItem: GalleryTreeItem) => { galleryTreeDataProvider.upGalleryItem(galleryTreeItem.galleryInfo); });
+
+		let downGalleryImageCommand = vscode.commands.registerCommand(
+			'3d2p.cmd.downGalleryImage',		
+			(galleryTreeItem: GalleryTreeItem) => { galleryTreeDataProvider.downGalleryItem(galleryTreeItem.galleryInfo); });
 
 		let uploadProjectCommand = vscode.commands.registerCommand(
 			'3d2p.cmd.uploadProject', 			
@@ -100,6 +112,8 @@ function add3D2PCommands(
 
 		context.subscriptions.push(initProjectCommand);
 		context.subscriptions.push(addGalleryImageCommand);
+		context.subscriptions.push(downGalleryImageCommand);
+		context.subscriptions.push(upGalleryImageCommand);
 		context.subscriptions.push(removeGalleryImageCommand);
 		context.subscriptions.push(uploadProjectCommand);
 		context.subscriptions.push(deleteProjectCommand);

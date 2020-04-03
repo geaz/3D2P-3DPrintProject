@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { Project } from '../../../3d2p/Project';
 import { FileWatcher } from '../../FileWatcher';
 import { GalleryTreeItem } from './treeItems/GalleryTreeItem';
+import { GalleryInfo } from '../../../3d2p/model/GalleryInfo';
 
 export class GalleryTreeDataProvider implements vscode.TreeDataProvider<GalleryTreeItem> {
     private _didChangeTreeDataEvent: vscode.EventEmitter<GalleryTreeItem | undefined> = new vscode.EventEmitter<GalleryTreeItem | undefined>();    
@@ -35,9 +36,8 @@ export class GalleryTreeDataProvider implements vscode.TreeDataProvider<GalleryT
         }
     }
 
-    public removeGalleryItem(relativePath: string): void {
+    public removeGalleryItem(galleryInfo: GalleryInfo): void {
         try{
-            let galleryInfo = this._project.gallery.filter(g => g.relativePath === relativePath)[0];
             this._project.gallery.forEach((item, index) => {
                 if(item.relativePath === galleryInfo.relativePath) {
                     this._project.gallery.splice(index, 1);
@@ -51,10 +51,37 @@ export class GalleryTreeDataProvider implements vscode.TreeDataProvider<GalleryT
         }
     }
 
+    public upGalleryItem(galleryInfo: GalleryInfo): void {
+        this.moveGalleryItem(galleryInfo, -1);
+    }
+
+    public downGalleryItem(galleryInfo: GalleryInfo): void {        
+        this.moveGalleryItem(galleryInfo, 1);
+    }
+
     private initEvents(): void {
         this._fileWatcher.ProjectFileWatcher.onDidChange(() => this._didChangeTreeDataEvent.fire());
-        this._fileWatcher.StlFileWatcher.onDidCreate(() => this._didChangeTreeDataEvent.fire());
-        this._fileWatcher.StlFileWatcher.onDidDelete(() => this._didChangeTreeDataEvent.fire());
-        this._fileWatcher.StlFileWatcher.onDidChange(() => this._didChangeTreeDataEvent.fire());
+    }
+
+    private moveGalleryItem(galleryInfo: GalleryInfo, movement: number): void {
+        try{
+            let oldPos = -1;
+            this._project.gallery.forEach((item, index) => {
+                if(item.relativePath === galleryInfo.relativePath && 
+                    ((movement === -1 && index > 0) || (movement === 1 && index < this._project.gallery.length))
+                ) {
+                    oldPos = index;
+                    this._project.gallery.splice(index, 1);
+                    return;
+                }
+            });
+            if(oldPos != -1) {
+                this._project.gallery.splice(oldPos + movement, 0, galleryInfo);
+            }
+            this._project.Save();    
+        }
+        catch(ex) {
+            vscode.window.showErrorMessage(`Could not move image! (${ex})`);
+        }
     }
 }

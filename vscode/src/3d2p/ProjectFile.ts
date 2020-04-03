@@ -64,6 +64,5 @@ export class ProjectFile {
                     break;
             }
         }
-        this.stls.updateListFromDisk(path.dirname(this._projectFilePath));
     }
 }

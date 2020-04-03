@@ -11,7 +11,7 @@ export class GalleryTreeItem extends vscode.TreeItem {
 
     public readonly command?: vscode.Command;
 
-    constructor(galleryInfo: GalleryInfo) {
+    constructor(public galleryInfo: GalleryInfo) {
         super(galleryInfo.name, vscode.TreeItemCollapsibleState.None);
 
         let absoluteFilePath = galleryInfo.getAbsolutePath();
