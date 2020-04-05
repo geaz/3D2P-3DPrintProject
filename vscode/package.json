@@ -148,12 +148,12 @@
             "properties": {
                 "3d2p.apiEndpoint": {
                     "type": "string",
-                    "default": "localhost",
+                    "default": "3d2p.net",
                     "description": "The url of the api endpoint of 3D2P. Normally it is not necessary to change this."
 				},
 				"3d2p.apiPort": {
                     "type": "number",
-                    "default": 5001,
+                    "default": 443,
                     "description": "The port of the api endpoint of 3D2P. Normally it is not necessary to change this."
                 },
 				"3d2p.strictSSL": {

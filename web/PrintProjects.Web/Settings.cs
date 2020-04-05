@@ -5,7 +5,7 @@ namespace PrintProjects.Web
     sealed public class Settings
     {
         public string Database { get; set; }
-        public string ProjectTargetPath => Environment.GetEnvironmentVariable("3D2P_PROJECT_TARGET_PATH");
+        public string ProjectTargetPath => Environment.GetEnvironmentVariable("_3D2P_PROJECT_TARGET_PATH");
 
         private string _connectionString;
         public string ConnectionString
@@ -13,7 +13,7 @@ namespace PrintProjects.Web
             get => _connectionString;
             set
             {
-                _connectionString = string.Format(value, Environment.GetEnvironmentVariable("3D2P_MONGOAUTH"));
+                _connectionString = string.Format(value, Environment.GetEnvironmentVariable("_3D2P_MONGOAUTH"));
             }
         }
     }
