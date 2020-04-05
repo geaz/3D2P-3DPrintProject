@@ -1,36 +1,24 @@
-import * as vscode from 'vscode';
-
-import { Project } from '../../3d2p/Project';
 import { ProjectUploader } from '../ProjectUploader';
 import { BaseQuestionnaire } from '../promptEngine/BaseQuestionnaire';
 import { PromptResult } from '../promptEngine/PromptResult';
 import { PickQuestion } from '../promptEngine/PickQuestion';
+import { InputQuestion } from '../promptEngine/InputQuestion';
 
 export class DeleteProjectQuestionnaire extends BaseQuestionnaire {
     private _projectUploader: ProjectUploader = new ProjectUploader();
-    public provider = new PickQuestion('Deleting project! Are you sure?', ['Yes', 'No']);
 
-    constructor(private _project: Project) { super() }
-
-    public async checkPrerequisite(): Promise<PromptResult> { 
-        let result = new PromptResult();
-        let remoteExists = await this._projectUploader.remoteExists(this._project.projectFile.repositoryUrl, this._project.projectFile.rawRepositoryUrl);
-        if(remoteExists) {
-            result.isFaulted = true;
-            result.message = '3D2P.json file does still exist in repository. Delete the 3D2P.json from the repository.';
-        }            
-        return result;
-    }
+    public shortId = new InputQuestion('Enter ID of project to delete.');
+    public shouldDelete = new PickQuestion('Deleting project! Are you sure?', ['Yes', 'No']);
 
     public async vscCommand(): Promise<PromptResult> {
-        if(this.provider.answer === 'No') return new PromptResult(); 
+        if(this.shouldDelete.answer === 'No') return new PromptResult('Deletion aborted by user.'); 
 
-        let result = await this._projectUploader.deleteProject(this._project.projectFile.repositoryUrl, this._project.projectFile.rawRepositoryUrl);                      
-        if(result) {
+        let resultMessage = await this._projectUploader.deleteProject(this.shortId.answer!);                      
+        if(resultMessage === undefined) {
             return new PromptResult(`Deleted project successfully from 3D2P homepage.`);
         }
         else {
-            return new PromptResult(`Error on deletion!`, true);
+            return new PromptResult(`${resultMessage}`, true);
         }
     }
 

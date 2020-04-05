@@ -70,24 +70,24 @@ export class ProjectUploader {
         });
     }
 
-    public deleteProject(repositoryUrl: string, rawRepositoryUrl: string): Promise<boolean> {
-        this._options.path =  `/api/projects?`
-            + `repositoryUrl=${encodeURIComponent(repositoryUrl)}`
-            + `&rawRepositoryUrl=${encodeURIComponent(rawRepositoryUrl)}`;
+    public deleteProject(shortId: string): Promise<string> {
+        this._options.path =  `/api/projects?shortId=${encodeURIComponent(shortId)}`;
         this._options.method = 'DELETE';
 
-        return new Promise<boolean>((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
             let req = https.request(this._options, function(res) {
                 let data = '';
                 res.on('data', (chunk) => {
                     data += chunk;
                 });
                 res.on('end', () => {                            
-                    if(res.statusCode !== 200) {
-                        reject();
+                    if(res.statusCode === 400) {
+                        resolve(data);
+                    } else if(res.statusCode === 200) {
+                        resolve();
                     } else {
-                        resolve(JSON.parse(data).result);
-                    }                    
+                        resolve(res.statusCode?.toString());
+                    }
                 });
             });        
             req.end();

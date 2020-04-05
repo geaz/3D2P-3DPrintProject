@@ -15,6 +15,7 @@
 	"main": "./out/extension.js",
 	"activationEvents": [
 		"onCommand:3d2p.cmd.initProject",
+		"onCommand:3d2p.cmd.deleteProject",
 		"workspaceContains:3D2P.json"
 	],
 	"contributes": {
@@ -68,10 +69,6 @@
 			"commandPalette": [
 				{
 					"command": "3d2p.cmd.uploadProject",
-					"when": "3d2p.context.activated"
-				},
-				{
-					"command": "3d2p.cmd.deleteProject",
 					"when": "3d2p.context.activated"
 				},
 				{

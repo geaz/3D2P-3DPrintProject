@@ -86,15 +86,15 @@ namespace PrintProjects.Web.Api
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteProject(string repositoryUrl)
+        public async Task<IActionResult> DeleteProject(string shortId)
         {
             IActionResult result = Ok();
             try
             {
-                var project = await _database.ProjectRepository.GetByRepositoryUrl(repositoryUrl);
+                var project = await _database.ProjectRepository.GetByShortId(shortId);
                 if(project == null)
                 {
-                    result = BadRequest($"Project with repository url {repositoryUrl} doesn't exist!");
+                    result = BadRequest($"Project with id '{shortId}' doesn't exist!");
                 }
                 else if(project.CodeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
                 {

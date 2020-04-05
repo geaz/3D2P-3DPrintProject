@@ -101,7 +101,7 @@ function add3D2PCommands(
 
 		let deleteProjectCommand = vscode.commands.registerCommand(
 			'3d2p.cmd.deleteProject', 			
-			async() => { return promptEngine.start(new DeleteProjectQuestionnaire(project)); });
+			async() => { return promptEngine.start(new DeleteProjectQuestionnaire()); });
 
 		let openStlWebviewCommand = vscode.commands.registerCommand(
 			'3d2p.cmd.openStlWebview', 

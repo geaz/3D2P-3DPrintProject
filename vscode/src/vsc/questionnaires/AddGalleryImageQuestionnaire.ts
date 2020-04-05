@@ -31,7 +31,7 @@ export class AddGalleryImageQuestionnaire extends BaseQuestionnaire {
     }
 
     public async vscCommand(): Promise<PromptResult> {
-        this._galleryTreeDataProvider.addGalleryItem(<string>this.image.answer);
+        this._galleryTreeDataProvider.addGalleryItem(this.image.answer!);
         return new PromptResult();
     }
 
