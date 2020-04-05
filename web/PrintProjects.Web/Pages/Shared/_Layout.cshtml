@@ -10,7 +10,15 @@
 <body>
     <header>
         <div class="container">            
-            <a id="logo" asp-page="/Index"><img src="~/logo.svg" alt="3D2P" /></a>       
+            <a id="logo" asp-page="/Index" title="Logo Home"><img src="~/logo.svg" alt="3D2P" /></a>
+            <nav>                
+                <a asp-page="/Index" title="Home">Home</a>
+                <a asp-page="/Overview" title="Project overview">Projects</a>
+                <form method="get" asp-page="/Overview">
+                    <input type="text" name="searchTerm" placeholder="Search projects ..." />
+                    <input type="submit" value="Search" />
+                </form>
+            </nav>
         </div>
     </header>
     <main>
@@ -20,7 +28,7 @@
     </main>
     <footer>
         <div class="container">
-            <small>No shitty ads, cookies (f*** cookie banners), 3rd party ressources or tracking.</small>
+            <small>No shitty ads, cookies, 3rd party ressources or tracking.</small>
         </div>
     </footer>
     @RenderSection("Scripts", required: false)

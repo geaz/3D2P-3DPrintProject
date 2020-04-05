@@ -6,7 +6,7 @@ namespace PrintProjects.Core.Interfaces.Repositories
     public interface IRepository<T> where T : IEntity
     {
         Task<long> Count();
-        Task<ReadOnlyCollection<T>> GetPaged(int page, int pageSize);
+        Task<ReadOnlyCollection<T>> GetPaged(int page, int pageSize, string searchTerm);
 
         void Insert(T entity);
         void Update(T entity);

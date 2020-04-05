@@ -23,9 +23,12 @@ namespace PrintProjects.Mongo.Repositories
             return await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
         }
 
-        public virtual async Task<ReadOnlyCollection<T>> GetPaged(int page, int pageSize)
+        public virtual async Task<ReadOnlyCollection<T>> GetPaged(int page, int pageSize, string searchText = null)
         {
-            var result = await _collection.Find(x => true)
+            var filter = string.IsNullOrEmpty(searchText)
+                ? Builders<T>.Filter.Empty
+                : Builders<T>.Filter.Text(searchText);
+            var result = await _collection.Find(filter)
                     .Limit(pageSize)
                     .Skip(page * pageSize)
                     .ToListAsync();
