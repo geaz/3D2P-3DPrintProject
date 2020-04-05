@@ -28,7 +28,9 @@ namespace PrintProjects.Web.Pages
             Project = await _database.ProjectRepository.GetByShortId(shortId);
             if(Project != null)
             {
-                ReadmeHtml = Markdown.ToHtml(Project.Readme);
+                ReadmeHtml = !string.IsNullOrEmpty(Project.Readme)
+                    ? Markdown.ToHtml(Project.Readme)
+                    : string.Empty;
                 // Escape Backslashes and remove newlines
                 // This way we are able to include the json into the html (see scryipt section in cshtml file)
                 ProjectFileContent = IO.File
