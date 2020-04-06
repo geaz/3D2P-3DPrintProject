@@ -70,8 +70,5 @@ The icons used in the Visual Studio Code Extension are taken from [Freepik](http
 
 ## TODOs
 
-- Paged Search
-- Extension Lending Page
-
-- Refactoring and Documentation
+- Add status update command to vscode extension
 - Finish Readme
