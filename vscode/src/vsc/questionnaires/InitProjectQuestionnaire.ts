@@ -49,6 +49,10 @@ export class InitProjectQuestionnaire extends BaseQuestionnaire {
 
         let git = gitExtension.getAPI(1);
         let repo = git.getRepository(vscode.Uri.file(path.dirname(this._projectFilePath)));
+        if (repo === null) {         
+            return new PromptResult('No repository found in current workspace!', true);
+        } 
+
         let repoUrl = repo!.state.remotes[0].fetchUrl;
         if (repoUrl === undefined) {         
             return new PromptResult('Repository remote URL is not set!', true);
