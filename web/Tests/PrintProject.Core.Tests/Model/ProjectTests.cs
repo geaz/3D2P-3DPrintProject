@@ -16,7 +16,6 @@ namespace PrintProjects.Core.Tests.Model
             var project = Project.Create
             (
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                rawRepositoryUrl: null,
                 downloadBasePath: null
             );
 
@@ -32,7 +31,6 @@ namespace PrintProjects.Core.Tests.Model
             var project = Project.Create
             (
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master/",
                 downloadBasePath: "C:\\NOTTHERE"
             );
 
@@ -50,13 +48,11 @@ namespace PrintProjects.Core.Tests.Model
             var project = Project.Create
             (
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master/",
                 downloadBasePath: downloadBasePath
             );
 
             //Assert
             Assert.IsFalse(string.IsNullOrEmpty(project.ShortId));
-            Assert.IsNotNull(project.CodeRepository);
         }
 
         [TestMethod]
@@ -67,7 +63,6 @@ namespace PrintProjects.Core.Tests.Model
             var project = Project.Create
             (
                 repositoryUrl: "https://github.com/geaz/simplyRetro-Z5.git",
-                rawRepositoryUrl: "https://raw.githubusercontent.com/geaz/simplyRetro-Z5/master/",
                 downloadBasePath: downloadBasePath
             );
 
@@ -75,10 +70,9 @@ namespace PrintProjects.Core.Tests.Model
             project.Update();
 
             //Assert
-            Assert.IsTrue(Directory.Exists(project.DataPath));
-            Assert.IsTrue(Directory.GetFiles(project.DataPath).Length > 0);
+            Assert.IsTrue(Directory.Exists(project.RepositoryPath));
+            Assert.IsTrue(Directory.GetFiles(project.RepositoryPath).Length > 0);
             Assert.IsFalse(string.IsNullOrEmpty(project.Readme));
-            Assert.IsFalse(string.IsNullOrEmpty(project.License));
         }
     }
 }

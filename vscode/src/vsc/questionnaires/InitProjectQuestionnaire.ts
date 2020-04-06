@@ -15,10 +15,6 @@ import { PromptResult } from '../promptEngine/PromptResult';
 export class InitProjectQuestionnaire extends BaseQuestionnaire {
 
     public projectName = new InputQuestion('Enter a name for the new project. This will also be the folder name.');
-    public provider = new PickQuestion('Pick your git provider.', ['Github', 'Bitbucket', 'Custom']);
-    public rawBasePath = new InputQuestion(
-        'Please enter the base path to access the raw files.', '',
-        this.provider, (provider) => provider === 'Custom');
 
     private _rootFolder: string = '';
     private _projectFilePath: string = '';
@@ -58,34 +54,14 @@ export class InitProjectQuestionnaire extends BaseQuestionnaire {
             return new PromptResult('Repository remote URL is not set!', true);
         } 
 
-        let rawUrl = this.getRawUrl(repoUrl);
-        if (rawUrl === undefined || rawUrl === '') {
-            return new PromptResult('Could not set raw repository URL!', true);
-        }
-
         fs.writeFileSync(this._projectFilePath, `{ 
             "name": "${this.projectName.answer}",
             "repositoryUrl": "${repoUrl}",
-            "rawRepositoryUrl": "${rawUrl}",
             "status": "WIP",
             "stls": [],
             "gallery": []
         }`, 'utf8');
         return new PromptResult();
-    }
-
-    private getRawUrl(repoUrl: string): string | undefined {
-        let rawUrl = this.rawBasePath.answer;
-        switch (this.provider.answer) {
-            case 'Github':
-                rawUrl = repoUrl.replace('.git', '/master/');
-                rawUrl = rawUrl.replace('https://github.com', 'https://raw.githubusercontent.com');
-                break;
-            case 'Bitbucket':
-                rawUrl = repoUrl!.replace('.git', '/raw/master/');
-                break;
-        }
-        return rawUrl;
     }
 
     public get Name(): string {

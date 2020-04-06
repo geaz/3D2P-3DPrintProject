@@ -9,7 +9,7 @@ namespace PrintProjects.Core.Model
         public static ProjectFile Load(string projectFilePath)
         {
             if(!File.Exists(projectFilePath))
-                throw new ModelException("Given project file does not exist!");
+                throw new ModelException("3D2P.json does not exist!");
 
             return JsonConvert.DeserializeObject<ProjectFile>(File.ReadAllText(projectFilePath));
         }

@@ -12,13 +12,6 @@ export class UploadProjectQuestionnaire extends BaseQuestionnaire {
     constructor(private _project: Project) { super(); }
 
     public async checkPrerequisite(): Promise<PromptResult> { 
-        let remoteExists = await this._projectUploader.remoteExists(this._project.projectFile.repositoryUrl, this._project.projectFile.rawRepositoryUrl);
-        if(!remoteExists) {
-            return new PromptResult(
-                '3D2P.json file does not exists in repository. Make sure you pushed all your changes. \
-                If you want to delete the project from the 3D2P homepage instead, use the delete command.', true);
-        }
-
         if(this._project.gallery.length === 0) {
             return new PromptResult('Add at least on image to the gallery!', true);
         }
@@ -43,7 +36,7 @@ export class UploadProjectQuestionnaire extends BaseQuestionnaire {
 
     public async vscCommand(): Promise<PromptResult> {
         let shortId = await this._projectUploader.uploadProject(this._project.projectFile.repositoryUrl, this._project.projectFile.rawRepositoryUrl);                      
-        return new PromptResult(`https://3d2p.net/projects/${shortId}`);
+        return new PromptResult(`https://3d2p.net/Project/${shortId}`);
     }
 
     public get Name(): string {

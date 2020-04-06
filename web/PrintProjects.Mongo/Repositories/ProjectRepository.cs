@@ -14,7 +14,7 @@ namespace PrintProjects.Mongo.Repositories
 
         public async Task<Project> GetByRepositoryUrl(string repositoryUrl)
         {
-            return await _collection.Find(f => f.CodeRepository.RepositoryUrl == repositoryUrl).FirstOrDefaultAsync();
+            return await _collection.Find(f => f.RepositoryUrl == repositoryUrl).FirstOrDefaultAsync();
         }
 
         public async Task<Project> GetByShortId(string shortId)

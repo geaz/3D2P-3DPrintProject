@@ -15,7 +15,7 @@ export class DeleteProjectQuestionnaire extends BaseQuestionnaire {
 
         let resultMessage = await this._projectUploader.deleteProject(this.shortId.answer!);                      
         if(resultMessage === undefined) {
-            return new PromptResult(`Deleted project successfully from 3D2P homepage.`);
+            return new PromptResult(`Project deleted successfully from 3D2P homepage.`);
         }
         else {
             return new PromptResult(`${resultMessage}`, true);

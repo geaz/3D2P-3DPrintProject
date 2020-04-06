@@ -34,7 +34,7 @@ namespace PrintProjects.Web.Pages
                 // Escape Backslashes and remove newlines
                 // This way we are able to include the json into the html (see scryipt section in cshtml file)
                 ProjectFileContent = IO.File
-                    .ReadAllText(IO.Path.Combine(Project.DataPath, Model.Project.PROJECT_FILE_NAME))
+                    .ReadAllText(IO.Path.Combine(Project.RepositoryPath, Model.Project.PROJECT_FILE_NAME))
                     .Replace("\\", "\\\\");
                 ProjectFileContent = Regex.Replace(ProjectFileContent, @"\r\n?|\n", string.Empty);
 

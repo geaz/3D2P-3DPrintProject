@@ -31,7 +31,7 @@
                 <div class="data-info">
                     <div class="data-info-item">@Model.Project.LastUpdate.ToShortDateString()</div>
                     <div class="data-info-item">@Model.Project.Status</div>
-                    <a class="data-info-item" target="_blank" href="@Model.Project.CodeRepository.RepositoryUrl" title="Repository Link">
+                    <a class="data-info-item" target="_blank" href="@Model.Project.RepositoryUrl" title="Repository Link">
                         <i class="fa fa-code-fork" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -59,7 +59,7 @@
             <div class="data-info">
                 <div class="data-info-item">@Model.Project.LastUpdate.ToShortDateString()</div>
                 <div class="data-info-item">@Model.Project.Status</div>
-                <a class="data-info-item" target="_blank" href="@Model.Project.CodeRepository.RepositoryUrl" title="Repository Link">
+                <a class="data-info-item" target="_blank" href="@Model.Project.RepositoryUrl" title="Repository Link">
                     <i class="fa fa-code-fork" aria-hidden="true"></i>
                 </a>
             </div>

@@ -24,59 +24,30 @@ namespace PrintProjects.Web.Api
             _database = database;
         }
 
-        [HttpGet]
-        [Route("remoteExists")]
-        public IActionResult RemoteExists(string repositoryUrl, string rawRepositoryUrl)
-        {
-            IActionResult result = Ok(JsonConvert.SerializeObject(new { result = false }));
-            try
-            {
-                var codeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl);
-                if(codeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
-                {
-                    result = Ok(JsonConvert.SerializeObject(new { result = true }));
-                }                
-            }
-            catch(Exception ex)
-            {
-                result = BadRequest(ex.Message);
-            }
-            return result;
-        }
-
         [HttpPost]
-        public async Task<IActionResult> UploadProject(string repositoryUrl, string rawRepositoryUrl)
+        public async Task<IActionResult> UploadProject(string repositoryUrl)
         {
             IActionResult result = BadRequest();
             try
             {
-                var codeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl);
-                if(!codeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
+                var project = await _database.ProjectRepository.GetByRepositoryUrl(repositoryUrl);
+                if(project == null)
                 {
-                    result = BadRequest($"Remote Repository doesn't contain a 3D2P.json file! Can't upload the project!");
-                } 
-                else 
-                {
-                    var project = await _database.ProjectRepository.GetByRepositoryUrl(repositoryUrl);
-                    if(project == null)
-                    {
-                        project = Project.Create
-                        (
-                            repositoryUrl: repositoryUrl,
-                            rawRepositoryUrl: rawRepositoryUrl,
-                            downloadBasePath: _settings.ProjectTargetPath
-                        );
-                        project.Update();
-                        _database.ProjectRepository.Insert(project);
-                    }
-                    else
-                    {
-                        project.Update();
-                        _database.ProjectRepository.Update(project);
-                    }
-                    await _database.Commit();
-                    result = Ok(JsonConvert.SerializeObject(new { shortId = project.ShortId }));
+                    project = Project.Create
+                    (
+                        repositoryUrl: repositoryUrl,
+                        downloadBasePath: _settings.ProjectTargetPath
+                    );
+                    project.Update();
+                    _database.ProjectRepository.Insert(project);
                 }
+                else
+                {
+                    project.Update();
+                    _database.ProjectRepository.Update(project);
+                }
+                await _database.Commit();
+                result = Ok(JsonConvert.SerializeObject(new { shortId = project.ShortId }));
             }
             catch(Exception ex)
             {
@@ -96,15 +67,11 @@ namespace PrintProjects.Web.Api
                 {
                     result = BadRequest($"Project with id '{shortId}' doesn't exist!");
                 }
-                else if(project.CodeRepository.RemoteFileExists(Project.PROJECT_FILE_NAME))
-                {
-                    result = BadRequest($"Remote Repository contains 3D2P.json file. Please remove it from the repository to delete the project!");
-                }
                 else
                 {
-                    Directory.Delete(project.DataPath, true);
+                    project.Delete();                    
                     _database.ProjectRepository.Delete(project);
-                    await _database.Commit();
+                    await _database.Commit();                  
                 }
             }
             catch(Exception ex)

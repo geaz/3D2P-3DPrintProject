@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using PrintProjects.Core.Interfaces;
 
 namespace PrintProjects.Core.Model
@@ -21,55 +20,73 @@ namespace PrintProjects.Core.Model
     public sealed class Project : IEntity
     {
         public static string PROJECT_FILE_NAME = "3D2P.json";
+        private readonly GitClient _gitClient = new GitClient();
 
         private Project() { }
 
-        public static Project Create(string repositoryUrl, string rawRepositoryUrl, string downloadBasePath)
+        public static Project Create(string repositoryUrl, string downloadBasePath)
         {
             if (string.IsNullOrEmpty(repositoryUrl))
                 throw new ArgumentNullException("Please provide a repository url!");
-            if (string.IsNullOrEmpty(rawRepositoryUrl))
-                throw new ArgumentNullException("Please provide a raw repository url!");
             if (string.IsNullOrEmpty(downloadBasePath))
                 throw new ArgumentNullException("Please provide a base path for the project download!");
             if (!Directory.Exists(downloadBasePath))
                 throw new ModelException("The given download base path was not found!");
 
-            var project = new Project()
-            {
-                CodeRepository = new CodeRepository(repositoryUrl, rawRepositoryUrl)
-            };
+            var project = new Project();
+            project.RepositoryUrl = repositoryUrl;
             project.ShortId = project.Id.GetShortGuid();
-            project.DataPath = Path.Combine(downloadBasePath, project.ShortId);
+            project.RepositoryPath = Path.Combine(downloadBasePath, project.ShortId);
 
             return project;
         }
 
         /// <summary>
-        /// Downloads and processes the 3d2p.json of the given repository.
+        /// Clones/pulls the repository and processes the 3d2p.json.
         /// </summary>
         public void Update()
         {
-            // Delete the old data first
-            if(Directory.Exists(DataPath)) Directory.Delete(DataPath, true);
-            Directory.CreateDirectory(DataPath);
-
-            var projectFile = CodeRepository.DownloadProjectFile(DataPath);
+            UpdateFiles();
+            var projectFile = ProjectFile.Load(Path.Combine(RepositoryPath, PROJECT_FILE_NAME));
 
             Name = projectFile.Name;
             Status = projectFile.Status;
             StlInfoList = projectFile.StlInfoList;
             GalleryInfoList = projectFile.GalleryInfoList;
             LastUpdate = DateTime.Now;
+      
+            if(FileExists("README")) Readme = File.ReadAllText(Path.Combine(RepositoryPath, "README"));
+            else if(FileExists("README.md")) Readme = File.ReadAllText(Path.Combine(RepositoryPath, "README.md"));
+        }
 
-            CodeRepository.DownloadMultiple(StlInfoList.Select(s => s.RelativePath).ToList(), DataPath);
-            CodeRepository.DownloadMultiple(GalleryInfoList.Select(s => s.RelativePath).ToList(), DataPath);
+        public void Delete()
+        {
+            UpdateFiles();
+            if(FileExists(PROJECT_FILE_NAME)) throw new ModelException("Repository still contains 3D2P.json file. Please remove it from the repository to delete the project!");
+            else _gitClient.DeleteGitFolder(RepositoryPath);
+        }
 
-            if(CodeRepository.RemoteFileExists("README")) Readme = CodeRepository.ReadRemoteFile("README", DataPath);
-            else if(CodeRepository.RemoteFileExists("README.md")) Readme = CodeRepository.ReadRemoteFile("README.md", DataPath);
+        /// <summary>
+        /// Clones/pulls the repository.
+        /// </summary>
+        private void UpdateFiles()
+        {
+            var repositoryDirectory = new DirectoryInfo(RepositoryPath);
+            if (repositoryDirectory.Exists)
+            {
+                _gitClient.Pull(RepositoryPath);
+            }
+            else
+            {
+                repositoryDirectory.Create();
+                _gitClient.Clone(RepositoryPath, RepositoryUrl);
+            }
+        }
 
-            if(CodeRepository.RemoteFileExists("LICENSE")) License = CodeRepository.ReadRemoteFile("LICENSE", DataPath);
-            else if(CodeRepository.RemoteFileExists("LICENSE.md")) License = CodeRepository.ReadRemoteFile("LICENSE.md", DataPath);
+        private bool FileExists(string relativePath)
+        {
+            var filePath = Path.Combine(RepositoryPath, relativePath);
+            return File.Exists(filePath);
         }
 
         public Guid Id { get; private set; } = Guid.NewGuid();
@@ -82,16 +99,14 @@ namespace PrintProjects.Core.Model
 
         public string Readme { get; private set; }
 
-        public string License { get; private set; }
+        public string RepositoryPath {get; private set; }
 
-        public string DataPath {get; private set; }
+        public string RepositoryUrl { get; private set; }
 
         public List<StlInfo> StlInfoList { get; private set; }
 
         public List<GalleryInfo> GalleryInfoList { get; private set; }
 
         public DateTime LastUpdate { get; private set; }
-
-        public CodeRepository CodeRepository { get; private set; }
     }
 }
