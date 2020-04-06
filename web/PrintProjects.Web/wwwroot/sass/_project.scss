@@ -96,20 +96,20 @@
     .gallery-image, 
     .stl-wrapper {
         max-width: 100%;
-        max-height: 250px;
+        height: 250px;
         flex-basis: 100%;
     }
 }
 
 @media (min-width: 960px) {
     .file-list-component {
-        max-height: 450px;
+        height: 450px;
         flex-basis: 25%;
     }
 
     .stl-wrapper,
     .gallery-image {
-        max-height: 450px;
+        height: 450px;
         flex-basis: 75%;
         max-width: 75%;
     }
