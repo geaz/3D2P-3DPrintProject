@@ -11,7 +11,7 @@
     "build": "npx npm-run-all build:*",
     "build:ts": "npx webpack --config webpack.config.js",
     "build:sass": "npx node-sass ./PrintProjects.Web/wwwroot/sass/ -o ./PrintProjects.Web/wwwroot/css/ --output-style compressed",
-    "build:server": "dotnet publish ./PrintProjects.Web/PrintProjects.Web.csproj"
+    "build:server": "dotnet publish ./PrintProjects.Web/PrintProjects.Web.csproj -r linux-x64 --configuration Release"
   },
   "repository": {
     "type": "git",

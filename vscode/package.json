@@ -1,11 +1,16 @@
 {
-	"name": "3d2p.vscode",
+	"name": "vscode",
 	"publisher": "3d2p",
 	"displayName": "3D2P - 3D Print Projects",	
 	"author": "Gerrit 'Geaz' Gazic",
 	"license": "MIT",
 	"description": "3D Print Projects Management in VS Code",
 	"version": "0.5.0",
+	"icon": "logo.png",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/geaz/3D2P-3DPrintProjects.git"
+	},
 	"engines": {
 		"vscode": "^1.43.0"
 	},

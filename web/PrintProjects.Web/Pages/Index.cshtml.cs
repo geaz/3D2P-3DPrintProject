@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,7 @@ namespace PrintProjects.Web.Pages
 {
     public class Index : PageModel
     {
-        private static int PAGE_SIZE = 25;
+        private static int PAGE_SIZE = 8;
 
         private readonly ILogger<Index> _logger;
         private readonly IDatabase _database;
@@ -22,8 +23,13 @@ namespace PrintProjects.Web.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            var result = (IActionResult) Page();          
+            var result = (IActionResult) Page();
+            var totalProjects = (await _database.ProjectRepository.Count());
+
+            ProjectList = await _database.ProjectRepository.GetPaged(0, PAGE_SIZE);      
             return result;
         }
+        
+        public ReadOnlyCollection<Model.Project> ProjectList { get; private set; }
     }
 }

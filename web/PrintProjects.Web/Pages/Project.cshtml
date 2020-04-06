@@ -2,9 +2,6 @@
 @model ProjectModel
 
 @{ ViewData["Title"] = Model.Project.Name; }
-@section Styles {
-    <link rel="stylesheet" href="~/css/pages/project.css" />
-}
 @section Scripts {
     <script>
         window.shortId = '@Model.Project.ShortId';

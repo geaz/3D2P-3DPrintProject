@@ -1,0 +1,120 @@
+@import 'var';
+
+.noscript {
+    display: block;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    margin: 0 0 25px 0;
+
+    h1 {
+        margin: 0;
+    }
+}
+
+.done {
+    border-top: 2px solid #008000;
+}
+
+.wip {
+    border-top: 2px solid #e2d300;
+}
+
+.data {    
+    background: white;
+    margin: 0 0 50px 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 0 0 5px 5px;
+
+    .tab-content {
+        display: none;
+        min-height: 450px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-input { 
+        display: none;
+
+        &:checked + label {
+            color: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid $primary-color;
+        }
+    }
+
+    #tab-button-stls:checked ~ #tab-stls,
+    #tab-button-gallery:checked ~ #tab-gallery {
+        display: block;
+    }
+
+    label {   
+        padding: 15px;
+        cursor: pointer;    
+        font-weight: bold;
+        display: inline-block;
+        color: rgba(0, 0, 0, 0.3);
+
+        &:hover {            
+            color: rgba(0, 0, 0, 0.6);
+        }
+    }
+
+    .data-footer {
+        display:flex;
+        padding: 15px;
+
+        .data-info {
+            flex: 1;
+            display: flex;
+            justify-content: right;
+        }
+
+        .data-info-item {
+            padding: 0px 5px;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+#gallery-app > div,
+#stl-viewer-app > div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.file-list-component,
+.gallery-image, 
+.stl-wrapper {
+    box-sizing: border-box;
+}
+
+@media (min-width: 375px) {
+    .file-list-component,
+    .gallery-image, 
+    .stl-wrapper {
+        max-width: 100%;
+        max-height: 250px;
+        flex-basis: 100%;
+    }
+}
+
+@media (min-width: 960px) {
+    .file-list-component {
+        max-height: 450px;
+        flex-basis: 25%;
+    }
+
+    .stl-wrapper,
+    .gallery-image {
+        max-height: 450px;
+        flex-basis: 75%;
+        max-width: 75%;
+    }
+}
+
+#js-app {
+    display: none;
+}

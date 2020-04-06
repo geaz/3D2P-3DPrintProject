@@ -3,6 +3,30 @@
 @{
     ViewData["Title"] = "Home";
 }
-@section Styles {
-    <link rel="stylesheet" href="~/css/pages/index.css" />
+
+<div class="headline">
+    <p class="secondary-line"><span>Free</span> & <span>Open Source</span> <a href="https://github.com/geaz/3D2P-3DPrintProjects" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a></p>
+    <p class="primary-line"><span>Manage</span> & <span>Upload</span> your 3D Print Projects within <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a></p>
+</div>
+
+<div class="action">
+    <a href="https://marketplace.visualstudio.com/items?itemName=3d2p.vscode" target="_blank">Download Extension</a>
+</div>
+    
+<video src="~/videos/demo.mp4" poster="~/videos/demo-poster.png" muted loop controls>
+    <img src="~/videos/demo-poster.png" title="No video support" />
+</video>
+
+<h2>Latest Project Updates</h2>
+@for(var i = 0; i < Model.ProjectList.Count; i += 4)
+{
+    <div class="flex-row">
+        @for(var j = 0; j < 4 && i + j < Model.ProjectList.Count; j++)
+        {
+            var project = Model.ProjectList[i + j];
+            <div class="flex-cell">
+                <partial name="_Project" model="project" />
+            </div>
+        }
+    </div>
 }

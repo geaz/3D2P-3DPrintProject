@@ -3,9 +3,6 @@
 @{
     ViewData["Title"] = "Overview";
 }
-@section Styles {
-    <link rel="stylesheet" href="~/css/pages/overview.css" />
-}
 
 @if(!string.IsNullOrEmpty(Model.SearchTerm))
 {
@@ -19,36 +16,7 @@
         {
             var project = Model.ProjectList[i + j];
             <div class="flex-cell">
-                <div class="project @project.Status.ToLower()">
-                    <div class="header">
-                        <a class="title" asp-page="/Project" asp-route-shortId="@project.ShortId" title="@project.Name">@project.Name</a>
-                        <small>ID: @project.ShortId</small>
-                    </div>            
-                    <a asp-page="/Project" asp-route-shortId="@project.ShortId">
-                        <img src="/ProjectFiles/@project.ShortId/@project.GalleryInfoList.First().RelativePath" alt="Project Image" />
-                    </a>
-                    <div class="footer">
-                        @{ var doneStls = project.StlInfoList.Sum(s => s.Status == "Done" ? 1 : 0); }
-                        @if(doneStls == project.StlInfoList.Count)
-                        {
-                            <div class="info">
-                                <i class="fa fa-cubes" aria-hidden="true"></i> STLs: @project.StlInfoList.Count                        
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="info">
-                                <i class="fa fa-cubes" aria-hidden="true"></i> STLs: @project.StlInfoList.Count (Done: @doneStls)                      
-                            </div>
-                        }              
-                        <div class="info">
-                            <i class="fa fa-cogs" aria-hidden="true"></i> Status: @project.Status
-                        </div>            
-                        <div class="info">
-                            <i class="fa fa-calendar" aria-hidden="true"></i> Last Update: @project.LastUpdate.ToShortDateString()
-                        </div> 
-                    </div>
-                </div>
+                <partial name="_Project" model="project" />
             </div>
         }
     </div>
