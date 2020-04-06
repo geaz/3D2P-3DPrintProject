@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import { InputQuestion } from '../promptEngine/InputQuestion';
-import { PickQuestion } from '../promptEngine/PickQuestion';
 import { GitExtension } from '../../git';
 import { BaseQuestionnaire } from '../promptEngine/BaseQuestionnaire';
 import { PromptResult } from '../promptEngine/PromptResult';

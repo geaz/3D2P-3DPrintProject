@@ -8,7 +8,6 @@ import { GalleryInfo } from './model/GalleryInfo';
 export class ProjectFile {
     public name: string = '';
     public repositoryUrl: string = '';
-    public rawRepositoryUrl: string = '';
     public status: string = '';
     public stls: FileList<StlInfo> = 
         new FileList<StlInfo>(".stl", (name, relPath) => new StlInfo(this._projectPath, name, relPath));

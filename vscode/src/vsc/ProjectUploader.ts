@@ -16,7 +16,7 @@ export class ProjectUploader {
         };
     }
     
-    public uploadProject(repositoryUrl: string, rawRepositoryUrl: string): Promise<string> {
+    public uploadProject(repositoryUrl: string): Promise<string> {
         this._options.path =  `/api/projects?`
             + `repositoryUrl=${encodeURIComponent(repositoryUrl)}`;
         this._options.method = 'POST';

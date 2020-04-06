@@ -35,7 +35,7 @@ export class UploadProjectQuestionnaire extends BaseQuestionnaire {
     }
 
     public async vscCommand(): Promise<PromptResult> {
-        let shortId = await this._projectUploader.uploadProject(this._project.projectFile.repositoryUrl, this._project.projectFile.rawRepositoryUrl);                      
+        let shortId = await this._projectUploader.uploadProject(this._project.projectFile.repositoryUrl);                      
         return new PromptResult(`https://3d2p.net/Project/${shortId}`);
     }
 
