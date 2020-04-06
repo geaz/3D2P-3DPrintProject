@@ -13,7 +13,7 @@ Hopefully this will help potential contributers.
 
 ### components
 
-This folder contains all [preact](https://preactjs.com/) components used by the **vscode extension** and the **website**.
+This folder contains all [Preact](https://preactjs.com/) components used by the **vscode extension** and the **website**.
 It is designed as a local NPM package. This way the **vscode extension** and the **website** are able to share some *preact* components.
 
 The package includes three major components:
@@ -38,16 +38,31 @@ To get a consistent build, all build tasks are designed as npm scripts.
 
 The **vscode** folder contains the whole code for the Visual Studio Code Extension. The following steps are needed to get it running:
 
-1. Execute *'npm install'* inside the **components** and **vscode** folder.
-2. Execute *'npm run compile:apps'* inside the **vscode** folder.
+1. Execute *npm install* inside the **components** and **vscode** folder.
+2. Execute *npm run compile:apps* inside the **vscode** folder.
 3. Open the **vscode** folder in Visual Studio Code and press *F5* to run and debug the extension in a new VS Code instance.
 
 ### Server
 
 The **web** folder contains the code for the *webapi* and the *homepage* of **3D2P**. The following steps are needed to get it running:
 
-1. Execute *'npm install'* inside the **web** folder.
-2. Execute *'npm run dev'* - this starts a development server and starts watching for scss and c# file changes
+1. Execute *npm install* inside the **web** folder.
+2. Execute *npm run dev* - this starts a development server and starts watching for scss and c# file changes
+
+The server uses a mongo database. Make sure that you have one installed and execute the following commands on your mongo database:
+
+```
+use 3d2p
+db.projects.createIndex( { "Name": "text", "Readme": "text" } )
+db.createUser({ user: "USERNAME", pwd: passwordPrompt(), roles: [{role: "readWrite", db:"3d2p"}]})
+```
+
+Add the following environment variables to your system:
+
+```
+export _3D2P_MONGOAUTH='USERNAME:PASS'
+export _3D2P_PROJECT_TARGET_PATH='PATH_TO_PROJECTS_DOWNLOAD_FOLDER'
+```
 
 ## Credits
 
@@ -55,12 +70,8 @@ The icons used in the Visual Studio Code Extension are taken from [Freepik](http
 
 ## TODOs
 
-- Search
+- Paged Search
 - Extension Lending Page
 
-- Delete Command in VS Code
-- VS Code Gallery functionality
-
 - Refactoring and Documentation
-
 - Finish Readme
