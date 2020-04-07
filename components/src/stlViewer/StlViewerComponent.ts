@@ -4,7 +4,7 @@ import htm from 'htm';
 
 import { WebGLRenderer, Vector3, Object3D, Scene, BufferGeometry,
         Mesh, MeshPhongMaterial, PerspectiveCamera, 
-        DirectionalLight, AmbientLight, DoubleSide, Vector2 } from 'three';
+        DirectionalLight, AmbientLight, Vector2 } from 'three';
 
 import { Dimensions } from './threejs/Dimensions';
 // @ts-ignore
@@ -123,8 +123,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
                     this._material = new MeshPhongMaterial({
                         color: this.props.color,
                         specular: 0x1F1F1F,
-                        shininess: 25,
-                        side: DoubleSide
+                        shininess: 25
                     });                    
                     resolve(new Mesh(geometry, this._material));
                 });
