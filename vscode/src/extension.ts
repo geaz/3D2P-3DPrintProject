@@ -6,7 +6,7 @@ import { PROJECTFILE_NAME, Project } from './3d2p/Project';
 import { FileWatcher } from './vsc/FileWatcher';
 import { GalleryTreeDataProvider } from './vsc/extensions/treeViews/GalleryTreeDataProvider';
 import { StlTreeDataProvider } from './vsc/extensions/treeViews/StlTreeDataProvider';
-import { PromptEngine } from './vsc/promptEngine/promptEngine';
+import { PromptEngine } from './vsc/promptEngine/PromptEngine';
 import { InitProjectQuestionnaire } from './vsc/questionnaires/InitProjectQuestionnaire';
 import { StlWebView } from './vsc/extensions/webViews/StlWebView';
 import { AddGalleryImageQuestionnaire } from './vsc/questionnaires/AddGalleryImageQuestionnaire';

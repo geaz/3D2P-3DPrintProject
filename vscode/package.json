@@ -5,7 +5,7 @@
 	"author": "Gerrit 'Geaz' Gazic",
 	"license": "MIT",
 	"description": "3D Print Projects Management in VS Code",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"icon": "logo.png",
 	"repository": {
 		"type": "git",
