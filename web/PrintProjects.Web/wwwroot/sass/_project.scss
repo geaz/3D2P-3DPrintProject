@@ -26,7 +26,7 @@
 .data {    
     background: white;
     margin: 0 0 50px 0;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: $box-shadow;
     border-radius: 0 0 5px 5px;
 
     .tab-content {

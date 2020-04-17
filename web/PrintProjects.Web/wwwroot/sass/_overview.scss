@@ -16,7 +16,7 @@
 
 .project {
     border-radius: 0 0 5px 5px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: $box-shadow;
     background: #f9f9f9;
 
     .header, .footer {
