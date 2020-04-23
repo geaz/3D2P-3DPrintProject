@@ -28,26 +28,12 @@
     margin: 0 0 50px 0;
     box-shadow: $box-shadow;
     border-radius: 0 0 5px 5px;
+    padding-top: 50px;
 
-    .tab-content {
-        display: none;
+    .data-content {
         min-height: 450px;
         border-top: 1px solid rgba(0, 0, 0, 0.1);
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .tab-input { 
-        display: none;
-
-        &:checked + label {
-            color: rgba(0, 0, 0, 0.8);
-            border-bottom: 2px solid $primary-color;
-        }
-    }
-
-    #tab-button-stls:checked ~ #tab-stls,
-    #tab-button-gallery:checked ~ #tab-gallery {
-        display: block;
     }
 
     label {   

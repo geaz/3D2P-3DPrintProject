@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 import { Project } from '../../../3d2p/Project';
-import { StlInfo } from '../../../3d2p/model/StlInfo';
+import { StlInfo } from '../../../3d2p/StlInfo';
 
 export class StlWebView {
     private readonly _panel: vscode.WebviewPanel;

@@ -24,7 +24,7 @@
     <noscript>
         <div class="data @Model.Project.Status.ToLower()">
             <div class="data-footer">
-                <div class="data-info-item">Please activate Javascript to use the STL Viewer and Gallery.</div>
+                <div class="data-info-item">Please activate Javascript to use the STL Viewer.</div>
                 <div class="data-info">
                     <div class="data-info-item">@Model.Project.LastUpdate.ToShortDateString()</div>
                     <div class="data-info-item">@Model.Project.Status</div>
@@ -36,20 +36,9 @@
         </div>
     </noscript>
 
-    <div id="js-app" class="data @Model.Project.Status.ToLower()">     
-        <input name="data-tabs" id="tab-button-stls" class="tab-input desktop" type="radio" checked />
-        <label for="tab-button-stls" class="desktop">STLs</label>
-
-        <input name="data-tabs" id="tab-button-gallery" class="tab-input" type="radio" />
-        <label for="tab-button-gallery">Gallery</label>
-        
-        <div id="tab-stls" class="tab-content desktop">
+    <div id="js-app" class="data @Model.Project.Status.ToLower()">             
+        <div class="data-content desktop">
             <div id="stl-viewer-app"></div>
-        </div>
-
-        <div id="tab-gallery" class="tab-content">
-            <noscript><div class="noscript">Please activate Javascript to use the Gallery.</div></noscript>
-            <div id="gallery-app"></div>
         </div>
 
         <div class="data-footer">

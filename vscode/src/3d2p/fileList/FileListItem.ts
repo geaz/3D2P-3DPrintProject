@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as os from 'os';
 
-export abstract class FileListItem {
+export class FileListItem {
     constructor(private _basePath: string, public name: string, public relativePath: string) {
         // Replace the path delimiter on windows to 
         // keep the project json cross platform compatible

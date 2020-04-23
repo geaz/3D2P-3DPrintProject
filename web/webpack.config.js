@@ -2,8 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        StlViewerApp: './PrintProjects.Web/wwwroot/ts/StlViewerApp.ts',
-        GalleryApp: './PrintProjects.Web/wwwroot/ts/GalleryApp.ts'
+        StlViewerApp: './PrintProjects.Web/wwwroot/ts/StlViewerApp.ts'
     },
     module: {
         rules: [

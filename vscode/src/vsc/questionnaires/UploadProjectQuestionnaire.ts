@@ -12,8 +12,8 @@ export class UploadProjectQuestionnaire extends BaseQuestionnaire {
     constructor(private _project: Project) { super(); }
 
     public async checkPrerequisite(): Promise<PromptResult> { 
-        if(this._project.gallery.length === 0) {
-            return new PromptResult('Add at least on image to the gallery!', true);
+        if(this._project.projectFile.coverImage === '') {
+            return new PromptResult('Add a cover image!', true);
         }
         
         let gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git')?.exports;

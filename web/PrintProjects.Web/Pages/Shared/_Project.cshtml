@@ -5,7 +5,7 @@
         <small>ID: @Model.ShortId</small>
     </div>            
     <a asp-page="/Project" asp-route-shortId="@Model.ShortId">
-        <img src="/ProjectFiles/@Model.ShortId/@Model.GalleryInfoList.First().RelativePath" alt="Project Image" />
+        <img src="/ProjectFiles/@Model.ShortId/@Model.CoverImage" alt="Project Image" />
     </a>
     <div class="footer">
         @{ var doneStls = Model.StlInfoList.Sum(s => s.Status == "Done" ? 1 : 0); }

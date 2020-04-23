@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import { IStlAnnotation } from '3d2p.preact.components';
-import { FileListItem } from "../fileList/FileListItem";
+import { FileListItem } from "./fileList/FileListItem";
 
 export const DEFAULT_STL_COLOR: number = 0xF58026;
 

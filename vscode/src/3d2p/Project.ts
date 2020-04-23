@@ -1,17 +1,17 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { StlInfo } from './StlInfo';
 import { ProjectFile } from './ProjectFile';
 import { FileList } from './fileList/FileList';
-import { StlInfo } from './model/StlInfo';
-import { GalleryInfo } from './model/GalleryInfo';
+import { FileListItem } from './fileList/FileListItem';
 
 export const PROJECTFILE_NAME = "3D2P.json";
 
 export class Project {
     private _projectPath?: string;
     private _projectFile?: ProjectFile;
-    private _imageList?: FileList<GalleryInfo>;
+    private _imageList?: FileList<FileListItem>;
     
     public Load(projectPath: string): void {
         if(!fs.existsSync(path.join(projectPath, PROJECTFILE_NAME))) {
@@ -20,7 +20,7 @@ export class Project {
 
         this._projectPath = projectPath;
         this._projectFile = new ProjectFile(projectPath, path.join(projectPath, PROJECTFILE_NAME));
-        this._imageList = new FileList<GalleryInfo>(".jpg|.jpeg|.png", (name, relPath) => new GalleryInfo(projectPath, name, relPath));
+        this._imageList = new FileList<FileListItem>(".jpg|.jpeg|.png", (name, relPath) => new FileListItem(projectPath, name, relPath));
 
         this.stls.updateListFromDisk(this._projectPath);
         this.images.updateListFromDisk(this._projectPath);
@@ -54,13 +54,8 @@ export class Project {
         return this._projectFile.stls;
     }
 
-    public get images(): FileList<GalleryInfo> {
+    public get images(): FileList<FileListItem> {
         if(this._projectFile === undefined) throw "No project loaded!";
         return this._imageList!;
-    }
-    
-    public get gallery(): Array<GalleryInfo> {
-        if(this._projectFile === undefined) throw "No project loaded!";
-        return this._projectFile.gallery;
     }
 }

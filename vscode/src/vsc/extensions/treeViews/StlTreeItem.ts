@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { StlStatus, StlInfo } from '../../../../3d2p/model/StlInfo';
+import { StlStatus, StlInfo } from '../../../3d2p/StlInfo';
 
 export class StlTreeItem extends vscode.TreeItem {
     private readonly _toolTip: string;
@@ -19,18 +19,18 @@ export class StlTreeItem extends vscode.TreeItem {
         this.command = {
             command: '3d2p.cmd.openStlWebview',
             title: 'Open STL',
-            arguments: [absoluteFilePath]
+            arguments: [vscode.Uri.file(absoluteFilePath)]
         };
         if(stlInfo.status === StlStatus.WIP) {
             this.iconPath = {
-                light: path.join(__filename, '..', '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'wip.png'),
-                dark: path.join(__filename, '..', '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'wip.png'),
+                light: path.join(__filename, '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'wip.png'),
+                dark: path.join(__filename, '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'wip.png'),
             };
         }
         else {
             this.iconPath = {
-                light: path.join(__filename, '..', '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'done.png'),
-                dark: path.join(__filename, '..', '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'done.png'),
+                light: path.join(__filename, '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'light', 'done.png'),
+                dark: path.join(__filename, '..', '..', '..', '..', '..', 'resources', 'images', 'icons', 'dark', 'done.png'),
             };
         }
     }

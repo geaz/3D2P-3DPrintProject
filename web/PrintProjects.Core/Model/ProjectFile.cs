@@ -17,6 +17,9 @@ namespace PrintProjects.Core.Model
         [JsonProperty("name")]
         public string Name { get; set; } = "Mysterious unnamed project";
 
+        [JsonProperty("coverImage")]
+        public string CoverImage { get; set; }
+
         [JsonProperty("repositoryUrl")]
         public string RepositoryUrl { get; set; }
 
@@ -28,8 +31,5 @@ namespace PrintProjects.Core.Model
 
         [JsonProperty("stls")]
         public List<StlInfo> StlInfoList { get; set; } = new List<StlInfo>();
-
-        [JsonProperty("gallery")]
-        public List<GalleryInfo> GalleryInfoList { get; set; } = new List<GalleryInfo>();
     }
 }

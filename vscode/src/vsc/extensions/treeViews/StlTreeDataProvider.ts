@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { Project } from '../../../3d2p/Project';
 import { FileWatcher } from '../../FileWatcher';
-import { StlTreeItem } from './treeItems/StlTreeItem';
+import { StlTreeItem } from './StlTreeItem';
 
 export class StlTreeDataProvider implements vscode.TreeDataProvider<StlTreeItem> {
     private _didChangeTreeDataEvent: vscode.EventEmitter<StlTreeItem | undefined> = new vscode.EventEmitter<StlTreeItem | undefined>();

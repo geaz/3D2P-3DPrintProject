@@ -52,7 +52,7 @@ namespace PrintProjects.Core.Model
             Name = projectFile.Name;
             Status = projectFile.Status;
             StlInfoList = projectFile.StlInfoList;
-            GalleryInfoList = projectFile.GalleryInfoList;
+            CoverImage = projectFile.CoverImage;
             LastUpdate = DateTime.Now;
       
             if(FileExists("README")) Readme = File.ReadAllText(Path.Combine(RepositoryPath, "README"));
@@ -99,13 +99,13 @@ namespace PrintProjects.Core.Model
 
         public string Readme { get; private set; }
 
+        public string CoverImage { get; private set; }
+
         public string RepositoryPath {get; private set; }
 
         public string RepositoryUrl { get; private set; }
 
         public List<StlInfo> StlInfoList { get; private set; }
-
-        public List<GalleryInfo> GalleryInfoList { get; private set; }
 
         public DateTime LastUpdate { get; private set; }
     }
