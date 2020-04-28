@@ -3,15 +3,14 @@
   "version": "0.5.0",
   "description": "The 3D2P website",
   "scripts": {
-    "test": "dotnet test ./Tests/PrintProject.Core.Tests/PrintProject.Core.Tests.csproj",
     "dev": "npx -c \"concurrently \\\"npm run dev:ts\\\" \\\"npm run dev:sass\\\" \\\"npm run dev:server\\\"\"",
     "dev:ts": "npx webpack --config webpack.config.js --watch",
-    "dev:sass": "npx node-sass -w ./PrintProjects.Web/wwwroot/sass/ -o ./PrintProjects.Web/wwwroot/css/",
-    "dev:server": "dotnet watch --project ./PrintProjects.Web/PrintProjects.Web.csproj run",
+    "dev:sass": "npx node-sass -w ./wwwroot/sass/ -o ./wwwroot/css/",
+    "dev:server": "dotnet watch --project ./PrintProjects.Web.csproj run",
     "build": "npx npm-run-all build:*",
     "build:ts": "npx webpack --config webpack.config.js",
-    "build:sass": "npx node-sass ./PrintProjects.Web/wwwroot/sass/ -o ./PrintProjects.Web/wwwroot/css/ --output-style compressed",
-    "build:server": "dotnet publish ./PrintProjects.Web/PrintProjects.Web.csproj -r linux-x64 --configuration Release"
+    "build:sass": "npx node-sass ./wwwroot/sass/ -o ./wwwroot/css/ --output-style compressed",
+    "build:server": "dotnet publish ./PrintProjects.Web.csproj -r linux-x64 --configuration Release"
   },
   "repository": {
     "type": "git",

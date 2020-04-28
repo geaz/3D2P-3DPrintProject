@@ -6,19 +6,27 @@
 		},
 		{
 			"name": "app",
-			"path": "app"
+			"path": "src\\app"
 		},
 		{
 			"name": "vscode",
-			"path": "vscode"
+			"path": "src\\vscode"
 		},
 		{
 			"name": "web",
-			"path": "web"
+			"path": "src\\web"
 		},
 		{
 			"name": "components",
-			"path": "components"
+			"path": "src\\components"
+		},
+		{
+			"name": "libraries",
+			"path": "src\\libraries"
+		},
+		{
+			"name": "tests",
+			"path": "tests"
 		}
 	],
 	"settings": {}

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PrintProjects.Core\PrintProjects.Core.csproj" />
+    <ProjectReference Include="..\..\src\libraries\PrintProjects.Core\PrintProjects.Core.csproj" />
   </ItemGroup>
 
 </Project>

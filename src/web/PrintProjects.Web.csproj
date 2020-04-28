@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);webpack.config.js;node_modules\**;package*.json;tsconfig.json</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PrintProjects.Core\PrintProjects.Core.csproj" />
-    <ProjectReference Include="..\PrintProjects.Mongo\PrintProjects.Mongo.csproj" />
+    <ProjectReference Include="..\libraries\PrintProjects.Core\PrintProjects.Core.csproj" />
+    <ProjectReference Include="..\libraries\PrintProjects.Mongo\PrintProjects.Mongo.csproj" />
   </ItemGroup>
 
 </Project>

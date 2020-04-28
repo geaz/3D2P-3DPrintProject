@@ -5,10 +5,10 @@ node_modules
 .vscode-test/
 *.vsix
 components/lib
-web/PrintProjects.Web/wwwroot/css/
-web/PrintProjects.Web/wwwroot/js/
-web/Tests/**/TestResults
+src/web/wwwroot/css/
+src/web/wwwroot/js/
 app/**/app.js
 bin
 obj
 TestResults
+src/components/lib/**

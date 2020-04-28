@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        StlViewerApp: './PrintProjects.Web/wwwroot/ts/StlViewerApp.ts'
+        StlViewerApp: './wwwroot/ts/StlViewerApp.ts'
     },
     module: {
         rules: [
@@ -18,7 +18,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, './PrintProjects.Web/wwwroot/js'),
+        path: path.resolve(__dirname, './wwwroot/js'),
     },
     mode: 'production'
 };

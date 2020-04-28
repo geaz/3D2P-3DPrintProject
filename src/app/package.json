@@ -3,7 +3,6 @@
   "version": "0.5.0",
   "description": "The 3D2P desktop application - Includes a 3MF Viewer and 3D2P.json bundler",
   "scripts": {
-    "test": "dotnet test ../../tests/PrintProjects.ThreeMF.Tests/PrintProjects.ThreeMF.Tests.csproj",
     "dev": "npx npm-run-all dev:*",
     "dev:ts": "npx webpack --config webpack.config.js",
     "dev:app": "dotnet build --configuration Debug",

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PrintProjects.ThreeMF\PrintProjects.ThreeMF.csproj" />
+    <ProjectReference Include="..\libraries\PrintProjects.ThreeMF\PrintProjects.ThreeMF.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,4 +34,13 @@
     </None>
   </ItemGroup>
 
+  <Target Name="CopyDll" AfterTargets="AfterBuild">
+    <Copy SourceFiles="..\..\libs\lib3mf.dll" DestinationFolder="$(OutDir)" />
+  </Target>
+  <Target Name="CopyDyLib" AfterTargets="CopyDll">
+    <Copy SourceFiles="..\..\libs\lib3mf.dylib" DestinationFolder="$(OutDir)" />
+  </Target>
+  <Target Name="CopySo" AfterTargets="CopyDyLib">
+    <Copy SourceFiles="..\..\libs\lib3mf.so" DestinationFolder="$(OutDir)" />
+  </Target>
 </Project>

@@ -1855,7 +1855,7 @@ namespace PrintProjects.ThreeMF {
 			CheckError(Internal.Lib3MFWrapper.MetaData_SetMustPreserve (Handle, (Byte)( AMustPreserve ? 1 : 0 )));
 		}
 
-		public String GetType ()
+		public new String GetType ()
 		{
 			UInt32 sizeType = 0;
 			UInt32 neededType = 0;
@@ -1963,7 +1963,7 @@ namespace PrintProjects.ThreeMF {
 		{
 		}
 
-		public eObjectType GetType ()
+		public new eObjectType GetType ()
 		{
 			Int32 resultObjectType = 0;
 
