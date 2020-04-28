@@ -1,4 +1,5 @@
 .cache
+.vs
 out
 node_modules
 .vscode-test/
@@ -7,5 +8,7 @@ components/lib
 web/PrintProjects.Web/wwwroot/css/
 web/PrintProjects.Web/wwwroot/js/
 web/Tests/**/TestResults
+app/**/app.js
 bin
 obj
+TestResults

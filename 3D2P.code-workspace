@@ -1,16 +1,24 @@
 {
 	"folders": [
 		{
-			"path": "components"
+			"name": "3D2P-3DPrintProjects",
+			"path": "."
 		},
 		{
+			"name": "app",
+			"path": "app"
+		},
+		{
+			"name": "vscode",
 			"path": "vscode"
 		},
 		{
+			"name": "web",
 			"path": "web"
 		},
 		{
-			"path": "."
+			"name": "components",
+			"path": "components"
 		}
 	],
 	"settings": {}
