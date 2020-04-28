@@ -2,12 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using PrintProjects.Core.Interfaces;
-using PrintProjects.Mongo;
 
 namespace PrintProjects.Web
 {
@@ -15,18 +11,11 @@ namespace PrintProjects.Web
     {
         public Startup(IConfiguration configuration)
         {
-            Settings = new Settings();
             Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            new ConfigureFromConfigurationOptions<Settings>(Configuration.GetSection("3D2P"))
-                .Configure(Settings);
-
-            services.AddSingleton(Settings);
-            services.AddSingleton<IDatabase>(new MongoDatabase(Settings.ConnectionString, Settings.Database));
-
             services.AddRazorPages(); 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -48,11 +37,6 @@ namespace PrintProjects.Web
             }
 
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Settings.ProjectTargetPath),
-                RequestPath = "/ProjectFiles"
-            });
             app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -68,7 +52,6 @@ namespace PrintProjects.Web
             });
         }
 
-        public Settings Settings { get; }
         public IConfiguration Configuration { get;}
     }
 }

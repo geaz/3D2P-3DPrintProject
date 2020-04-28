@@ -10,21 +10,25 @@ namespace PrintProjects.Core.Model
         {
             if(!File.Exists(projectFilePath))
                 throw new ModelException("3D2P.json does not exist!");
+            else if(Path.GetFileName(projectFilePath).ToUpper() != "3D2P.JSON")
+                throw new ModelException("Please provide a 3D2P.json file!");
 
             return JsonConvert.DeserializeObject<ProjectFile>(File.ReadAllText(projectFilePath));
+        }
+
+        public void Write(string projectFilePath, bool overwrite)
+        {
+            if(File.Exists(projectFilePath) && !overwrite)
+                throw new ModelException($"File already exists!");
+            
+            File.WriteAllText(projectFilePath, JsonConvert.SerializeObject(this));
         }
 
         [JsonProperty("name")]
         public string Name { get; set; } = "Mysterious unnamed project";
 
-        [JsonProperty("coverImage")]
-        public string CoverImage { get; set; }
-
-        [JsonProperty("repositoryUrl")]
-        public string RepositoryUrl { get; set; }
-
-        [JsonProperty("rawRepositoryUrl")]
-        public string RawRepositoryUrl { get; set; }
+        [JsonProperty("thumbnail")]
+        public string Thumbnail { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; } = "WIP";

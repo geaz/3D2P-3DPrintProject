@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\libraries\PrintProjects.Core\PrintProjects.Core.csproj" />
-    <ProjectReference Include="..\libraries\PrintProjects.Mongo\PrintProjects.Mongo.csproj" />
   </ItemGroup>
 
 </Project>
