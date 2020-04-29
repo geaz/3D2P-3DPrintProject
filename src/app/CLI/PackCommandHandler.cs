@@ -42,12 +42,14 @@ namespace PrintProjects.App.CLI
             var projectFile = ProjectFile.Load(project.FullName);
 
             modelBuilder.Set3D2PFile(project.FullName);
-            if(!string.IsNullOrEmpty(projectFile.Readme)) modelBuilder.SetReadme(projectFile.Readme);
-            if(!string.IsNullOrEmpty(projectFile.Thumbnail)) modelBuilder.SetThumbnail(projectFile.Thumbnail);
+            if(!string.IsNullOrEmpty(projectFile.Readme)) 
+                modelBuilder.SetReadme(Path.GetFullPath(projectFile.Readme, project.DirectoryName));
+            if(!string.IsNullOrEmpty(projectFile.Thumbnail)) 
+                modelBuilder.SetThumbnail(Path.GetFullPath(projectFile.Thumbnail, project.DirectoryName));
 
             foreach(var stl in projectFile.StlInfoList)
             {
-                modelBuilder.AddStl(stl.RelativePath);
+                modelBuilder.AddStl(Path.GetFullPath(stl.RelativePath, project.DirectoryName));
             }
             
             var targetFilepath = Path.Combine(dir.FullName, $"{projectFile.Name}.3mf");
