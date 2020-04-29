@@ -1,8 +1,7 @@
 ﻿using System.Linq;
+using System.Text;
 using System.Collections.Generic;
 using PrintProjects.ThreeMF.Model;
-using System;
-using System.Text;
 
 namespace PrintProjects.ThreeMF
 {
@@ -43,23 +42,6 @@ namespace PrintProjects.ThreeMF
 
         private void LoadColors()
         {
-         /*  var attachment = _model.AddAttachment("/Metadata/README.md", "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve");
-            attachment.ReadFromFile("TestData/README.md");
-            
-            var k = _model.GetAttachmentCount();
-
-            _model.AddCustomContentType("md", "test/markdown");
-
-            var writer = _model.QueryWriter("3mf");
-            writer.WriteToFile("TestData/test.3mf");
-
-            var test = Wrapper.CreateModel();
-            var reader = test.QueryReader("3mf");
-           // reader.AddRelationToRead("http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve");
-            reader.ReadFromFile("TestData/test.3mf");
-
-          var j = _model.GetAttachmentCount();*/
-
             Colors = new List<Color>();
             var colorIterator = _model.GetColorGroups();
             while(colorIterator.MoveNext())

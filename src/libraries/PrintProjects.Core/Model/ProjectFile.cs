@@ -4,8 +4,16 @@ using System.Collections.Generic;
 
 namespace PrintProjects.Core.Model
 {
+    public enum Status
+    {
+        WIP,
+        Done
+    }
+
     public sealed class ProjectFile
     {
+        public static string ProjectFileName = "3D2P.json"; 
+
         public static ProjectFile Load(string projectFilePath)
         {
             if(!File.Exists(projectFilePath))
@@ -16,7 +24,7 @@ namespace PrintProjects.Core.Model
             return JsonConvert.DeserializeObject<ProjectFile>(File.ReadAllText(projectFilePath));
         }
 
-        public void Write(string projectFilePath, bool overwrite)
+        public void Save(string projectFilePath, bool overwrite)
         {
             if(File.Exists(projectFilePath) && !overwrite)
                 throw new ModelException($"File already exists!");
@@ -30,8 +38,11 @@ namespace PrintProjects.Core.Model
         [JsonProperty("thumbnail")]
         public string Thumbnail { get; set; }
 
+        [JsonProperty("readme")]
+        public string Readme { get; set; }
+
         [JsonProperty("status")]
-        public string Status { get; set; } = "WIP";
+        public Status Status { get; set; } = Status.WIP;
 
         [JsonProperty("stls")]
         public List<StlInfo> StlInfoList { get; set; } = new List<StlInfo>();

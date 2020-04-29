@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/geaz/3D2P-3DPrintProjects#readme",
   "devDependencies": {
-    "3d2p.preact.components": "file:../shared/components",
+    "3d2p.preact.components": "file:../components",
     "@types/node": "^13.9.8",
     "concurrently": "^5.1.0",
     "copyfiles": "^2.2.0",
