@@ -1,11 +1,14 @@
 using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System;
 
 namespace PrintProjects.Core.Model
 {
     public enum Status
     {
+        Unknown,
         WIP,
         Done
     }
@@ -24,6 +27,14 @@ namespace PrintProjects.Core.Model
             return JsonConvert.DeserializeObject<ProjectFile>(File.ReadAllText(projectFilePath));
         }
 
+        public static ProjectFile Load(byte[] projectFileBytes)
+        {
+            if(projectFileBytes == null)
+                throw new ModelException("Byte array is null!");
+                
+            return JsonConvert.DeserializeObject<ProjectFile>(Encoding.UTF8.GetString(projectFileBytes));
+        }
+
         public void Save(string projectFilePath, bool overwrite)
         {
             if(File.Exists(projectFilePath) && !overwrite)
@@ -31,6 +42,9 @@ namespace PrintProjects.Core.Model
             
             File.WriteAllText(projectFilePath, JsonConvert.SerializeObject(this));
         }
+
+        [JsonProperty("id")]
+        public string Id { get; set; } = Guid.NewGuid().GetShortGuid();
 
         [JsonProperty("name")]
         public string Name { get; set; } = "Mysterious unnamed project";
@@ -44,7 +58,7 @@ namespace PrintProjects.Core.Model
         [JsonProperty("status")]
         public Status Status { get; set; } = Status.WIP;
 
-        [JsonProperty("stls")]
+        [JsonProperty("stlInfoList")]
         public List<StlInfo> StlInfoList { get; set; } = new List<StlInfo>();
     }
 }

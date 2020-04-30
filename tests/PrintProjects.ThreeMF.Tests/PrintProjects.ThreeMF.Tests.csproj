@@ -18,13 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TestData\PlainMulti.3mf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ReadmeMulti.3mf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\README.md">
+    <Content Include="TestData\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>  

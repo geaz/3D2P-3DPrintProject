@@ -17,7 +17,7 @@ namespace PrintProjects.Core.Model
         [JsonProperty("relativePath")]
         public string RelativePath { get; set; }
 
-        [JsonProperty("annotations")]
-        public List<StlAnnotation> Annotations { get; set; } = new List<StlAnnotation>();
+        [JsonProperty("annotationList")]
+        public List<StlAnnotation> AnnotationList { get; set; } = new List<StlAnnotation>();
     }
 }

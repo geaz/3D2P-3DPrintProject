@@ -2,6 +2,9 @@
 using System.Text;
 using System.Collections.Generic;
 using PrintProjects.ThreeMF.Model;
+using System.IO;
+using PrintProjects.Core;
+using PrintProjects.Core.Model;
 
 namespace PrintProjects.ThreeMF
 {
@@ -18,26 +21,52 @@ namespace PrintProjects.ThreeMF
             LoadReadme();
             LoadColors();
             LoadMeshes();
+            LoadProjectFile();
+        }
+
+        public byte[] GetAttachment(string attachmenPath)
+        {
+            byte[] attachmentBytes = null;     
+            for(uint i = 0; i < _model.GetAttachmentCount(); i++)
+            {
+                var attachment = _model.GetAttachment(i);
+                if(attachment.GetPath() == attachmenPath)
+                {
+                    var fileSize = attachment.GetStreamSize();
+
+                    attachmentBytes = new byte[fileSize];
+                    attachment.WriteToBuffer(out attachmentBytes);
+                    break;
+                }       
+            }
+            return attachmentBytes;
+        }
+
+        public void ExtractPrintProject(string directory)
+        {
+            if(!Directory.Exists(directory))
+                throw new ModelException("Directory does not exist!");
+            
+            foreach(var mesh in Meshes)
+            {
+                var stlModel = Wrapper.CreateModel();
+                var stlMesh = stlModel.AddMeshObject();
+                stlMesh.SetName(mesh.Name);
+                stlMesh.SetGeometry(mesh.NativeVertices, mesh.NativeTriangles);
+                stlModel.AddBuildItem(stlMesh, Wrapper.GetIdentityTransform());
+
+                var stlWriter = stlModel.QueryWriter("stl");
+                stlWriter.WriteToFile(Path.Combine(directory, stlMesh.GetName()));
+            }
+            if(!string.IsNullOrEmpty(Readme)) File.WriteAllText(Path.Combine(directory, "README.md"), Readme);
+            if(ProjectFile != null) ProjectFile.Save(Path.Combine(directory, "3D2P.json"), true);
         }
 
         private void LoadReadme()
         {
-            var l = _model.GetMetaDataGroup();
-            var k = l.GetMetaDataCount();
-            for(uint i = 0; i < _model.GetAttachmentCount(); i++)
-            {
-                var attachment = _model.GetAttachment(i);
-                if(attachment.GetPath() == "/Metadata/README.md")
-                {
-                    var fileSize = attachment.GetStreamSize();
-
-                    var fileBytes = new byte[fileSize];
-                    attachment.WriteToBuffer(out fileBytes);
-
-                    Readme = Encoding.UTF8.GetString(fileBytes, 0, fileBytes.Length);
-                    break;
-                }       
-            }
+            var readmeBytes = GetAttachment("/Metadata/README.md");
+            if(readmeBytes != null)
+                Readme = Encoding.UTF8.GetString(readmeBytes, 0, readmeBytes.Length);
         }
 
         private void LoadColors()
@@ -75,7 +104,45 @@ namespace PrintProjects.ThreeMF
                 .ToList();
         }
 
+        private void LoadProjectFile()
+        {
+            var projectFileBytes = GetAttachment("/Metadata/3D2P.json");
+            if(projectFileBytes != null)
+            {
+                ProjectFile = ProjectFile.Load(projectFileBytes);
+            }
+            // If no 3D2P.json projectfile was found,
+            // create a default one for unknown projects.
+            else
+            {
+                ProjectFile = new ProjectFile();
+                ProjectFile.Name = "Unknown Project";
+                ProjectFile.Id = null;
+                ProjectFile.Status = Status.Unknown;
+                
+                for(var i = 0; i < Meshes.Count; i++)
+                {                    
+                    var mesh = Meshes[i];
+                    var stlName = string.IsNullOrEmpty(mesh.Name)
+                        ? $"{i}.stl"
+                        : mesh.Name;
+                    stlName = stlName.ToUpper().EndsWith(".STL")
+                        ? stlName
+                        : $"{stlName}.stl";
+
+                    var stlInfo = new StlInfo
+                    {
+                        Name = stlName,
+                        Status = Status.Unknown,
+                    };
+                    mesh.Name = stlName;
+                    ProjectFile.StlInfoList.Add(stlInfo);
+                }
+            }
+        }
+
         public string Readme { get; private set; }
+        public ProjectFile ProjectFile { get; private set; }
         public List<Mesh> Meshes { get; private set; }
         public List<Color> Colors { get; private set; }
     }
