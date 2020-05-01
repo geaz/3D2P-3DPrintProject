@@ -1,5 +1,5 @@
 export enum Status {
     Unknown,
     WIP,
-    Done
+    Done,
 }

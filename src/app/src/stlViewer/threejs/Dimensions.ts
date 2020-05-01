@@ -1,19 +1,19 @@
-import { Box3, Geometry, BufferGeometry } from 'three';
+import { Box3, Geometry, BufferGeometry } from "three";
 
 export class Dimensions {
     public x: number;
     public y: number;
     public z: number;
     public box: Box3;
-    
+
     constructor(public geometry: Geometry | BufferGeometry) {
-        if(geometry.boundingBox === null) {
+        if (geometry.boundingBox === null) {
             geometry.computeBoundingBox();
         }
         let box = geometry.boundingBox;
 
-        if(box === null) {
-            throw 'Error while getting bounding box of geometry!';
+        if (box === null) {
+            throw "Error while getting bounding box of geometry!";
         }
         this.box = box;
 
@@ -22,12 +22,12 @@ export class Dimensions {
         this.z = this.box.max.z - this.box.min.z;
     }
 
-    public getOriginCorrection(): { x: number, y: number, z: number } {
-        let originCorrection = (max: number, min: number) => ((min - max) / 2) - min;
+    public getOriginCorrection(): { x: number; y: number; z: number } {
+        let originCorrection = (max: number, min: number) => (min - max) / 2 - min;
         return {
             x: originCorrection(this.box.max.x, this.box.min.x),
             y: originCorrection(this.box.max.y, this.box.min.y),
-            z: originCorrection(this.box.max.z, this.box.min.z)
+            z: originCorrection(this.box.max.z, this.box.min.z),
         };
     }
 

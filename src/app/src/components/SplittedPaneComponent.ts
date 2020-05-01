@@ -1,30 +1,28 @@
-import { h, Component } from 'preact';
-import { css } from 'emotion'
-import htm from 'htm';
-
+import { h, Component } from "preact";
+import { css } from "emotion";
+import htm from "htm";
 const html = htm.bind(h);
 
 interface SplittedPaneComponentProps {
-    leftPaneComponent: Component,
-    rightPaneComponent: Component
+    leftPaneComponent: Component;
+    rightPaneComponent: Component;
 }
 
 export class SplittedPaneComponent extends Component<SplittedPaneComponentProps> {
     private _leftPaneSize: number = 250;
 
     public render() {
-        return html`
-            <div className=${this.css()}>
-                <div id="left-pane">${this.props.leftPaneComponent}</div>
-                <div id="splitter"></div>
-                <div id="right-pane">${this.props.rightPaneComponent}</div>
-            </div>`;
+        return html`<div className=${this.css()}>
+            <div id="left-pane">${this.props.leftPaneComponent}</div>
+            <div id="splitter"></div>
+            <div id="right-pane">${this.props.rightPaneComponent}</div>
+        </div>`;
     }
 
     private css(): string {
         return css`
             height: 100%;
-            display:flex;
+            display: flex;
             position: relative;
             align-items: stretch;
 
@@ -44,7 +42,6 @@ export class SplittedPaneComponent extends Component<SplittedPaneComponentProps>
                 height: 100%;
                 position: absolute;
                 cursor: e-resize;
-                
                 background: rgba(0, 0, 0, 0.1);
             }
         `;

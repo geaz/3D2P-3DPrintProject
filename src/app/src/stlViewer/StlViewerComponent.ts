@@ -1,17 +1,27 @@
-import { h, Component } from 'preact';
-import { css } from 'emotion'
-import htm from 'htm';
+import { h, Component } from "preact";
+import { css } from "emotion";
+import htm from "htm";
 
-import { WebGLRenderer, Vector3, Object3D, Scene, BufferGeometry,
-        Mesh, MeshPhongMaterial, PerspectiveCamera, 
-        DirectionalLight, AmbientLight, Vector2 } from 'three';
+import {
+    WebGLRenderer,
+    Vector3,
+    Object3D,
+    Scene,
+    BufferGeometry,
+    Mesh,
+    MeshPhongMaterial,
+    PerspectiveCamera,
+    DirectionalLight,
+    AmbientLight,
+    Vector2,
+} from "three";
 
-import { Dimensions } from './threejs/Dimensions';
+import { Dimensions } from "./threejs/Dimensions";
 // @ts-ignore
-import { STLLoader } from '../../threeLibs/STLLoader.js';
+import { STLLoader } from "../../threeLibs/STLLoader.js";
 // @ts-ignore
-import { OrbitControls } from '../../threeLibs/OrbitControls.js';
-import { StlViewerContext } from './threejs/StlViewerContext';
+import { OrbitControls } from "../../threeLibs/OrbitControls.js";
+import { StlViewerContext } from "./threejs/StlViewerContext";
 
 const html = htm.bind(h);
 
@@ -29,23 +39,23 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     public async componentDidMount() {
         this._currentStlFileUrl = this.props.stlFileUrl;
         this.initScene();
-        this.updateSceneStl(await this.loadStl());        
-        window.addEventListener('resize', this._resizeHandler);
+        this.updateSceneStl(await this.loadStl());
+        window.addEventListener("resize", this._resizeHandler);
     }
 
     public async componentDidUpdate() {
-        if(this._currentStlFileUrl !== this.props.stlFileUrl) {
+        if (this._currentStlFileUrl !== this.props.stlFileUrl) {
             this._currentStlFileUrl = this.props.stlFileUrl;
-            this.updateSceneStl(await this.loadStl()); 
+            this.updateSceneStl(await this.loadStl());
             this.resetCamera();
         }
-        if(this._material !== undefined && this._material.color.getHex() !== this.props.color) {
+        if (this._material !== undefined && this._material.color.getHex() !== this.props.color) {
             this._material.color.setHex(this.props.color);
         }
     }
 
-    public componentWillUnmount() {        
-        window.removeEventListener('resize', this._resizeHandler);
+    public componentWillUnmount() {
+        window.removeEventListener("resize", this._resizeHandler);
     }
 
     public render() {
@@ -53,8 +63,8 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     }
 
     public resetCamera(): void {
-        if(this._mesh === undefined || this._camera === undefined || this._camera === undefined) {
-            throw 'Viewer was not initialized correctly!';
+        if (this._mesh === undefined || this._camera === undefined || this._camera === undefined) {
+            throw "Viewer was not initialized correctly!";
         }
 
         let stlDimensions = new Dimensions(this._mesh.geometry);
@@ -66,8 +76,8 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     }
 
     public resizeRenderer(): void {
-        if(this._renderer === undefined || this._camera === undefined) {
-            throw 'Viewer was not initialized correctly!';
+        if (this._renderer === undefined || this._camera === undefined) {
+            throw "Viewer was not initialized correctly!";
         }
 
         let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
@@ -77,37 +87,37 @@ export class StlViewerComponent extends Component<StlViewerProps> {
     }
 
     private initScene(): void {
-        this._meshParent = new Object3D(); 
+        this._meshParent = new Object3D();
 
         this._scene = new Scene();
-        this._scene.add(this._meshParent); 
+        this._scene.add(this._meshParent);
 
-        let directionalLightTop = new DirectionalLight(0xFFFFFF, 0.5);
+        let directionalLightTop = new DirectionalLight(0xffffff, 0.5);
         directionalLightTop.position.set(1, 5, 1);
         directionalLightTop.lookAt(new Vector3(0, 0, 0));
 
-        let directionalLightBottom = new DirectionalLight(0xFFFFFF, 0.3);
+        let directionalLightBottom = new DirectionalLight(0xffffff, 0.3);
         directionalLightBottom.position.set(1, -5, 1);
         directionalLightBottom.lookAt(new Vector3(0, 0, 0));
 
-        this._scene.add(new AmbientLight(0xFFFFFF, 0.9));
-        this._scene.add(directionalLightTop);          
+        this._scene.add(new AmbientLight(0xffffff, 0.9));
+        this._scene.add(directionalLightTop);
         this._scene.add(directionalLightBottom);
-        
-        this._renderer = new WebGLRenderer( { antialias: true, alpha: true } );
+
+        this._renderer = new WebGLRenderer({ antialias: true, alpha: true });
         this.base!.appendChild(this._renderer.domElement);
-        
+
         let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
         this._renderer.setSize(boundingBox.width, boundingBox.height);
-        this._camera = new PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);        
+        this._camera = new PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);
         this._camera.lookAt(new Vector3(0, 0, 0));
-        
+
         this._controls = new OrbitControls(this._camera, this.base);
         this._controls.target.set(0, 0, 0);
         this._controls.autoRotate = true;
-        this._controls.update(); 
+        this._controls.update();
 
-        if(this.props.onViewerInitiated !== undefined) {
+        if (this.props.onViewerInitiated !== undefined) {
             this.props.onViewerInitiated(new StlViewerContext(this._renderer, this._scene, this._camera));
         }
         this.animate();
@@ -115,35 +125,33 @@ export class StlViewerComponent extends Component<StlViewerProps> {
 
     private loadStl(): Promise<Mesh> {
         return new Promise((resolve) => {
-            if(this.props.stlFileUrl !== undefined)
-            {
+            if (this.props.stlFileUrl !== undefined) {
                 let loader: any = new STLLoader();
-                loader.load(this.props.stlFileUrl, (geometry: BufferGeometry) => {            
+                loader.load(this.props.stlFileUrl, (geometry: BufferGeometry) => {
                     this._material = new MeshPhongMaterial({
                         color: this.props.color,
-                        specular: 0x1F1F1F,
-                        shininess: 25
-                    });   
-                    console.dir(geometry);                 
+                        specular: 0x1f1f1f,
+                        shininess: 25,
+                    });
+                    console.dir(geometry);
                     resolve(new Mesh(geometry, this._material));
                 });
-            }
-            else {
+            } else {
                 resolve(undefined);
             }
-        });        
+        });
     }
 
     private updateSceneStl(stlMesh: Mesh): void {
-        if(this._meshParent === undefined || this._camera === undefined || this._scene === undefined) {
-            throw 'Viewer was not initialized correctly!';
+        if (this._meshParent === undefined || this._camera === undefined || this._scene === undefined) {
+            throw "Viewer was not initialized correctly!";
         }
 
-        if(stlMesh === undefined) return;
-        if(this._mesh !== undefined) this._meshParent.remove(this._mesh);
-        
+        if (stlMesh === undefined) return;
+        if (this._mesh !== undefined) this._meshParent.remove(this._mesh);
+
         this._mesh = stlMesh;
-        this._mesh.name = StlViewerContext.STLMESH_NAME; 
+        this._mesh.name = StlViewerContext.STLMESH_NAME;
         this._mesh.geometry.computeBoundingBox();
         this._mesh.geometry.computeVertexNormals();
 
@@ -151,9 +159,9 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         let originCorrection = stlDimensions.getOriginCorrection();
 
         this._mesh.geometry.translate(originCorrection.x, originCorrection.y, originCorrection.z);
-        this._mesh.rotateX(-Math.PI/2);
+        this._mesh.rotateX(-Math.PI / 2);
         this._mesh.rotateZ(Math.PI / 4);
-        
+
         this._mesh.castShadow = true;
         this._mesh.receiveShadow = true;
 
@@ -162,39 +170,44 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         let maxDimension = stlDimensions.MaxDimension;
         this._camera.position.set(0, maxDimension / 2, maxDimension);
 
-        this._scene.dispatchEvent({ type: 'stlLoaded' });
-    } 
+        this._scene.dispatchEvent({ type: "stlLoaded" });
+    }
 
-    private animate(): void { 
-        if(this._renderer === undefined || this._camera === undefined 
-            || this._controls === undefined || this._scene === undefined) {
-            throw 'Viewer was not initialized correctly!';
+    private animate(): void {
+        if (
+            this._renderer === undefined ||
+            this._camera === undefined ||
+            this._controls === undefined ||
+            this._scene === undefined
+        ) {
+            throw "Viewer was not initialized correctly!";
         }
-        
+
         // If the viewer is not visible during the initialization,
         // the renderer couldn't be set to the correct size (display:none boundingbox = 0).
         // Thats why we check each animation frame, if the renderer was set.
         let target: Vector2 = new Vector2(0, 0);
         this._renderer.getSize(target);
-        if(target.width === 0) {
+        if (target.width === 0) {
             this.resizeRenderer();
         }
 
         requestAnimationFrame(this.animate.bind(this));
         this._controls.update();
         this._renderer.render(this._scene, this._camera);
-    }    
+    }
 
     private css(): string {
         return css`
             width: 100%;
             height: 100%;
-            background: radial-gradient(#FFFFFF, rgb(80, 80, 80));`;
+            background: radial-gradient(#ffffff, rgb(80, 80, 80));
+        `;
     }
 }
 
 interface StlViewerProps {
-    stlFileUrl: string,
-    color: number,
-    onViewerInitiated: (stlViewerContext: StlViewerContext) => void
+    stlFileUrl: string;
+    color: number;
+    onViewerInitiated: (stlViewerContext: StlViewerContext) => void;
 }

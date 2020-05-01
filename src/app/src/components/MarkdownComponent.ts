@@ -1,17 +1,16 @@
-import { h, Component } from 'preact';
-import htm from 'htm';
-
-import * as marked from 'marked';
-
+import { h, Component } from "preact";
+import htm from "htm";
 const html = htm.bind(h);
 
+import * as marked from "marked";
+
 interface MarkdownComponentProps {
-    markdownUrl: string
+    markdownUrl: string;
 }
 
 interface MarkdownComponentState {
-    loading: boolean,
-    content: string
+    loading: boolean;
+    content: string;
 }
 
 export class MarkdownComponent extends Component<MarkdownComponentProps, MarkdownComponentState> {
@@ -23,10 +22,10 @@ export class MarkdownComponent extends Component<MarkdownComponentProps, Markdow
     }
 
     public render() {
-        return html`
-            <div>
-                ${this.state.loading && html`<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>` }
-                ${!this.state.loading && html`<div class="markdown" dangerouslySetInnerHTML=${{__html: this.state.content}}></div>` }
-            </div>`;
+        return html`<div>
+            ${this.state.loading && html`<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>`}
+            ${!this.state.loading &&
+            html`<div class="markdown" dangerouslySetInnerHTML=${{ __html: this.state.content }}></div>`}
+        </div>`;
     }
 }
