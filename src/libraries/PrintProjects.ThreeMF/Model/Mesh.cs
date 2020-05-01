@@ -10,9 +10,7 @@ namespace PrintProjects.ThreeMF.Model
         public Mesh(CMeshObject mesh)
         {
             _mesh = mesh;
-
-            uint resId, propId;
-            _mesh.GetObjectLevelProperty(out resId, out propId);
+            _mesh.GetObjectLevelProperty(out uint resId, out uint propId);
 
             Id = _mesh.GetResourceID();
             Name = _mesh.GetName();
@@ -45,15 +43,15 @@ namespace PrintProjects.ThreeMF.Model
                 .ToList();
         }
 
-        public uint Id { get; private set; }
+        public uint Id { get; }
         public string Name { get; set; }
-        public uint RessourceId { get; private set; }
-        public uint PropertyId { get; private set; }
-        
+        public uint RessourceId { get; }
+        public uint PropertyId { get; }
+
         public sPosition[] NativeVertices { get; private set; }
         public sTriangle[] NativeTriangles { get; private set; }
 
-        public List<Vertex> Vertices { get; private set; } 
-        public List<Triangle> Triangles { get; private set; } 
+        public List<Vertex> Vertices { get; private set; }
+        public List<Triangle> Triangles { get; private set; }
     }
 }

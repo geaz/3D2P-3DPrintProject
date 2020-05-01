@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Text;
-using System.Collections.Generic;
-using PrintProjects.ThreeMF.Model;
-using System.IO;
 using PrintProjects.Core;
 using PrintProjects.Core.Model;
+using System.Collections.Generic;
+using PrintProjects.ThreeMF.Model;
 
 namespace PrintProjects.ThreeMF
 {
@@ -26,18 +26,15 @@ namespace PrintProjects.ThreeMF
 
         public byte[] GetAttachment(string attachmenPath)
         {
-            byte[] attachmentBytes = null;     
+            byte[] attachmentBytes = null;
             for(uint i = 0; i < _model.GetAttachmentCount(); i++)
             {
                 var attachment = _model.GetAttachment(i);
                 if(attachment.GetPath() == attachmenPath)
                 {
-                    var fileSize = attachment.GetStreamSize();
-
-                    attachmentBytes = new byte[fileSize];
                     attachment.WriteToBuffer(out attachmentBytes);
                     break;
-                }       
+                }
             }
             return attachmentBytes;
         }
@@ -46,7 +43,7 @@ namespace PrintProjects.ThreeMF
         {
             if(!Directory.Exists(directory))
                 throw new ModelException("Directory does not exist!");
-            
+
             foreach(var mesh in Meshes)
             {
                 var stlModel = Wrapper.CreateModel();
@@ -59,7 +56,7 @@ namespace PrintProjects.ThreeMF
                 stlWriter.WriteToFile(Path.Combine(directory, stlMesh.GetName()));
             }
             if(!string.IsNullOrEmpty(Readme)) File.WriteAllText(Path.Combine(directory, "README.md"), Readme);
-            if(ProjectFile != null) ProjectFile.Save(Path.Combine(directory, "3D2P.json"), true);
+            ProjectFile?.Save(Path.Combine(directory, "3D2P.json"), true);
         }
 
         private void LoadReadme()
@@ -74,10 +71,9 @@ namespace PrintProjects.ThreeMF
             Colors = new List<Color>();
             var colorIterator = _model.GetColorGroups();
             while(colorIterator.MoveNext())
-            {                
-                uint[] propertyIds;
+            {
                 var colorGroup = colorIterator.GetCurrentColorGroup();
-                colorGroup.GetAllPropertyIDs(out propertyIds);
+                colorGroup.GetAllPropertyIDs(out uint[] propertyIds);
 
                 foreach(var propertyId in propertyIds)
                 {
@@ -115,18 +111,20 @@ namespace PrintProjects.ThreeMF
             // create a default one for unknown projects.
             else
             {
-                ProjectFile = new ProjectFile();
-                ProjectFile.Name = "Unknown Project";
-                ProjectFile.Id = null;
-                ProjectFile.Status = Status.Unknown;
-                
-                for(var i = 0; i < Meshes.Count; i++)
-                {                    
+                ProjectFile = new ProjectFile
+                {
+                    Name = "Unknown Project",
+                    Id = null,
+                    Status = Status.Unknown
+                };
+
+                for (var i = 0; i < Meshes.Count; i++)
+                {
                     var mesh = Meshes[i];
                     var stlName = string.IsNullOrEmpty(mesh.Name)
                         ? $"{i}.stl"
                         : mesh.Name;
-                    stlName = stlName.ToUpper().EndsWith(".STL")
+                    stlName = stlName.EndsWith(".STL", System.StringComparison.OrdinalIgnoreCase)
                         ? stlName
                         : $"{stlName}.stl";
 

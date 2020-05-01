@@ -16,16 +16,16 @@ namespace PrintProjects.ThreeMF.Model
         /// <summary>
         /// Gets the ressource ID of the ressource where the color is defined.
         /// </summary>
-        public uint RessourceId { get; private set; }
+        public uint RessourceId { get; }
 
         /// <summary>
         /// Gets the property ID of the color within the ressource.
         /// </summary>
-        public uint PropertyId { get; private set; }
-        
-        public byte Alpha { get; private set; }
-        public byte Red { get; private set; }
-        public byte Green { get; private set; }
-        public byte Blue { get; private set; }
+        public uint PropertyId { get; }
+
+        public byte Alpha { get; }
+        public byte Red { get; }
+        public byte Green { get; }
+        public byte Blue { get; }
     }
 }

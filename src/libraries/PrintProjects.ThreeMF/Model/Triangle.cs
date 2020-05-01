@@ -9,8 +9,8 @@ namespace PrintProjects.ThreeMF.Model
             V3 = triangle.Indices[2];
         }
 
-        public uint V1 { get; private set; }
-        public uint V2 { get; private set; }
-        public uint V3 { get; private set; }
+        public uint V1 { get; }
+        public uint V2 { get; }
+        public uint V3 { get; }
     }
 }

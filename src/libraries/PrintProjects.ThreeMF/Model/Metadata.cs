@@ -11,10 +11,10 @@ namespace PrintProjects.ThreeMF.Model
             MustPreserve = metaData.GetMustPreserve();
         }
 
-        public string Key { get; private set; }
-        public string Type { get; private set; }
-        public string Name { get; private set; }
-        public string Value { get; private set; }
-        public bool MustPreserve { get; private set; }
+        public string Key { get; }
+        public string Type { get; }
+        public string Name { get; }
+        public string Value { get; }
+        public bool MustPreserve { get; }
     }
 }

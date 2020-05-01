@@ -10,7 +10,7 @@ namespace PrintProjects.Core.Model
 
         [JsonProperty("color")]
         public string Color { get; set; } = "#F58026";
-        
+
         [JsonProperty("status")]
         public Status Status { get; set; }
 

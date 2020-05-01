@@ -9,8 +9,8 @@ namespace PrintProjects.ThreeMF.Model
             Z = position.Coordinates[2];
         }
 
-        public float X { get; private set; }
-        public float Y { get; private set; }
-        public float Z { get; private set; }
+        public float X { get; }
+        public float Y { get; }
+        public float Z { get; }
     }
 }

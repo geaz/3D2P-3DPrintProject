@@ -8,7 +8,7 @@ namespace PrintProjects.ThreeMF
         private readonly CModel _model = Wrapper.CreateModel();
 
         public Model3MFBuilder()
-        {            
+        {
             _model.AddCustomContentType("md", "test/markdown");
             _model.AddCustomContentType("json", "application/json");
         }
@@ -17,7 +17,7 @@ namespace PrintProjects.ThreeMF
         public void Set3D2PFile(string projectFilepath) => AddAttachment("/Metadata/3D2P.json", projectFilepath);
 
         public void SetThumbnail(string thumbnailFilePath)
-        {            
+        {
             if(!File.Exists(thumbnailFilePath))
                 throw new ModelException($"File '{thumbnailFilePath}' does not exist!");
 
@@ -36,27 +36,21 @@ namespace PrintProjects.ThreeMF
             stlReader.ReadFromFile(stlFilepath);
 
             var stlMeshObjects = stlModel.GetMeshObjects();
-            if(stlMeshObjects.Count() == 0)
-               throw new ModelException($"Error occured while reading stl (lib3mf reader - 0).");
-            else if(stlMeshObjects.Count() > 1)
-                throw new ModelException($"Error occured while reading stl (lib3mf reader > 1).");
-            else
-            {
-                stlMeshObjects.MoveNext();
-                var stlMeshObject = stlMeshObjects.GetCurrentMeshObject();
+            if (stlMeshObjects.Count() == 0)
+                throw new ModelException("Error occured while reading stl (lib3mf reader - 0).");
+            else if (stlMeshObjects.Count() > 1)
+                throw new ModelException("Error occured while reading stl (lib3mf reader > 1).");
 
-                sPosition[] vertices;
-                stlMeshObject.GetVertices(out vertices);
+            stlMeshObjects.MoveNext();
+            var stlMeshObject = stlMeshObjects.GetCurrentMeshObject();
+            stlMeshObject.GetVertices(out sPosition[] vertices);
+            stlMeshObject.GetTriangleIndices(out sTriangle[] triangles);
 
-                sTriangle[] triangles;
-                stlMeshObject.GetTriangleIndices(out triangles);
+            var newMeshObject = _model.AddMeshObject();
+            newMeshObject.SetName(Path.GetFileName(stlFilepath));
+            newMeshObject.SetGeometry(vertices, triangles);
 
-                var newMeshObject = _model.AddMeshObject();
-                newMeshObject.SetName(Path.GetFileName(stlFilepath));
-                newMeshObject.SetGeometry(vertices, triangles);
-
-                _model.AddBuildItem(newMeshObject, Wrapper.GetIdentityTransform());
-            }
+            _model.AddBuildItem(newMeshObject, Wrapper.GetIdentityTransform());
         }
 
         public void Write3MF(string filepath, bool overwrite)
@@ -74,7 +68,7 @@ namespace PrintProjects.ThreeMF
                 throw new ModelException($"File '{filepath}' does not exist!");
 
             // Check for existing Readme File
-            CAttachment fileAttachment = null;   
+            CAttachment fileAttachment = null;
             for(uint i = 0; i < _model.GetAttachmentCount(); i++)
             {
                 var attachment = _model.GetAttachment(i);
@@ -88,10 +82,10 @@ namespace PrintProjects.ThreeMF
             if(fileAttachment == null)
             {
                 fileAttachment = _model.AddAttachment(
-                    packagePath, 
+                    packagePath,
                     "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve");
             }
-                        
+
             fileAttachment.ReadFromFile(filepath);
             return fileAttachment;
         }
