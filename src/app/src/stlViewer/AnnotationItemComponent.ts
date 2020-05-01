@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { css } from 'emotion'
 import htm from 'htm';
 
-import md from 'markdown-it';
+import * as marked from 'marked';
 import { WebGLRenderer, CanvasTexture, Sprite, SpriteMaterial, Raycaster, Camera,
         Vector2, Vector3, Group, Material, Geometry, BufferGeometry, Scene } from 'three';
 import { StlViewerContext } from './threejs/StlViewerContext';
@@ -11,7 +11,6 @@ import { IStlAnnotation } from '../model/IStlAnnotation';
 const html = htm.bind(h);
 
 export class AnnotationItemComponent extends Component<IAnnotationItemComponentProps, IAnnotationItemComponentState> {
-    private _mdRenderer = new md();
     private _sprite?: Sprite;
     private _textareaElement?: HTMLElement;
     private _numberContainerElement?: HTMLElement;
@@ -45,7 +44,7 @@ export class AnnotationItemComponent extends Component<IAnnotationItemComponentP
     public render() {
         let annotationText = this.props.annotation.text === undefined || this.props.annotation.text === ''
             ? '<small>Marked</small>'
-            : this._mdRenderer.render(this.props.annotation.text);
+            : marked(this.props.annotation.text);
 
         let annotationBox = undefined;
         if(this.props.active) {

@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import htm from 'htm';
 
-import md from 'markdown-it';
+import * as marked from 'marked';
 
 const html = htm.bind(h);
 
@@ -15,13 +15,11 @@ interface MarkdownComponentState {
 }
 
 export class MarkdownComponent extends Component<MarkdownComponentProps, MarkdownComponentState> {
-    private _mdRenderer = new md();
-
     async componentWillMount() {
         this.setState({ loading: true });
         let response = await fetch(this.props.markdownUrl);
         let fileContent = await response.text();
-        this.setState({ loading: false, content: this._mdRenderer.render(fileContent) });
+        this.setState({ loading: false, content: marked(fileContent) });
     }
 
     public render() {
