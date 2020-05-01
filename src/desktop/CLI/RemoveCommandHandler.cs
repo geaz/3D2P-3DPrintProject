@@ -1,9 +1,9 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.CommandLine;
 using PrintProjects.Core.Model;
 using System.CommandLine.Invocation;
-using System;
-using System.Linq;
 
 namespace PrintProjects.App.CLI
 {
@@ -46,7 +46,7 @@ namespace PrintProjects.App.CLI
             };
             removeAnnotationCommand.Handler = CommandHandler
                 .Create<FileInfo, string, int>(HandleRemoveAnnotationCommand);
-            
+
             Command.Add(removeStlCommand);
             Command.Add(removeAnnotationCommand);
         }
@@ -55,7 +55,7 @@ namespace PrintProjects.App.CLI
         {
             var projectFile = ProjectFile.Load(project.FullName);
             var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
-            
+
             if(stl != null)
             {
                 projectFile.StlInfoList.Remove(stl);
@@ -72,7 +72,7 @@ namespace PrintProjects.App.CLI
         {
             var projectFile = ProjectFile.Load(project.FullName);
             var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
-            
+
             if(stl != null)
             {
                 var annotation = stl.AnnotationList.SingleOrDefault(a => a.Id == id);

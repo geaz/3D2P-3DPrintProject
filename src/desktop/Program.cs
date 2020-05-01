@@ -1,14 +1,13 @@
-﻿using System;
-using PrintProjects.App.CLI;
+﻿using PrintProjects.App.CLI;
 
 namespace PrintProjects.App
 {
-    class Program
+    internal static class Program
     {
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             var rootCommandHandler = new RootCommandHandler();
-            return rootCommandHandler.Execute(args);          
+            return rootCommandHandler.Execute(args);
         }
     }
 }

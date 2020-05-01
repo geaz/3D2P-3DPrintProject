@@ -23,13 +23,13 @@ namespace PrintProjects.App
         {
             var is3MF = model?.Extension.ToUpper() == ".3MF";
             if(model == null || is3MF)
-            {                
+            {
                 // System.CommandLine parses and executes the CLI arguments
                 // in a new Task. Because of this, it is necessary to execute
                 // a new STA Thread to run the webview. Will throw exceptions otherwise.
                 Thread thread = new Thread(() =>
                 {
-                    var initScript = 
+                    var initScript =
                         @"window.printProjects = {};
                         window.printProjects.dropCallback = dropCallback;";
                     if(is3MF)
@@ -37,16 +37,16 @@ namespace PrintProjects.App
                         var model3mf = new Model3MF(model.FullName);
                         model3mf.ExtractPrintProject(_extractionPath);
                         initScript += "window.printProjects.projectFolderUrl='/extracted';";
-                    } 
+                    }
 
                     var hostedContent = new HostedContent();
                     using (_webview = new Webview(false, true))
                     {
                         _webview
-                            .SetTitle("3D2P")              
+                            .SetTitle("3D2P")
                             .SetSize(1280, 960, WebviewHint.None)
                             .SetSize(1024, 768, WebviewHint.Min)
-                            .Bind("dropCallback", DropCallback)                            
+                            .Bind("dropCallback", DropCallback)
                             .InitScript(initScript)
                             .Navigate(hostedContent)
                             .Run();
@@ -73,9 +73,9 @@ namespace PrintProjects.App
                     .Remove(0, "data:;base64,".Length);
 
             File.WriteAllBytes(
-                modelFilePath, 
+                modelFilePath,
                 Convert.FromBase64String(trimmedJsDataUrl));
-                
+
             var model3mf = new Model3MF(modelFilePath);
             model3mf.ExtractPrintProject(_extractionPath);
 

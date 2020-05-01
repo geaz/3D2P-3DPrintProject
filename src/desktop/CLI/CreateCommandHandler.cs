@@ -1,8 +1,8 @@
+using System;
 using System.IO;
 using System.CommandLine;
-using System.CommandLine.Invocation;
-using System;
 using PrintProjects.Core.Model;
+using System.CommandLine.Invocation;
 
 namespace PrintProjects.App.CLI
 {
@@ -21,7 +21,7 @@ namespace PrintProjects.App.CLI
                 Required = true
             };
             var overwriteOption = new Option<bool>("--overwrite", "Use to overwrite any exisiting 3D2P.json file in the target directory.");
-            
+
             Command.Add(directoryOption);
             Command.Add(overwriteOption);
             Command.Handler = CommandHandler.Create<DirectoryInfo, bool>(HandleCreateCommand);
@@ -30,7 +30,7 @@ namespace PrintProjects.App.CLI
         private void HandleCreateCommand(DirectoryInfo dir, bool overwrite)
         {
             Console.WriteLine("Creating new 3D2P.json file ...");
-            
+
             var projectFile = new ProjectFile();
             projectFile.Save(Path.Combine(dir.FullName, ProjectFile.ProjectFileName), overwrite);
 

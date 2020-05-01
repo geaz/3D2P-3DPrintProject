@@ -1,8 +1,8 @@
+using System;
 using System.IO;
 using System.CommandLine;
 using PrintProjects.Core.Model;
 using System.CommandLine.Invocation;
-using System;
 
 namespace PrintProjects.App.CLI
 {
@@ -34,7 +34,7 @@ namespace PrintProjects.App.CLI
         {
             var projectFile = ProjectFile.Load(project.FullName);
             projectFile.Name = !string.IsNullOrEmpty(name) ? name : projectFile.Name;
-            projectFile.Status = status != null ? status.Value : projectFile.Status;
+            projectFile.Status = status ?? projectFile.Status;
             projectFile.Thumbnail = thumbnail != null ? Path.GetRelativePath(project.DirectoryName, thumbnail.FullName) : projectFile.Thumbnail;
             projectFile.Readme = readme != null ? Path.GetRelativePath(project.DirectoryName, readme.FullName) : projectFile.Readme;
             projectFile.Save(project.FullName, true);

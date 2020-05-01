@@ -1,9 +1,9 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.CommandLine;
 using PrintProjects.Core.Model;
 using System.CommandLine.Invocation;
-using System;
-using System.Linq;
 
 namespace PrintProjects.App.CLI
 {
@@ -50,7 +50,7 @@ namespace PrintProjects.App.CLI
             Console.WriteLine($"Project at '{project.FullName}' includes the following STLs:");
             foreach(var stl in projectFile.StlInfoList)
             {
-                Console.WriteLine($"- {stl.Name} ({stl.Status.ToString()}, {stl.Color}, Annotations: {stl.AnnotationList.Count})");
+                Console.WriteLine($"- {stl.Name} ({stl.Status}, {stl.Color}, Annotations: {stl.AnnotationList.Count})");
             }
         }
 
@@ -58,7 +58,7 @@ namespace PrintProjects.App.CLI
         {
             var projectFile = ProjectFile.Load(project.FullName);
             var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
-            
+
             if(stl != null)
             {
                 foreach(var annotation in stl.AnnotationList)

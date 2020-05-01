@@ -1,9 +1,9 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.CommandLine;
 using PrintProjects.Core.Model;
 using System.CommandLine.Invocation;
-using System;
-using System.Linq;
 
 namespace PrintProjects.App.CLI
 {
@@ -52,7 +52,7 @@ namespace PrintProjects.App.CLI
             };
             addAnnotationCommand.Handler = CommandHandler
                 .Create<FileInfo, string, string, decimal, decimal, decimal>(HandleAddAnnotationCommand);
-            
+
             Command.Add(addStlCommand);
             Command.Add(addAnnotationCommand);
         }
@@ -72,12 +72,12 @@ namespace PrintProjects.App.CLI
 
             Console.WriteLine("Added stl to project file.");
         }
-        
+
         private void HandleAddAnnotationCommand(FileInfo project, string stlName, string text, decimal x, decimal y, decimal z)
         {
             var projectFile = ProjectFile.Load(project.FullName);
             var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
-            
+
             if(stl != null)
             {
                 var annotationIds = stl.AnnotationList.Select(a => a.Id);

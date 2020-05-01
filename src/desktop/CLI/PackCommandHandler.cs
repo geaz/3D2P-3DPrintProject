@@ -1,9 +1,9 @@
+using System;
 using System.IO;
 using System.CommandLine;
-using System.CommandLine.Invocation;
-using PrintProjects.Core.Model;
 using PrintProjects.ThreeMF;
-using System;
+using PrintProjects.Core.Model;
+using System.CommandLine.Invocation;
 
 namespace PrintProjects.App.CLI
 {
@@ -27,11 +27,11 @@ namespace PrintProjects.App.CLI
                 Argument = new Argument<DirectoryInfo>().ExistingOnly()
             };
             var overwriteOption = new Option<bool>("--overwrite", "Use to overwrite any exisiting 3D2P.json file in the target directory.");
-            
+
             Command.Add(projectOption);
             Command.Add(directoryOption);
             Command.Add(overwriteOption);
-            
+
             Command.Handler = CommandHandler
                 .Create<FileInfo, DirectoryInfo, bool>(HandlePackCommand);
         }
@@ -42,16 +42,16 @@ namespace PrintProjects.App.CLI
             var projectFile = ProjectFile.Load(project.FullName);
 
             modelBuilder.Set3D2PFile(project.FullName);
-            if(!string.IsNullOrEmpty(projectFile.Readme)) 
+            if(!string.IsNullOrEmpty(projectFile.Readme))
                 modelBuilder.SetReadme(Path.GetFullPath(projectFile.Readme, project.DirectoryName));
-            if(!string.IsNullOrEmpty(projectFile.Thumbnail)) 
+            if(!string.IsNullOrEmpty(projectFile.Thumbnail))
                 modelBuilder.SetThumbnail(Path.GetFullPath(projectFile.Thumbnail, project.DirectoryName));
 
             foreach(var stl in projectFile.StlInfoList)
             {
                 modelBuilder.AddStl(Path.GetFullPath(stl.RelativePath, project.DirectoryName));
             }
-            
+
             var targetFilepath = Path.Combine(dir.FullName, $"{projectFile.Name}.3mf");
             Console.WriteLine($"Creating '{targetFilepath}' ...");
             modelBuilder.Write3MF(targetFilepath, overwrite);

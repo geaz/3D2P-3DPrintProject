@@ -6,7 +6,6 @@ namespace PrintProjects.App.CLI
 {
     internal sealed class RootCommandHandler
     {
-        private readonly PrintProjectsWebview _ppWebview = new PrintProjectsWebview();
         private readonly AddCommandHandler _addCommand = new AddCommandHandler();
         private readonly SetCommandHandler _setCommand = new SetCommandHandler();
         private readonly ListCommandHandler _listCommand = new ListCommandHandler();
@@ -26,14 +25,14 @@ namespace PrintProjects.App.CLI
 
         private void BuildCommand()
         {
-            var fileArgument = 
+            var fileArgument =
                 new Argument<FileInfo>()
                 {
                     Name = "Model",
                     Description = "3MF file to open",
                     Arity = ArgumentArity.ZeroOrOne
                 }.ExistingOnly();
-                
+
             RootCommand.AddArgument(fileArgument);
             RootCommand.Add(_createCommand.Command);
             RootCommand.Add(_addCommand.Command);
