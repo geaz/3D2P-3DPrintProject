@@ -4,7 +4,7 @@ out
 node_modules
 .vscode-test/
 *.vsix
-app/dist
+src/app/dist
 src/web/wwwroot/css/
 src/web/wwwroot/js/
 src/desktop/**/app.js
