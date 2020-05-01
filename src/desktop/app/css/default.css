@@ -1,0 +1,8 @@
+html, body, #print-projects-app {
+    height: 100%;
+}
+
+body {
+    color: #404040;
+    background: #f7f7f7;
+}

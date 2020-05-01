@@ -9,16 +9,16 @@
 			"path": "src\\app"
 		},
 		{
+			"name": "desktop",
+			"path": "src\\desktop"
+		},
+		{
 			"name": "vscode",
 			"path": "src\\vscode"
 		},
 		{
 			"name": "web",
 			"path": "src\\web"
-		},
-		{
-			"name": "components",
-			"path": "src\\components"
 		},
 		{
 			"name": "libraries",

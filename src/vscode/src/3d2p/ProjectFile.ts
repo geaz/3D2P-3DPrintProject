@@ -5,9 +5,9 @@ import { StlInfo } from './StlInfo';
 
 export class ProjectFile {
     public name: string = '';
-    public repositoryUrl: string = '';
     public status: string = '';
-    public coverImage: string = '';
+    public thumbnail: string = '';
+    public homepage: string = '';
     public stls: FileList<StlInfo> = 
         new FileList<StlInfo>(".stl", (name, relPath) => new StlInfo(this._projectPath, name, relPath));
         

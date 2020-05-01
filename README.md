@@ -70,7 +70,15 @@ The icons used in the Visual Studio Code Extension are taken from [Freepik](http
 
 ## TODOs
 
-- Remove Git dependency
-- Add 3MF creation
-- Add status update command to vscode extension
-- Finish Readme
+### Application
+- Parse Images on Readme set
+
+### VSCode
+- Rewrite for 3D2P CLI
+
+### Web
+- Add Guide (Markdown Renderer from Github)
+- Startpage promotes App and shows drop part from application to use online
+
+### Repository
+- Change Readme (Repo restructuring and heavy project changes)

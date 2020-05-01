@@ -7,7 +7,7 @@ node_modules
 components/lib
 src/web/wwwroot/css/
 src/web/wwwroot/js/
-src/app/**/app.js
+src/desktop/**/app.js
 bin
 obj
 TestResults
