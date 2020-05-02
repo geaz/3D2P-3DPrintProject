@@ -19,7 +19,7 @@ import {
     Scene,
 } from "three";
 import { StlViewerContext } from "./threejs/StlViewerContext";
-import { IStlAnnotation } from "../model/IStlAnnotation";
+import { IStlAnnotation } from "../../model/IStlAnnotation";
 
 const html = htm.bind(h);
 

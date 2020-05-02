@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using PrintProjects.Core;
+using System.IO.Compression;
 using PrintProjects.Core.Model;
 using System.Collections.Generic;
 using PrintProjects.ThreeMF.Model;
@@ -44,6 +45,10 @@ namespace PrintProjects.ThreeMF
             if(!Directory.Exists(directory))
                 throw new ModelException("Directory does not exist!");
 
+            var stlFolder = Path.Combine(directory, "stl");
+            if(!Directory.Exists(stlFolder))
+                Directory.CreateDirectory(stlFolder);
+
             foreach(var mesh in Meshes)
             {
                 var stlModel = Wrapper.CreateModel();
@@ -53,8 +58,10 @@ namespace PrintProjects.ThreeMF
                 stlModel.AddBuildItem(stlMesh, Wrapper.GetIdentityTransform());
 
                 var stlWriter = stlModel.QueryWriter("stl");
-                stlWriter.WriteToFile(Path.Combine(directory, stlMesh.GetName()));
+                stlWriter.WriteToFile(Path.Combine(stlFolder, stlMesh.GetName()));
             }
+            ZipFile.CreateFromDirectory(stlFolder, Path.Combine(directory, "stls.zip"));
+
             if(!string.IsNullOrEmpty(Readme)) File.WriteAllText(Path.Combine(directory, "README.md"), Readme);
             ProjectFile?.Save(Path.Combine(directory, "3D2P.json"), true);
         }

@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, VNode } from "preact";
 import { css } from "emotion";
 import htm from "htm";
 const html = htm.bind(h);
@@ -6,12 +6,12 @@ const html = htm.bind(h);
 import { IStlInfo } from "../model/IStlInfo";
 import { IFileInfo } from "../model/IFileInfo";
 import { IProjectFile } from "../model/IProjectFile";
-import { FileListComponent } from "./FileListComponent";
-import { SidebarPaneComponent } from "./SidebarPaneComponent";
-import { StlViewerComponent } from "../stlViewer/StlViewerComponent";
-import { StlViewerContext } from "../stlViewer/threejs/StlViewerContext";
-import { AnnotationsComponent } from "../stlViewer/AnnotationsComponent";
-import { IConfigDescription, ConfigType, ConfigComponent } from "./ConfigComponent";
+import { FileListComponent } from "../components/FileListComponent";
+import { SidebarPaneComponent } from "../components/SidebarPaneComponent";
+import { StlViewerComponent } from "../components/stlViewer/StlViewerComponent";
+import { StlViewerContext } from "../components/stlViewer/threejs/StlViewerContext";
+import { AnnotationsComponent } from "../components/stlViewer/AnnotationsComponent";
+import { IConfigDescription, ConfigType, ConfigComponent } from "../components/ConfigComponent";
 
 interface StlExplorerComponentProps {
     projectFile: IProjectFile;
@@ -47,7 +47,7 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
         this._configDescription.push(<IConfigDescription>{ property: "resetCamera", type: ConfigType.Button });
     }
 
-    public render() {
+    public render(): VNode<any> | VNode<any>[] {
         let annotationsComponent = undefined;
         if (this.state.stlViewerContext !== undefined && this.state.selectedStl.annotationList !== undefined) {
             annotationsComponent = html`<${AnnotationsComponent}
@@ -63,6 +63,7 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
                 sidebarComponent=${html`<${FileListComponent}
                     selectedFile=${this.state.selectedStl.name}
                     fileList=${this._fileList}
+                    downloadAllUrl="${this.props.projectFolderUrl}/stls.zip"
                     onFileSelected=${(name: string) => this.onFileSelected(name)}
                 />`}
                 contentComponent=${html`<div class="stl-wrapper">
@@ -77,7 +78,7 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
                     <${StlViewerComponent}
                         ref=${(sc: StlViewerComponent) => (this._stlViewerComponent = sc)}
                         color="${parseInt(this.state.selectedStl.color.substring(1), 16)}"
-                        stlFileUrl="${this.props.projectFolderUrl}/${this.state.selectedStl.name}"
+                        stlFileUrl="${this.props.projectFolderUrl}/stl/${this.state.selectedStl.name}"
                         onViewerInitiated=${this.onViewerInitiated.bind(this)}
                     />
                 </div>`}

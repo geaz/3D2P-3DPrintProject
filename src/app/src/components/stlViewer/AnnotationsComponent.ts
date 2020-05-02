@@ -5,7 +5,7 @@ import { Intersection } from "three";
 import { RaycasterEventListener } from "./threejs/RaycasterEventListener";
 import { AnnotationItemComponent } from "./AnnotationItemComponent";
 import { StlViewerContext } from "./threejs/StlViewerContext";
-import { IStlAnnotation } from "../model/IStlAnnotation";
+import { IStlAnnotation } from "../../model/IStlAnnotation";
 
 const html = htm.bind(h);
 

@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, VNode } from "preact";
 import htm from "htm";
 const html = htm.bind(h);
 
@@ -21,7 +21,7 @@ export class MarkdownComponent extends Component<MarkdownComponentProps, Markdow
         this.setState({ loading: false, content: marked(fileContent) });
     }
 
-    public render() {
+    public render(): VNode<any> | VNode<any>[] {
         return html`<div>
             ${this.state.loading && html`<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>`}
             ${!this.state.loading &&

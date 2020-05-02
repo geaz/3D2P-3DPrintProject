@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, VNode } from "preact";
 import { css } from "emotion";
 import htm from "htm";
 const html = htm.bind(h);
@@ -42,7 +42,7 @@ export class DropComponent extends Component<DropComponentProps, DropComponentSt
         componentDom?.removeEventListener("drop", this._dropHandler);
     }
 
-    public render() {
+    public render(): VNode<any> | VNode<any>[] {
         return html`<div className=${this.css()}>
             ${(this.state.dragging || this.props.visibleDrop) &&
             html`<div id="droparea-overlay">

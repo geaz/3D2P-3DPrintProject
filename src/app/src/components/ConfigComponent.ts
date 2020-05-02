@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, VNode } from "preact";
 import htm from "htm";
 const html = htm.bind(h);
 
@@ -20,8 +20,8 @@ export enum ConfigType {
 
 interface IConfigComponentProps {
     config: object;
-    configDescription: Array<IConfigDescription>;
     containerId: string;
+    configDescription: Array<IConfigDescription>;
     onChange: (property: string, value: any) => void;
 }
 
@@ -59,7 +59,7 @@ export class ConfigComponent extends Component<IConfigComponentProps> {
         });
     }
 
-    public render() {
+    public render(): VNode<any> | VNode<any>[] {
         return html``;
     }
 }

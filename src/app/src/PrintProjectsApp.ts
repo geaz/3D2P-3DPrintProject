@@ -5,26 +5,28 @@ const html = htm.bind(h);
 
 import { DropComponent } from "./components/DropComponent";
 import { MarkdownComponent } from "./components/MarkdownComponent";
-import { StlExplorerComponent } from "./components/StlExplorerComponent";
+import { StlExplorerComponent } from "./compositions/StlExplorerComponent";
 import { IProjectFile } from "./model/IProjectFile";
 
 interface PrintProjectsAppState {
     projectFolderUrl: string;
-    projectFile: IProjectFile;
+    projectFile: IProjectFile | undefined;
     dropCallback: (fileDataUrl: string) => Promise<any>;
 }
 
 class PrintProjectsApp extends Component<{}, PrintProjectsAppState> {
-    componentWillMount() {
-        this.setState({
-            dropCallback: (<any>window).printProjects?.dropCallback,
-        });
+    state: Readonly<PrintProjectsAppState> = {
+        dropCallback: (<any>window).printProjects?.dropCallback,
+        projectFolderUrl: (<any>window).printProjects?.projectFolderUrl,
+        projectFile: undefined,
+    };
 
-        let projectFolderUrl = (<any>window).printProjects?.projectFolderUrl;
-        if (projectFolderUrl !== undefined) this.loadProject(projectFolderUrl);
+    componentWillMount() {
+        if (this.state.projectFolderUrl !== undefined) 
+            this.loadProject(this.state.projectFolderUrl);
     }
 
-    public render() {
+    public render(): VNode<any> | VNode<any>[] {
         let contentHtml = this.renderStlExplorer();
         if (this.state.projectFile !== undefined && this.state.projectFile.readme !== null) {
             contentHtml = html`

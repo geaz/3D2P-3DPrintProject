@@ -19,9 +19,9 @@ import {
 
 import { Dimensions } from "./threejs/Dimensions";
 // @ts-ignore
-import { STLLoader } from "../../threeLibs/STLLoader.js";
+import { STLLoader } from "../../../threeLibs/STLLoader.js";
 // @ts-ignore
-import { OrbitControls } from "../../threeLibs/OrbitControls.js";
+import { OrbitControls } from "../../../threeLibs/OrbitControls.js";
 import { StlViewerContext } from "./threejs/StlViewerContext";
 
 const html = htm.bind(h);
