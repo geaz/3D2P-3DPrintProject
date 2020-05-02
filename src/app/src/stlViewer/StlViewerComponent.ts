@@ -14,6 +14,7 @@ import {
     DirectionalLight,
     AmbientLight,
     Vector2,
+    Color,
 } from "three";
 
 import { Dimensions } from "./threejs/Dimensions";
@@ -79,6 +80,10 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         if (this._renderer === undefined || this._camera === undefined) {
             throw "Viewer was not initialized correctly!";
         }
+        // Set renderer to zero to set the div to maximal width and height
+        // Otherwise, if the div is normally smaller then the previous canvas size
+        // the boundingbox would be 'wrong' (old width, because has fixed defined sizes)
+        this._renderer.setSize(0, 0);
 
         let boundingBox = (<HTMLElement>this.base).getBoundingClientRect();
         this._camera.aspect = boundingBox.width / boundingBox.height;
@@ -133,7 +138,6 @@ export class StlViewerComponent extends Component<StlViewerProps> {
                         specular: 0x1f1f1f,
                         shininess: 25,
                     });
-                    console.dir(geometry);
                     resolve(new Mesh(geometry, this._material));
                 });
             } else {
@@ -201,6 +205,7 @@ export class StlViewerComponent extends Component<StlViewerProps> {
         return css`
             width: 100%;
             height: 100%;
+            overflow: hidden;
             background: radial-gradient(#ffffff, rgb(80, 80, 80));
         `;
     }

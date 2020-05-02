@@ -3,15 +3,15 @@ import { css } from "emotion";
 import htm from "htm";
 const html = htm.bind(h);
 
-import { SplittedPaneComponent } from "./SplittedPaneComponent";
-import { IProjectFile } from "../model/IProjectFile";
-import { StlViewerContext } from "../stlViewer/threejs/StlViewerContext";
 import { IStlInfo } from "../model/IStlInfo";
 import { IFileInfo } from "../model/IFileInfo";
-import { StlViewerComponent } from "../stlViewer/StlViewerComponent";
-import { IConfigDescription, ConfigType, ConfigComponent } from "./ConfigComponent";
-import { AnnotationsComponent } from "../stlViewer/AnnotationsComponent";
+import { IProjectFile } from "../model/IProjectFile";
 import { FileListComponent } from "./FileListComponent";
+import { SidebarPaneComponent } from "./SidebarPaneComponent";
+import { StlViewerComponent } from "../stlViewer/StlViewerComponent";
+import { StlViewerContext } from "../stlViewer/threejs/StlViewerContext";
+import { AnnotationsComponent } from "../stlViewer/AnnotationsComponent";
+import { IConfigDescription, ConfigType, ConfigComponent } from "./ConfigComponent";
 
 interface StlExplorerComponentProps {
     projectFile: IProjectFile;
@@ -58,14 +58,14 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
             />`;
         }
 
-        return html`<div className="${this.css()}">
-            <${SplittedPaneComponent}
-                leftPaneComponent=${html` <${FileListComponent}
+        return html`<div className="stl-explorer ${this.css()}">
+            <${SidebarPaneComponent}
+                sidebarComponent=${html`<${FileListComponent}
                     selectedFile=${this.state.selectedStl.name}
                     fileList=${this._fileList}
                     onFileSelected=${(name: string) => this.onFileSelected(name)}
                 />`}
-                rightPaneComponent=${html` <div class="stl-wrapper">
+                contentComponent=${html`<div class="stl-wrapper">
                     ${annotationsComponent}
                     <${ConfigComponent}
                         config=${this._config}
@@ -76,7 +76,7 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
                     <div id="stl-config-component"></div>
                     <${StlViewerComponent}
                         ref=${(sc: StlViewerComponent) => (this._stlViewerComponent = sc)}
-                        color=${this.state.selectedStl.color}
+                        color="${parseInt(this.state.selectedStl.color.substring(1), 16)}"
                         stlFileUrl="${this.props.projectFolderUrl}/${this.state.selectedStl.name}"
                         onViewerInitiated=${this.onViewerInitiated.bind(this)}
                     />
@@ -119,7 +119,7 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
 
     private css(): string {
         return css`
-            height: 400px;
+            height: 100%;
 
             .stl-wrapper {
                 height: 100%;
@@ -127,8 +127,8 @@ export class StlExplorerComponent extends Component<StlExplorerComponentProps, S
             }
 
             #stl-config-component {
-                position: absolute;
                 right: 15px;
+                position: absolute;
             }
         `;
     }

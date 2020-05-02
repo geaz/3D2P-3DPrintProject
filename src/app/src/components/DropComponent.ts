@@ -94,9 +94,7 @@ export class DropComponent extends Component<DropComponentProps, DropComponentSt
 
     private css(): string {
         return css`
-            width: 100%;
-            height: 100%;
-            display: block;
+            height:100%;
 
             #droparea-overlay {
                 top: 0;

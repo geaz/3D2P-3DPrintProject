@@ -1,4 +1,4 @@
-import { h, Component, render } from "preact";
+import { h, Component, render, VNode } from "preact";
 import { css } from "emotion";
 import htm from "htm";
 const html = htm.bind(h);
@@ -15,7 +15,6 @@ interface PrintProjectsAppState {
 }
 
 class PrintProjectsApp extends Component<{}, PrintProjectsAppState> {
-    // Loads the initial values from an js object 'printProject' on the 'window'
     componentWillMount() {
         this.setState({
             dropCallback: (<any>window).printProjects?.dropCallback,
@@ -26,30 +25,31 @@ class PrintProjectsApp extends Component<{}, PrintProjectsAppState> {
     }
 
     public render() {
+        let contentHtml = this.renderStlExplorer();
+        if (this.state.projectFile !== undefined && this.state.projectFile.readme !== null) {
+            contentHtml = html`
+                <div id="title">
+                    <h1>${this.state.projectFile.name}</h1>
+                    ${this.state.projectFile.id && html`<small>ID: ${this.state.projectFile.id}</small>`}
+                </div>
+                <div id="stl-box">
+                    <div id="info-bar" class="status-${this.state.projectFile.status}">
+                        ${this.state.projectFile.readme && html`<button>Readme</button>`}
+                        <button>STLs</button>
+                    </div>
+                    ${contentHtml}
+                    <div id="info-footer"></div>
+                </div>
+                ${this.state.projectFile.readme &&
+                html` <article id="readme">
+                    <${MarkdownComponent} markdownUrl=${this.state.projectFolderUrl + "/README.md"} />
+                </article>`}
+            `;
+        }
+
         return html`<div className=${this.css()}>
             <${DropComponent}
-                content=${this.state.projectFile !== undefined &&
-                html`
-                    <div id="title">
-                        <h1>${this.state.projectFile.name}</h1>
-                        ${this.state.projectFile.id && html`<small>ID: ${this.state.projectFile.id}</small>`}
-                    </div>
-                    <div id="stl-box">
-                        <div id="info-bar" class="status-${this.state.projectFile.status}">
-                            ${this.state.projectFile.readme && html`<button>Readme</button>`}
-                            <button>STLs</button>
-                        </div>
-                        <${StlExplorerComponent}
-                            projectFile=${this.state.projectFile}
-                            projectFolderUrl=${this.state.projectFolderUrl}
-                        />
-                        <div id="info-footer"></div>
-                    </div>
-                    ${this.state.projectFile.readme &&
-                    html` <article id="readme">
-                        <${MarkdownComponent} markdownUrl=${this.state.projectFolderUrl + "/README.md"} />
-                    </article>`}
-                `}
+                content=${this.state.projectFile && contentHtml}
                 visibleDrop=${this.state.projectFile === undefined}
                 onDrop=${this.handleDrop.bind(this)}
             />
@@ -72,15 +72,20 @@ class PrintProjectsApp extends Component<{}, PrintProjectsAppState> {
         this.loadProject((await this.state.dropCallback(fileDataUrl)).projectFolderUrl);
     }
 
+    private renderStlExplorer(): VNode<any> | VNode<any>[] {
+        return html`<${StlExplorerComponent}
+            projectFile=${this.state.projectFile}
+            projectFolderUrl=${this.state.projectFolderUrl}
+        />`;
+    }
+
     private css(): string {
         return css`
             height: 100%;
-            margin-bottom: 50px;
-            box-sizing: border-box;
-
+            
             #title {
                 text-align: center;
-                margin: 25px 0;
+                margin-bottom: 25px;
 
                 h1 {
                     margin: 0;
@@ -88,15 +93,13 @@ class PrintProjectsApp extends Component<{}, PrintProjectsAppState> {
             }
 
             #stl-box {
-                max-width: 1024px;
                 background: white;
-                margin: 0 auto 25px auto;
+                margin: 0 0 25px 0;
                 box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
                 border-radius: 0 0 5px 5px;
 
                 #info-bar {
                     padding: 15px;
-                    box-sizing: border-box;
                     border-bottom: rgba(0, 0, 0, 0.1);
 
                     button {
@@ -121,13 +124,10 @@ class PrintProjectsApp extends Component<{}, PrintProjectsAppState> {
                 }
             }
 
-            #readme {
-                margin: auto;
-                max-width: 1024px;
-            }
-
-            img {
+            #readme img {
+                display: block;
                 max-width: 100%;
+                margin: auto;
             }
         `;
     }

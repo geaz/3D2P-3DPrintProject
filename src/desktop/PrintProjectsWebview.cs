@@ -44,8 +44,8 @@ namespace PrintProjects.App
                     {
                         _webview
                             .SetTitle("3D2P")
-                            .SetSize(1280, 960, WebviewHint.None)
-                            .SetSize(1024, 768, WebviewHint.Min)
+                            .SetSize(1024, 800, WebviewHint.None)
+                            .SetSize(800, 800, WebviewHint.Min)
                             .Bind("dropCallback", DropCallback)
                             .InitScript(initScript)
                             .Navigate(hostedContent)

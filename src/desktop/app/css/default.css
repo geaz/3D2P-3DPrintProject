@@ -1,8 +1,14 @@
-html, body, #print-projects-app {
+html, body  {
     height: 100%;
 }
 
 body {
+    display: flex;
+    align-items: stretch;
     color: #404040;
     background: #f7f7f7;
+}
+
+#print-projects-app {
+    flex:1;
 }
