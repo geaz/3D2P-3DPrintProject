@@ -9,6 +9,7 @@
 			"es2019",
 			"dom"
 		],
+		"jsx": "react",
 		"strict": true,
 		"rootDir": "src",
 		"declaration": true,

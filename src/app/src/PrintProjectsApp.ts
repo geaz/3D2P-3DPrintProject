@@ -4,7 +4,7 @@ import htm from "htm";
 const html = htm.bind(h);
 
 import { DropComponent } from "./components/DropComponent";
-import { MarkdownComponent } from "./components/MarkdownComponent";
+import MarkdownComponent from "./components/MarkdownComponent";
 import { StlExplorerComponent } from "./compositions/StlExplorerComponent";
 import { IProjectFile } from "./model/IProjectFile";
 
