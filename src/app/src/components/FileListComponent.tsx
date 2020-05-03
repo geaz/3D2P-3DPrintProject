@@ -1,7 +1,6 @@
-import { h, Component, VNode } from "preact";
-import { css } from "emotion";
-import htm from "htm";
-const html = htm.bind(h);
+import * as React from "react";
+import { FC } from "react";
+import styled from "styled-components";
 
 import { IFileInfo } from "../model/IFileInfo";
 
@@ -12,6 +11,65 @@ interface FileListComponentProps {
     onFileSelected: (name: string) => void;
 }
 
+export const FileListComponent: FC<FileListComponentProps> = (props: FileListComponentProps) => {
+    let fileList = props.fileList.map(
+        (f) =>
+            <FileButton
+                className={props.selectedFile === f.name ? "active" : ""}
+                value={f.name}
+                onClick={() => {
+                    props.onFileSelected(f.name);
+                }}
+            >
+                {f.name} {f.description !== undefined && <><br/><small>{f.description}</small></>}
+            </FileButton>
+    );
+    
+    return <StyledFileListComponent>
+        <div className="file-list">
+            {fileList}
+        </div>
+        <div className="file-infobar">
+            <small>{props.fileList.length} File(s)</small>
+            {props.downloadAllUrl &&
+            <a href={props.downloadAllUrl} title="Save all"
+                ><i className="fa fa-floppy-o" aria-hidden="true"></i>
+            </a>}
+        </div>
+    </StyledFileListComponent>;
+};
+
+const StyledFileListComponent = styled.div`
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f7f7f7;
+    display:flex;
+    flex-direction:column;
+`;
+
+const FileButton = styled.button`
+    border: 0;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    text-align: left;
+    background: none;
+    padding: 10px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        color: #f58026;
+        background: #eaeaea;
+    }
+
+    small {
+        font-size: 0.7rem;
+        font-weight: ${p => p.active ? "bold" : "normal" }
+    }
+`;
+
+/*
 export class FileListComponent extends Component<FileListComponentProps> {
     public render(): VNode<any> | VNode<any>[] {
         let fileList = this.props.fileList.map(
@@ -86,3 +144,4 @@ export class FileListComponent extends Component<FileListComponentProps> {
         `;
     }
 }
+*/
