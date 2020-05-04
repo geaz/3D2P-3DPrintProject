@@ -71,14 +71,12 @@ export class StlViewerContext {
         this._renderer.setSize(0, 0);
 
         let boundingBox = this._hostElement.getBoundingClientRect();
-        console.dir(boundingBox);
         this._camera.aspect = boundingBox.width / boundingBox.height;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize(boundingBox.width, boundingBox.height);
     }
 
     public async loadStl(stlFileUrl: string, color: number): Promise<void> {
-        console.log(stlFileUrl);
         let mesh = await new Promise<Mesh | undefined>((resolve) => {
             if (stlFileUrl !== undefined) {
                 let loader: any = new STLLoader();
