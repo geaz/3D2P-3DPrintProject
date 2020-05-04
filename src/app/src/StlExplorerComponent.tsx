@@ -15,26 +15,29 @@ import { SplittedSidebarComponent } from "./components/SplittedSidebarComponent"
 import { CollapsingSidebarComponent } from "./components/CollapsingSidebarComponent";
 
 interface StlExplorerComponentProps {
-    minSizeForSidebar: number;
+    minSizeForSplitter: number;
     projectFile: ProjectFile;
     projectFolderUrl: string;
 }
 
 export const StlExplorerComponent: FC<StlExplorerComponentProps> = (props: StlExplorerComponentProps) => {
-    const componentRef = useRef<HTMLDivElement>(null);
-    const stlDivRef = useRef<HTMLDivElement>(null);
-    const stlViewerContext = useRef<StlViewerContext>();
-
-    const [selectedStl, setSelectedStl] = useState<StlInfo | null>(null);
+    const [selectedStl, setSelectedStl] = useState<StlInfo>();
     const [showAnnotations, setShowAnnotations] = useState(true);
     const [useSplitterSidebar, setUseSplitterSidebar] = useState(true);
     const [fileList, setFileList] = useState(new Array<FileInfo>());
+
+    const componentRef = useRef<HTMLDivElement>(null);
+    const stlViewerRef = useRef<StlViewerContext>();
+    const stlDivRef = useCallback(node => {
+        if(node !== null) stlViewerRef.current = new StlViewerContext(node);
+        else stlViewerRef.current = undefined;
+    }, []);
 
     const datConfig = {} as DatConfig;
     datConfig.configObject = {
         showAnnotations: true,
         resetCamera: () => {
-            stlViewerContext.current?.resetCamera();
+            stlViewerRef.current?.resetCamera();
         },
     };
     datConfig.configDescription = [];
@@ -44,21 +47,20 @@ export const StlExplorerComponent: FC<StlExplorerComponentProps> = (props: StlEx
         if (property === "showAnnotations") setShowAnnotations(value);
     });
     
-    const checkSidebarType = () => {
+    const handleWindowResize = () => {
+        console.log(stlViewerRef.current);
+        stlViewerRef.current?.resizeRenderer();
         let boundingBox = componentRef.current?.getBoundingClientRect();
-        setUseSplitterSidebar(boundingBox !== undefined && boundingBox.width >= props.minSizeForSidebar);
+        console.log(boundingBox !== undefined && boundingBox.width >= props.minSizeForSplitter);
+        console.log(boundingBox?.width);
+        setUseSplitterSidebar(boundingBox !== undefined && boundingBox.width >= props.minSizeForSplitter);
     }    
-    useEffect(checkSidebarType, []);
-    useWindowResize(checkSidebarType);
+    useEffect(handleWindowResize, []);
+    useWindowResize(handleWindowResize);
 
-
-
-    if(stlViewerContext.current === undefined && stlDivRef.current !== null) {
-        stlViewerContext.current = new StlViewerContext(stlDivRef.current!);
-    }
     useEffect(() => { 
-        if(selectedStl !== null) 
-            stlViewerContext.current?.loadStl(`${props.projectFolderUrl}/stl/${selectedStl.name}`, parseInt(selectedStl.color.substring(1), 16)) 
+        if(selectedStl !== undefined) 
+        stlViewerRef.current?.loadStl(`${props.projectFolderUrl}/stl/${selectedStl.name}`, parseInt(selectedStl.color.substring(1), 16)) 
     }, [selectedStl]);
 
     useEffect(() => {
@@ -79,13 +81,13 @@ export const StlExplorerComponent: FC<StlExplorerComponentProps> = (props: StlEx
     }, [props.projectFile])
 
     let annotationsComponent = undefined;
-    if (stlViewerContext.current !== undefined && selectedStl?.annotationList !== undefined) {
+    if (stlViewerRef.current !== undefined && selectedStl?.annotationList !== undefined) {
         annotationsComponent = <AnnotationsComponent
             isEditable={false}
             onAnnotationListChanged={ () => { }}
             showAnnotations={showAnnotations}
             annotationList={selectedStl?.annotationList}
-            stlViewerContext={stlViewerContext.current}
+            stlViewerContext={stlViewerRef.current}
         />;
     }
     
@@ -116,7 +118,7 @@ export const StlExplorerComponent: FC<StlExplorerComponentProps> = (props: StlEx
         />;
     }
 
-    return paneComponent;
+    return <div className="stl-explorer" ref={ componentRef }>{ paneComponent }</div>;
 };
 
 /*

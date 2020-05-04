@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpWebview" Version="0.5.5" />
+    <PackageReference Include="SharpWebview" Version="0.5.4" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20214.1" />
   </ItemGroup>
 

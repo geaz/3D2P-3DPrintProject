@@ -50,7 +50,7 @@ const PrintProjectsApp: FC = () => {
     let pageContent = undefined;
     if(projectFile !== undefined && projectFile.readme === null) {
         pageContent = <StlExplorerComponent 
-            minSizeForSidebar={ 250 }
+            minSizeForSplitter={ 850 }
             projectFile={ projectFile }
             projectFolderUrl={ projectFolderUrl! } />;
     }
@@ -66,7 +66,7 @@ const PrintProjectsApp: FC = () => {
                     <button>STLs</button>
                 </div>
                 <StlExplorerComponent 
-                    minSizeForSidebar={ 250 }
+                    minSizeForSplitter={ 250 }
                     projectFile={ projectFile }
                     projectFolderUrl={ projectFolderUrl! } />
                 <div id="info-footer"></div>

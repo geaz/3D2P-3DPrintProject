@@ -38,8 +38,6 @@ export class StlViewerContext {
 
         this._renderer = new WebGLRenderer({ antialias: true, alpha: true });
         this._hostElement.appendChild(this._renderer.domElement);
-        console.log("test123");
-        console.dir(this._hostElement);
         let boundingBox = this._hostElement.getBoundingClientRect();
         this._renderer.setSize(boundingBox.width, boundingBox.height);
         this._camera = new PerspectiveCamera(75, boundingBox.width / boundingBox.height, 0.1, 2000);
@@ -73,6 +71,7 @@ export class StlViewerContext {
         this._renderer.setSize(0, 0);
 
         let boundingBox = this._hostElement.getBoundingClientRect();
+        console.dir(boundingBox);
         this._camera.aspect = boundingBox.width / boundingBox.height;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize(boundingBox.width, boundingBox.height);
@@ -107,7 +106,6 @@ export class StlViewerContext {
     }
 
     private updateSceneStl(stlMesh: Mesh): void {
-        console.log("test");
         if (stlMesh === undefined) return;
         if (this._mesh !== undefined) this._meshParent.remove(this._mesh);
 
