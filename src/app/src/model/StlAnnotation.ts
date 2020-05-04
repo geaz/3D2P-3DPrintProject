@@ -1,4 +1,4 @@
-export interface IStlAnnotation {
+export interface StlAnnotation {
     id: number;
     x: number;
     y: number;

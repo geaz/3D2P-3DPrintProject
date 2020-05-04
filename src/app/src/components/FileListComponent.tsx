@@ -2,27 +2,28 @@ import * as React from "react";
 import { FC } from "react";
 import styled from "styled-components";
 
-import { IFileInfo } from "../model/IFileInfo";
-
 interface FileListComponentProps {
-    selectedFile: string;
-    fileList: Array<IFileInfo>;
+    selectedFile: string | undefined;
+    fileList: Array<FileInfo>;
     downloadAllUrl: string;
     onFileSelected: (name: string) => void;
+}
+
+export interface FileInfo {
+    name: string;
+    description: string;
 }
 
 export const FileListComponent: FC<FileListComponentProps> = (props: FileListComponentProps) => {
     let fileList = props.fileList.map(
         (f) =>
-            <FileButton
-                className={props.selectedFile === f.name ? "active" : ""}
-                value={f.name}
+            <StyledFileButton active={props.selectedFile === f.name} value={f.name}
                 onClick={() => {
                     props.onFileSelected(f.name);
                 }}
             >
                 {f.name} {f.description !== undefined && <><br/><small>{f.description}</small></>}
-            </FileButton>
+            </StyledFileButton>
     );
     
     return <StyledFileListComponent>
@@ -48,7 +49,7 @@ const StyledFileListComponent = styled.div`
     flex-direction:column;
 `;
 
-const FileButton = styled.button`
+const StyledFileButton = styled.button<{ active: boolean }>`
     border: 0;
     width: 100%;
     display: block;
@@ -56,7 +57,10 @@ const FileButton = styled.button`
     text-align: left;
     background: none;
     padding: 10px 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+
+    color: ${p => p.active ? "#f58026" : p.theme.textColor };
+    font-weight: ${p => p.active ? "bold" : "normal" };
 
     &:hover {
         color: #f58026;
@@ -65,83 +69,6 @@ const FileButton = styled.button`
 
     small {
         font-size: 0.7rem;
-        font-weight: ${p => p.active ? "bold" : "normal" }
+        font-weight: ${p => p.active ? "bold" : "normal" };
     }
 `;
-
-/*
-export class FileListComponent extends Component<FileListComponentProps> {
-    public render(): VNode<any> | VNode<any>[] {
-        let fileList = this.props.fileList.map(
-            (f) =>
-                html`<button
-                    class=${this.props.selectedFile === f.name ? "active" : ""}
-                    value=${f.name}
-                    onclick=${() => {
-                        this.onFileSelected(f.name);
-                    }}
-                >
-                    ${f.name} ${f.description !== undefined ? html`<br /><small>${f.description}</small>` : ""}
-                </button>`
-        );
-        return html`<div className="file-list-component ${this.css()}">
-            <div class="file-list">
-                ${fileList}
-            </div>
-            <div class="file-infobar">
-                <small>${this.props.fileList.length} File(s)</small>
-                ${this.props.downloadAllUrl &&
-                html`<a href=${this.props.downloadAllUrl} title="Save all"
-                    ><i class="fa fa-floppy-o" aria-hidden="true"></i>
-                </a>`}
-            </div>
-        </div>`;
-    }
-
-    private onFileSelected(name: string): void {
-        if (this.props.onFileSelected !== undefined) {
-            this.props.onFileSelected(name);
-        }
-    }
-
-    private css(): string {
-        return css`
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: #f7f7f7;
-            display:flex;
-            flex-direction:column;
-
-            button {
-                border: 0;
-                width: 100%;
-                display: block;
-                cursor: pointer;
-                text-align: left;
-                background: none;
-                padding: 10px 10px;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-                &:hover {
-                    color: #f58026;
-                    background: #eaeaea;
-                }
-
-                small {
-                    font-size: 0.7rem;
-                }
-            }
-
-            .active {
-                color: #f58026;
-                font-weight: bold;
-
-                small {
-                    font-weight: 400;
-                }
-            }
-        `;
-    }
-}
-*/

@@ -17,7 +17,6 @@ export const MarkdownComponent: FC<MarkdownComponentProps> = (props: MarkdownCom
         setMarkdown(marked(fileContent));
         setLoading(false);
     };
-
     useEffect(() => { fetchMarkdown(); }, [props.markdownUrl]);
 
     return <div>

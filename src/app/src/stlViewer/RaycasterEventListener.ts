@@ -10,7 +10,7 @@ export class RaycasterEventListener {
         private _objectName: string,
         private _onIntersection: (mouseX: number, mouseY: number, intersection: Intersection) => void
     ) {
-        this._rendererDom = this._stlViewerContext.renderer.domElement;
+        this._rendererDom = this._stlViewerContext.Renderer.domElement;
         this._rendererDom.addEventListener("dblclick", this._mouseHandler);
     }
 
@@ -19,7 +19,7 @@ export class RaycasterEventListener {
     }
 
     private handleDblClick(event: MouseEvent): void {
-        let relevantObject = this._stlViewerContext.scene.getObjectByName(this._objectName);
+        let relevantObject = this._stlViewerContext.Scene.getObjectByName(this._objectName);
         if (relevantObject !== undefined) {
             // set the mouse position with a coordinate system where the center
             // of the screen is the origin
@@ -28,7 +28,7 @@ export class RaycasterEventListener {
             let mouseY = -(event.clientY / boundingBox.height) * 2 + 1;
 
             let raycaster = new Raycaster();
-            raycaster.setFromCamera({ x: mouseX, y: mouseY }, this._stlViewerContext.camera);
+            raycaster.setFromCamera({ x: mouseX, y: mouseY }, this._stlViewerContext.Camera);
 
             let intersections = raycaster.intersectObject(relevantObject);
             if (intersections.length > 0) {

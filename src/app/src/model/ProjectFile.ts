@@ -1,10 +1,10 @@
 import { Status } from "./Status";
-import { IStlInfo } from "./IStlInfo";
+import { StlInfo } from "./StlInfo";
 
-export interface IProjectFile {
+export interface ProjectFile {
     id: string;
     name: string;
     status: Status;
     readme: string;
-    stlInfoList: Array<IStlInfo>;
+    stlInfoList: Array<StlInfo>;
 }
