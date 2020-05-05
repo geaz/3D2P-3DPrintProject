@@ -269,7 +269,7 @@ const StyledAnnotationItem = styled.div<{ active: boolean }>`
 
                 &:hover {
                     cursor: pointer;
-                    color: #f58026;
+                    color: ${p => p.theme.mainColor };
                 }
 
                 &:last-child {

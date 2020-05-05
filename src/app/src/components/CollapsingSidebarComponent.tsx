@@ -8,7 +8,7 @@ interface CollapsingSidebarComponentProps {
 }
 
 export const CollapsingSidebarComponent: FC<CollapsingSidebarComponentProps> = (props: CollapsingSidebarComponentProps) => {
-    const [isCollapsed, setCollapsed] = useState(false);
+    const [isCollapsed, setCollapsed] = useState(true);
 
     return <StyledCollapsingSidebarComponent collapsed={ isCollapsed }>
         <div className="sidebar">
@@ -30,6 +30,7 @@ const StyledCollapsingSidebarComponent = styled.div<{ collapsed: boolean }>`
 
     .sidebar {
         flex:1;
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
         display: ${ p => p.collapsed ? "none" : "block" };
     }
 
@@ -40,14 +41,14 @@ const StyledCollapsingSidebarComponent = styled.div<{ collapsed: boolean }>`
 
     .sidebar-button {
         display: flex;
-        align-items: center;
         padding: 15px;
         font-size: 1.5rem;
-        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        background: white;
+        align-items: center;
         border-right: 1px solid rgba(0, 0, 0, 0.1);
 
         &:hover {
-            color: #f58026;
+            color: ${p => p.theme.mainColor };
             cursor: pointer;
         }
     }

@@ -1,4 +1,4 @@
-import { useEffect, RefObject, Dispatch, SetStateAction } from "react";
+import { useEffect, RefObject, Dispatch, SetStateAction, useRef, useState } from "react";
 
 export function useWindowResize(resizeCb: () => void) {
     useEffect(() => {
@@ -14,12 +14,12 @@ export function useFileDragDrop(
     setDragging: Dispatch<SetStateAction<boolean>>,
     dropCallback: (file: File) => void
 ) {
-    let eventCounter: number = 0;
+    const eventCounter = useRef(0);
 
     useEffect(() => {
         let dragEnterHandler = (e: Event) => {
             e.preventDefault();
-            eventCounter++;
+            eventCounter.current++;
             setDragging(true);
         };
 
@@ -30,8 +30,8 @@ export function useFileDragDrop(
     useEffect(() => {
         let handleDragLeave = (e: Event) => {
             e.preventDefault();
-            eventCounter--;
-            if (eventCounter === 0) setDragging(false);
+            eventCounter.current--;            
+            if (eventCounter.current === 0) setDragging(false);
         };
 
         domElement.current?.addEventListener("dragleave", handleDragLeave);
@@ -49,11 +49,12 @@ export function useFileDragDrop(
 
     useEffect(() => {
         let handleDrop = (e: DragEvent) => {
+            console.log("test");
             e.preventDefault();
             if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
                 dropCallback(e.dataTransfer.files[0]);
             }
-            eventCounter = 0;
+            eventCounter.current = 0;
             setDragging(false);
         };
 

@@ -70,9 +70,6 @@ The icons used in the Visual Studio Code Extension are taken from [Freepik](http
 
 ## TODOs
 
-### Application
-- Parse Images on Readme set
-
 ### VSCode
 - Rewrite for 3D2P CLI
 

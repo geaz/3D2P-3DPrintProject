@@ -34,6 +34,7 @@ namespace PrintProjects.App
                         window.printProjects.dropCallback = dropCallback;";
                     if(is3MF)
                     {
+                        ClearCreateExtractionPath();
                         var model3mf = new Model3MF(model.FullName);
                         model3mf.ExtractPrintProject(_extractionPath);
                         initScript += "window.printProjects.projectFolderUrl='/extracted';";
@@ -62,10 +63,14 @@ namespace PrintProjects.App
             }
         }
 
-        private void DropCallback(string id, string req)
-        {
+        private void ClearCreateExtractionPath() {
             if(Directory.Exists(_extractionPath)) Directory.Delete(_extractionPath, true);
             Directory.CreateDirectory(_extractionPath);
+        }
+
+        private void DropCallback(string id, string req)
+        {
+            ClearCreateExtractionPath();
 
             var modelFilePath = Path.Combine(_extractionPath, "model.3mf");
             var trimmedJsDataUrl = req
