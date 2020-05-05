@@ -1,3 +1,7 @@
+*.msi
+*.wixpdb
+*.wixobj
+Files.wxs
 .cache
 .vs
 out

@@ -9,13 +9,14 @@
     <Company>3D2P</Company>
     <Authors>Gerrit 'Geaz' Gazic</Authors>
     <RepositoryType>Git</RepositoryType>
+    <PublishTrimmed>true</PublishTrimmed>
     <PackageProjectUrl>https://github.com/geaz/3D2P-3DPrintProjects</PackageProjectUrl>
     <RepositoryUrl>https://github.com/geaz/3D2P-3DPrintProjects</RepositoryUrl>
     <DefaultItemExcludes>$(DefaultItemExcludes);webpack.config.js;node_modules\**;package*.json;tsconfig.json</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpWebview" Version="0.5.4" />
+    <PackageReference Include="SharpWebview" Version="0.5.5" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20214.1" />
   </ItemGroup>
 
@@ -24,10 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="icon.ico">
+    <None Update="app\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="app\index.html">
+    <None Update="app\app.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="app\images\*.*">
@@ -39,22 +40,14 @@
     <None Include="app\css\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="..\..\libs\lib3mf.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\libs\lib3mf.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\libs\lib3mf.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
-  <Target Name="BuildApp" BeforeTargets="BeforeBuild">
-    <Exec Command="npm --prefix ..\app run build:desktop" />
-  </Target>
-  <Target Name="CopyApp" AfterTargets="BuildApp">
-    <Copy SourceFiles="app\app.js" DestinationFolder="$(OutDir)\app" />
-  </Target>
-
-  <Target Name="CopyDll" AfterTargets="AfterBuild">
-    <Copy SourceFiles="..\..\libs\lib3mf.dll" DestinationFolder="$(OutDir)" />
-  </Target>
-  <Target Name="CopyDyLib" AfterTargets="CopyDll">
-    <Copy SourceFiles="..\..\libs\lib3mf.dylib" DestinationFolder="$(OutDir)" />
-  </Target>
-  <Target Name="CopySo" AfterTargets="CopyDyLib">
-    <Copy SourceFiles="..\..\libs\lib3mf.so" DestinationFolder="$(OutDir)" />
-  </Target>
 </Project>
