@@ -1,5 +1,5 @@
 {
-	"name": "vscode",
+	"name": "3d2p.vscode",
 	"publisher": "3d2p",
 	"displayName": "3D2P - 3D Print Projects",
 	"author": "Gerrit 'Geaz' Gazic",
@@ -76,8 +76,6 @@
 	},
 	"devDependencies": {
 		"3d2p.react.components": "file:../app",
-		"react": "file:../app/node_modules/react",
-		"react-dom": "file:../app/node_modules/react-dom",
 		"@types/command-exists": "1.2.0",
 		"@types/glob": "7.1.1",
 		"@types/node": "12.12.32",
@@ -86,6 +84,8 @@
 		"@types/styled-components": "5.1.0",
 		"@types/vscode": "1.43.0",
 		"@types/webgl2": "0.0.5",
+		"react": "16.13.1",
+		"react-dom": "16.13.1",
 		"command-exists": "1.2.9",
 		"glob": "7.1.6",
 		"npm-run-all": "4.1.5",
