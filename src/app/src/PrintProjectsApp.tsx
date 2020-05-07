@@ -9,7 +9,7 @@ import { StlExplorerComponent } from "./components/StlExplorerComponent";
 import { useFileDragDrop } from "./effects/EventEffects";
 import { MarkdownComponent } from "./components/MarkdownComponent";
 
-const PrintProjectsApp: FC = () => {
+export const PrintProjectsApp: FC = () => {
     const componentRef = useRef<HTMLDivElement>(null);
     
     const [projectFile, setProjectFile] = useState<ProjectFile | undefined>(undefined);

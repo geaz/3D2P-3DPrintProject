@@ -70,13 +70,13 @@ namespace PrintProjects.App
 
         private void DropCallback(string id, string req)
         {
+            var trimmedJsDataUrl = req.Trim(new char[]{ '[', ']', '"' });
+            var basePos = trimmedJsDataUrl.IndexOf("base64,") + 7;
+            trimmedJsDataUrl = trimmedJsDataUrl.Substring(basePos);
+
             ClearCreateExtractionPath();
 
             var modelFilePath = Path.Combine(_extractionPath, "model.3mf");
-            var trimmedJsDataUrl = req
-                    .Trim(new char[]{ '[', ']', '"' })
-                    .Remove(0, "data:;base64,".Length);
-
             File.WriteAllBytes(
                 modelFilePath,
                 Convert.FromBase64String(trimmedJsDataUrl));

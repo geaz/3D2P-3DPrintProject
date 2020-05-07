@@ -1,17 +1,44 @@
-import { h, Component, render } from 'preact';
-import htm from 'htm';
-
-import { DEFAULT_STL_COLOR } from '../3d2p/StlInfo';
-import { 
-    StlViewerComponent, AnnotationsComponent, ConfigComponent, 
-    IConfigDescription, ConfigType, StlViewerContext, IStlAnnotation
-} from '3d2p.preact.components';
+import * as React from "react";
+import { render } from "react-dom";
+import { FC, useRef, useEffect, useState } from "react";
+import { StlViewerComponent, StlInfo } from "3d2p.react.components";
 
 declare var acquireVsCodeApi: any;
-const html = htm.bind(h);
 
+const StlViewerApp: FC = () => {
+    const vscode = useRef();
+    const [stlUrl, setStlUrl] = useState<string>();
+    const [stlInfo, setStlInfo] = useState<StlInfo>();
+
+    useEffect(() => {
+        const handleMessage = (event: any): void => {
+            let message = event.data;
+            switch (message.command) {
+                case 'loadStl':
+                    setStlUrl(message.data.stlUrl);
+                    setStlInfo(message.data.stlInfo);
+                    break;
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        return () => { window.removeEventListener('message', handleMessage); };
+    }, []);
+    useEffect(() => { vscode.current = acquireVsCodeApi(); }, []);
+
+    return <div style={{ flex: 1 }}>
+        { stlUrl === undefined && <div>Loading ...</div> }
+        { stlUrl !== undefined && <StlViewerComponent 
+            stlAnnotations={stlInfo?.annotationList}
+            stlHexColor={ stlInfo !== undefined ? parseInt(stlInfo.color.substring(1), 16) : 16089126 /* Orange #F58026 */ }
+            stlUrl={ stlUrl }
+            />}
+        </div>;
+};
+
+render(<StlViewerApp/>, document.getElementById("stl-viewer-app")!);
+
+/*
 class App extends Component<{}, AppState> {
-    private _vscode = acquireVsCodeApi();
     private _windowListener = this.handleMessage.bind(this);
     private _configDescription = new Array<IConfigDescription>();
 
@@ -123,4 +150,4 @@ interface AppState {
     stlViewerContext: StlViewerContext;
 }
 
-render(html`<${App}/>`, document.getElementById('stl-viewer-app')!);
+render(html`<${App}/>`, document.getElementById('stl-viewer-app')!);*/

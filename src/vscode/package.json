@@ -20,7 +20,6 @@
 	"main": "./out/extension.js",
 	"activationEvents": [
 		"onCommand:3d2p.cmd.initProject",
-		"onCommand:3d2p.cmd.deleteProject",
 		"workspaceContains:3D2P.json"
 	],
 	"contributes": {
@@ -30,78 +29,43 @@
 				"title": "3D2P: Initialize 3D Print Project"
 			},
 			{
-				"command": "3d2p.cmd.uploadProject",
-				"title": "3D2P: Upload Project"
+				"command": "3d2p.cmd.setProjectData",
+				"title": "3D2P: Set Project Data"
 			},
 			{
-				"command": "3d2p.cmd.deleteProject",
-				"title": "3D2P: Delete Project"
+				"command": "3d2p.cmd.addStl",
+				"title": "3D2P: Add STL"
 			},
 			{
-				"command": "3d2p.cmd.setCoverImage",
-				"title": "3D2P: Set Cover Image"
+				"command": "3d2p.cmd.packProject",
+				"title": "3D2P: Create 3MF"
 			},
 			{
-				"command": "3d2p.cmd.openStlWebview",
-				"title": "Open STL Viewer"
+				"command": "3d2p.cmd.open3mf",
+				"title": "3D2P: Open 3MF"
+			},
+			{
+				"command": "3d2p.cmd.openStl",
+				"title": "3D2P: Open STL"
 			}
 		],
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "3d2p.cmd.uploadProject",
-					"when": "3d2p.context.activated"
-				},
-				{
-					"command": "3d2p.cmd.openStlWebview",
+					"command": "3d2p.cmd.open3mf",
 					"when": "false"
 				}
 			],
 			"explorer/context": [
 				{
-					"command": "3d2p.cmd.openStlWebview",
+					"command": "3d2p.cmd.open3mf",
+					"when": "resourceExtname == .3mf"
+				},
+				{
+					"command": "3d2p.cmd.openStl",
 					"when": "resourceExtname == .stl"
 				}
 			]
-		},
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "3d2pViewContainer",
-					"title": "3D Print Project",
-					"icon": "resources/images/3d-printer-variant.svg"
-				}
-			]
-		},
-		"views": {
-			"3d2pViewContainer": [
-				{
-					"id": "3d2p.view.stl",
-					"name": "STLs",
-					"when": "3d2p.context.activated"
-				}
-			]
-		},
-		"configuration": {
-			"type": "object",
-			"title": "3D2P Configuration",
-			"properties": {
-				"3d2p.apiEndpoint": {
-					"type": "string",
-					"default": "3d2p.net",
-					"description": "The url of the api endpoint of 3D2P. Normally it is not necessary to change this."
-				},
-				"3d2p.apiPort": {
-					"type": "number",
-					"default": 443,
-					"description": "The port of the api endpoint of 3D2P. Normally it is not necessary to change this."
-				},
-				"3d2p.strictSSL": {
-					"type": "boolean",
-					"default": true,
-					"description": "Should the SSL certificate be strictly checked during api calls?"
-				}
-			}
 		}
 	},
 	"scripts": {
@@ -111,18 +75,23 @@
 		"watch": "npx tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"3d2p.preact.components": "file:../components",
-		"@types/glob": "^7.1.1",
-		"@types/node": "^12.12.32",
-		"@types/vscode": "^1.43.0",
+		"3d2p.react.components": "file:../app",
+		"react": "file:../app/node_modules/react",
+		"react-dom": "file:../app/node_modules/react-dom",
+		"@types/command-exists": "1.2.0",
+		"@types/glob": "7.1.1",
+		"@types/node": "12.12.32",
+		"@types/react": "16.9.34",
+		"@types/react-dom": "16.9.7",
+		"@types/styled-components": "5.1.0",
+		"@types/vscode": "1.43.0",
 		"@types/webgl2": "0.0.5",
-		"glob": "^7.1.6",
-		"htm": "^3.0.3",
-		"npm-run-all": "^4.1.5",
-		"preact": "10.3.4",
-		"ts-loader": "^6.2.2",
-		"typescript": "^3.8.3",
-		"webpack": "^4.42.1",
-		"webpack-cli": "^3.3.11"
+		"command-exists": "1.2.9",
+		"glob": "7.1.6",
+		"npm-run-all": "4.1.5",
+		"ts-loader": "6.2.2",
+		"typescript": "3.8.3",
+		"webpack": "4.42.1",
+		"webpack-cli": "3.3.11"
 	}
 }

@@ -8,14 +8,17 @@
 			"es2019",
 			"dom"
 		],
+		"jsx": "react",
 		"sourceMap": true,
 		"rootDir": "src",
 		"strict": true,
+		"skipLibCheck": true,
 		"experimentalDecorators": true
 	},
 	"exclude": [
 		"node_modules",
 		".vscode-test",
-		"src/apps/*"
+		"out",
+		"src/StlViewerApp.tsx"
 	]
 }

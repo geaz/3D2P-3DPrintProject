@@ -40,7 +40,7 @@ namespace PrintProjects.Core.Model
             if(File.Exists(projectFilePath) && !overwrite)
                 throw new ModelException($"File already exists!");
 
-            File.WriteAllText(projectFilePath, JsonConvert.SerializeObject(this));
+            File.WriteAllText(projectFilePath, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 
         [JsonProperty("id")]

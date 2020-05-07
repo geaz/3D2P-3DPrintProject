@@ -9,10 +9,10 @@ export class PickQuestion extends BaseQuestion {
     constructor(
         public question: string,
         public options: Array<string>,
-        dependendQuestion?: BaseQuestion,
-        shouldShowDelegate?: (value: string) => boolean
+        public answerRequired: boolean = true,
+        shouldShowDelegate?: () => boolean
     ) {
-        super(dependendQuestion, shouldShowDelegate);
+        super(answerRequired, shouldShowDelegate);
     }
 
     public async show(): Promise<void> {

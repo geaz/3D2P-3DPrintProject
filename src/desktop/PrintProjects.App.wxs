@@ -21,6 +21,12 @@
             </Directory>
         </Directory>
 
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="PathVar" Guid="cc40e686-5ee0-4c54-b92e-475321b4eb5b">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
+        </DirectoryRef>
+
         <DirectoryRef Id="ApplicationProgramsFolder">
             <Component Id="ApplicationShortcut" Guid="03e625e1-8189-4c11-b329-4114c992a3e7">
                 <Shortcut Id="ApplicationStartMenuShortcut" 
@@ -46,6 +52,7 @@
             <ComponentGroupRef Id="ApplicationFiles" />
             <ComponentRef Id="AppFolderPermission" /> 
             <ComponentRef Id="ApplicationShortcut" /> 
+            <ComponentRef Id="PathVar" /> 
         </Feature>
 
         <UI>

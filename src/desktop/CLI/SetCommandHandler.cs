@@ -3,6 +3,7 @@ using System.IO;
 using System.CommandLine;
 using PrintProjects.Core.Model;
 using System.CommandLine.Invocation;
+using System.Linq;
 
 namespace PrintProjects.App.CLI
 {
@@ -15,22 +16,35 @@ namespace PrintProjects.App.CLI
 
         private void BuildCommand()
         {
-            var projectOption = new Option<FileInfo>("--project", "Path to project to change.") { Required = true };
-            var nameOption = new Option<string>("--name", "Set the project name.");
-            var statusOption = new Option<Status?>("--status", "Set the project status.");
-            var thumbnailOption = new Option<FileInfo>("--thumbnail", "Set the thumbnail path.");
-            var readmeOption = new Option<FileInfo>("--readme", "Set the readme path.");
+            var setProjectCommand = new Command("project", "Set project values.")
+            {
+                new Option<FileInfo>("--project", "Path to project to change.") { Required = true },
+                new Option<string>("--name", "Set the project name."),
+                new Option<Status?>("--status", "Set the project status."),
+                new Option<FileInfo>("--thumbnail", "Set the thumbnail path."),
+                new Option<FileInfo>("--readme", "Set the readme path.")
+            };
+            setProjectCommand.Handler = CommandHandler
+                .Create<FileInfo, string, Status?, FileInfo, FileInfo>(HandleSetProjectCommand);
 
-            Command.Add(projectOption);
-            Command.Add(nameOption);
-            Command.Add(statusOption);
-            Command.Add(thumbnailOption);
-            Command.Add(readmeOption);
-            Command.Handler = CommandHandler
-                .Create<FileInfo, string, Status?, FileInfo, FileInfo>(HandleSetCommand);
+            var setStlCommand = new Command("stl", "Set stl values.")
+            {
+                new Option<FileInfo>("--project", "Path to project to change.") { Required = true },
+                new Option<string>("--stl-name", "Name of the stl to set the values (Matches the name of the file, added to the project).")
+                {
+                    Required = true
+                },
+                new Option<string>("--color", description: "Color of the stl (#F58026)."),
+                new Option<Status?>("--status", description: "Status of the stl (WIP, Done).")
+            };
+            setStlCommand.Handler = CommandHandler
+                .Create<FileInfo, string, string, Status?>(HandleSetStlCommand);
+
+            Command.Add(setProjectCommand);
+            Command.Add(setStlCommand);
         }
 
-        private void HandleSetCommand(FileInfo project, string name, Status? status, FileInfo thumbnail, FileInfo readme)
+        private void HandleSetProjectCommand(FileInfo project, string name, Status? status, FileInfo thumbnail, FileInfo readme)
         {
             var projectFile = ProjectFile.Load(project.FullName);
             projectFile.Name = !string.IsNullOrEmpty(name) ? name : projectFile.Name;
@@ -41,6 +55,24 @@ namespace PrintProjects.App.CLI
             Console.WriteLine("Project values set.");
         }
 
-        public Command Command { get; } = new Command("set", "Set properties of an existing project.");
+        private void HandleSetStlCommand(FileInfo project, string stlName, string color, Status? status)
+        {
+            var projectFile = ProjectFile.Load(project.FullName);
+            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
+
+            if(stl != null)
+            {
+                stl.Color = color ?? stl.Color;
+                stl.Status = status ?? stl.Status;
+                projectFile.Save(project.FullName, true);
+                Console.WriteLine("STL values set.");
+            }
+            else
+            {
+                Console.WriteLine($"STL with name '{stlName}' not found in project!");
+            }
+        }
+
+        public Command Command { get; } = new Command("set", "Set properties of an existing project or stl.");
     }
 }

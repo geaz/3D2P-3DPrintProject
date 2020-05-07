@@ -90,7 +90,7 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 				onLoad( scope.parse( text ) );
 
 			} catch ( exception ) {
-
+				console.log(exception);
 				if ( onError ) {
 
 					onError( exception );

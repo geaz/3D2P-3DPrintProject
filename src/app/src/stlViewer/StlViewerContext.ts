@@ -90,8 +90,10 @@ export class StlViewerContext {
     }
 
     public async loadStl(stlFileUrl: string, color: number): Promise<void> {
+        console.log("ala:" + stlFileUrl);
         let mesh = await new Promise<Mesh | undefined>((resolve) => {
             if (stlFileUrl !== undefined) {
+                console.log(stlFileUrl);
                 let loader: any = new STLLoader();
                 loader.load(stlFileUrl, (geometry: BufferGeometry) => {
                     this._material = new MeshPhongMaterial({

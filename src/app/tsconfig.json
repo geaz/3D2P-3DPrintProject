@@ -13,6 +13,7 @@
 		"strict": true,
 		"rootDir": "src",
 		"declaration": true,
+		"skipLibCheck": true,
 		"experimentalDecorators": true
 	},
 	"exclude": [

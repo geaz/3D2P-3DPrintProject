@@ -5,5 +5,6 @@ export interface StlInfo {
     name: string;
     color: string;
     status: Status;
+    relativePath: string;
     annotationList: Array<StlAnnotation>;
 }

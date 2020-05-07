@@ -9,10 +9,10 @@ export class InputQuestion extends BaseQuestion {
     constructor(
         public question: string,
         public placeHolder?: string,
-        dependendQuestion?: BaseQuestion,
-        shouldShowDelegate?: (value: string) => boolean
+        public answerRequired: boolean = true,
+        shouldShowDelegate?: () => boolean
     ) {
-        super(dependendQuestion, shouldShowDelegate);
+        super(answerRequired, shouldShowDelegate);
     }
 
     public async show(): Promise<void> {

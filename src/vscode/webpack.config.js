@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/apps/StlWebViewApp.ts',
+    entry: './src/StlViewerApp.tsx',
     module: {
         rules: [
             {
@@ -15,8 +15,8 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js' ],
     },
     output: {
-        filename: 'StlWebViewApp.js',
-        path: path.resolve(__dirname, 'out/apps'),
+        filename: 'StlViewerApp.js',
+        path: path.resolve(__dirname, 'out'),
     },
-    mode: 'production'
+    mode: 'development'
 };

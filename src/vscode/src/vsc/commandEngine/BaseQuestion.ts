@@ -5,16 +5,14 @@ export abstract class BaseQuestion {
     /**
      * Returns the average of two numbers.
      *
-     * @param dependendQuestion - Specify any dependend question   * 
      * @param shouldShowDelegate
-     * A function which will get the answer of the dependend question as a parameter.
      * The delegate should return true, if the question should be shown in the prompt. False otherwise.
      * 
      * @constructor
      */
     constructor(
-        protected dependendQuestion?: BaseQuestion,
-        protected shouldShowDelegate?: (value: string) => boolean) { }
+        public answerRequired: boolean = true,
+        protected shouldShowDelegate?: () => boolean) { }
 
     /**
      * This method gets executed, if the question should be shown during the questionnaire.
@@ -27,8 +25,8 @@ export abstract class BaseQuestion {
      * @returns True, if the question should be visible. False, otherwise.
      */
     public shouldShow(): boolean {
-        return this.dependendQuestion !== undefined && this.shouldShowDelegate !== undefined
-            ? this.shouldShowDelegate(<string>this.dependendQuestion.answer)
+        return this.shouldShowDelegate !== undefined
+            ? this.shouldShowDelegate()
             : true;
     }
 

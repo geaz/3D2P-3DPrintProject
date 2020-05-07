@@ -9,6 +9,14 @@ body {
     background: #f7f7f7;
 }
 
+#app-loading {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #print-projects-app {
     flex:1;
 }
