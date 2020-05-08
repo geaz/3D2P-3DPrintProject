@@ -28,7 +28,7 @@ export class PrintProjectCli {
     }
 
     public async addStl(projectPath: string, stlPath: string, status: string): Promise<boolean> {
-        let params = ["add", "stl", "--project", projectPath, "--stl", stlPath, "--status", status];
+        let params = ["add", "--project", projectPath, "--stl", stlPath, "--status", status];
         return await this.execute(params);
     }
 

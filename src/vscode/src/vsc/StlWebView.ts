@@ -44,10 +44,11 @@ export class StlWebView {
                 case "updateStlInfo":
                     if (this._stlUpdateHandle !== -1) clearTimeout(this._stlUpdateHandle);
                     this._stlUpdateHandle = setTimeout(async () => {
-                        await vscode.commands.executeCommand("3d2p.cmd.setStlInfo", message.data as StlInfo);
-                    }, 100);
+                            await vscode.commands.executeCommand("3d2p.cmd.setStlInfo", message.data as StlInfo);
+                        }, 100);
                     break;
                 case "updateStlAnnotations":
+                    console.log(message.data);
                     await vscode.commands.executeCommand("3d2p.cmd.setStlAnnotations", 
                         this._stlInfo!.name,
                         message.data as Array<StlAnnotation>);

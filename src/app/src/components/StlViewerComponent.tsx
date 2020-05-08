@@ -43,7 +43,7 @@ export const StlViewerComponent: FC<StlViewerComponentProps> = (props: StlViewer
             datConfig.configDescription = datConfig.configDescription.concat(props.additionalConfig.configDescription);
             datConfig.onConfigChange = (property: string, value: any) => {
                 if (property === "showAnnotations") setShowAnnotations(value);
-                props.additionalConfig!.onConfigChange(property, value);
+                props.additionalConfig!.onConfigChange?.(property, value);
             };
         }
         setDatConfig(datConfig);

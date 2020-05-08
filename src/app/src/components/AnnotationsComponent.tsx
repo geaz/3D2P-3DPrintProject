@@ -31,6 +31,7 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
     
                 let newAnnotation = {} as StlAnnotation;
                 newAnnotation.id = id;
+                newAnnotation.text = "";
                 newAnnotation.x = intersection.point.x;
                 newAnnotation.y = intersection.point.y;
                 newAnnotation.z = intersection.point.z;
@@ -38,6 +39,7 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
                 newAnnotationList.push(newAnnotation);
                 setAnnotationList(newAnnotationList);
                 setActiveAnnotation(newAnnotationList.length - 1);
+                props.onAnnotationListChanged?.(newAnnotationList);
             }
         };
 
@@ -64,7 +66,7 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
     const handleAnnotationSaved = (annotation: StlAnnotation): void => {
         let savedAnnotation = annotationList.filter((a) => a.id == annotation.id);
         if (savedAnnotation.length === 1) {
-            savedAnnotation[0].text = annotation.text;
+            savedAnnotation[0].text = annotation.text;            
             props.onAnnotationListChanged?.(annotationList);
         }
     };
@@ -77,9 +79,9 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
                 return;
             }
         });
-        props.onAnnotationListChanged?.(newAnnotationList);
         setAnnotationList(newAnnotationList);
-        setActiveAnnotation(-1);
+        setActiveAnnotation(-1);  
+        props.onAnnotationListChanged?.(newAnnotationList);
     };
 
     let annotationItemList = undefined;
@@ -89,6 +91,7 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
                 isEditable={props.isEditable}
                 annotation={annotation}
                 stlViewerContext={props.stlViewerContext}
+                key={annotation.id}
                 index={index}
                 active={activeAnnotation === index}
                 onClicked={ handleAnnotationClicked }

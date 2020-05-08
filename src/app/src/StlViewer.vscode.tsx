@@ -64,7 +64,7 @@ const StlViewerApp: FC = () => {
             newDatConfig.configObject = {
                 color: stlInfo.color, 
                 status: Status[stlInfo.status],
-                resetColor: () => { saveStlInfoColor(defaultColor); }
+                resetColor: function() { (this as any).color = defaultColor; saveStlInfoColor(defaultColor); }
             };
             newDatConfig.configDescription.push({ property: "color", type: ConfigType.Color } as ConfigDescription);
             newDatConfig.configDescription.push({ property: "status", type: ConfigType.Picker, options: ["WIP", "Done"] } as ConfigDescription);
@@ -77,7 +77,6 @@ const StlViewerApp: FC = () => {
                     vscode.current?.postMessage({ command: "updateStlInfo", data: stlInfo });
                 } 
             };
-            console.log(parseInt(stlInfo.color.substring(1), 16));
             setStlColor(parseInt(stlInfo.color.substring(1), 16));
         }
         setDatConfig(newDatConfig);

@@ -146,48 +146,47 @@ export const AnnotationItemComponent: FC<AnnotationItemComponentProps> = (props:
         }
     }, [props.index, props.stlViewerContext]);
 
-    let annotationText =
-        props.annotation.text === undefined || props.annotation.text === ""
+    let annotationText = props.annotation.text === ""
             ? "<small>Marked</small>"
             : marked(props.annotation.text);
 
-        let annotationBox = undefined;
-        if (props.active) {
-            annotationBox = <div className="annotation">
-                {isEditMode && <>
-                    <textarea 
-                        placeholder="Annotation"
-                        onInput={ (e: any) => (props.annotation.text = e.target.value) }
-                        ref={ textAreaRef }
-                    >
-                        {props.annotation.text}
-                    </textarea>
-                    <div className="button-container">
-                        <div className="button" onClick={ () => { setEditMode(false); props.onAnnotationSaved(props.annotation) }}>Save</div>
-                        <div className="button" onClick={ () => props.onAnnotationDeleted(props.annotation) }>Delete</div>
-                    </div></> 
-                }
-                {!isEditMode &&
-                <><div className="annotation-content" dangerouslySetInnerHTML={{ __html: annotationText }}></div>
-                    { props.isEditable &&
-                    <div className="button-container">
-                        <div className="button" onClick={ () => setEditMode(true) }>Edit</div>
-                        <div className="button" onClick={ () => props.onAnnotationDeleted(props.annotation) }>Delete</div>
-                    </div>}
-                </>}
-            </div>;
-        }
+    let annotationBox = undefined;
+    if (props.active) {
+        annotationBox = <div className="annotation">
+            {isEditMode && <>
+                <textarea 
+                    placeholder="Annotation"
+                    onInput={ (e: any) => (props.annotation.text = e.target.value) }
+                    ref={ textAreaRef }
+                >
+                    {props.annotation.text}
+                </textarea>
+                <div className="button-container">
+                    <div className="button" onClick={ () => { setEditMode(false); props.onAnnotationSaved(props.annotation) }}>Save</div>
+                    <div className="button" onClick={ () => props.onAnnotationDeleted(props.annotation) }>Delete</div>
+                </div></> 
+            }
+            {!isEditMode &&
+            <><div className="annotation-content" dangerouslySetInnerHTML={{ __html: annotationText }}></div>
+                { props.isEditable &&
+                <div className="button-container">
+                    <div className="button" onClick={ () => setEditMode(true) }>Edit</div>
+                    <div className="button" onClick={ () => props.onAnnotationDeleted(props.annotation) }>Delete</div>
+                </div>}
+            </>}
+        </div>;
+    }
 
-        return <StyledAnnotationItem ref={ componentRef } active={ props.active }>
-            <div
-                className="number-container"
-                ref={ numberContainerRef }
-                onClick={ () => props.onClicked(props.index) }
-            >
-                <div className="number">{props.index + 1}</div>
-            </div>
-            {annotationBox}
-        </StyledAnnotationItem>;
+    return <StyledAnnotationItem ref={ componentRef } active={ props.active }>
+        <div
+            className="number-container"
+            ref={ numberContainerRef }
+            onClick={ () => props.onClicked(props.index) }
+        >
+            <div className="number">{props.index + 1}</div>
+        </div>
+        {annotationBox}
+    </StyledAnnotationItem>;
 }
 
 const StyledAnnotationItem = styled.div<{ active: boolean }>`
@@ -201,7 +200,7 @@ const StyledAnnotationItem = styled.div<{ active: boolean }>`
         color: #eee;
         border-radius: 5px;
         border: 1px solid #eee;
-        background: rgb(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.8);
 
         ${p => p.active &&
         css`
@@ -230,7 +229,7 @@ const StyledAnnotationItem = styled.div<{ active: boolean }>`
         padding: 10px;
         margin-left: 15px;
         position: relative;
-        background: rgb(17, 17, 17, 0.8);
+        background: rgba(17, 17, 17, 0.8);
 
         &::before {
             content: "";
@@ -238,7 +237,7 @@ const StyledAnnotationItem = styled.div<{ active: boolean }>`
             right: 100%;
             top: 12px;
             border-bottom: 5px solid transparent;
-            border-right: 5px solid rgb(17, 17, 17, 0.8);
+            border-right: 5px solid rgba(17, 17, 17, 0.8);
             border-top: 5px solid transparent;
             clear: both;
         }

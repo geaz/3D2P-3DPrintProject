@@ -40,9 +40,9 @@ export const StlExplorerComponent: FC<StlExplorerComponentProps> = (props: StlEx
             if (s.status !== Status.Unknown) fileInfo.description = Status[s.status];
             if (s.annotationList !== undefined && s.annotationList.length > 0) {
                 if (s.annotationList.length > 1) {
-                    fileInfo.description = ` (${s.annotationList.length} Annotations)`;
+                    fileInfo.description += ` (${s.annotationList.length} Annotations)`;
                 } else {
-                    fileInfo.description = ` (${s.annotationList.length} Annotation)`;
+                    fileInfo.description += ` (${s.annotationList.length} Annotation)`;
                 }
             }
             return fileInfo;

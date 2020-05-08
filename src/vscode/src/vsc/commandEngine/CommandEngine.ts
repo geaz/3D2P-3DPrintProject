@@ -7,13 +7,13 @@ import { CommandResult } from "./CommandResult";
  * This class is responsible to lead through the different questions of a given command.
  */
 export class CommandEngine {
-    public async start(questionnaire: BaseCommand): Promise<void> {
-        let result = await this.executeAsProgress(`${questionnaire.Name}: Checking...`, () => questionnaire.checkPrerequisite());
+    public async start(command: BaseCommand): Promise<void> {        
+        let result = await this.executeAsProgress(`${command.Name}: Checking...`, () => command.checkPrerequisite());
         if (result) {
             let valid = true;
-            let propertyNameList = Object.getOwnPropertyNames(questionnaire);
+            let propertyNameList = Object.getOwnPropertyNames(command);
             for (let index = 0; index < propertyNameList.length; index++) {
-                let possibleQuestion = (<PropertyDescriptor>Object.getOwnPropertyDescriptor(questionnaire, propertyNameList[index])).value;
+                let possibleQuestion = (<PropertyDescriptor>Object.getOwnPropertyDescriptor(command, propertyNameList[index])).value;
                 if (possibleQuestion instanceof BaseQuestion && possibleQuestion.shouldShow()) {
                     await possibleQuestion.show();
                     if ((possibleQuestion.answer === "" || possibleQuestion.answer === undefined) && possibleQuestion.answerRequired) {
@@ -25,7 +25,7 @@ export class CommandEngine {
             }
 
             if (valid) {
-                await this.executeAsProgress(`${questionnaire.Name}`, questionnaire.vscCommand.bind(questionnaire));
+                await this.executeAsProgress(`${command.Name}`, command.vscCommand.bind(command));
             } else {
                 vscode.window.showErrorMessage("Please try again and enter values for each prompt!");
             }
@@ -34,7 +34,7 @@ export class CommandEngine {
 
     private async executeAsProgress(title: string, delegate: (progress: vscodeProgress) => Promise<CommandResult>): Promise<boolean> {
         return vscode.window.withProgress(
-            { title: title, location: vscode.ProgressLocation.Notification, cancellable: false },
+            { title: title, location: vscode.ProgressLocation.Window, cancellable: false },
             (progress, token) => {
                 return new Promise(async (resolve, reject) => {
                     try {
@@ -43,7 +43,7 @@ export class CommandEngine {
                             vscode.window.showErrorMessage(`Error during execution: ${result.message}`);
                             resolve(false);
                         } else if (result.message !== undefined) {
-                            vscode.window.showInformationMessage(result.message);
+                            vscode.window.setStatusBarMessage(result.message);
                         }
                         resolve(true);
                     } catch (ex) {
