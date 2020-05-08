@@ -52,6 +52,7 @@ export const StlViewerComponent: FC<StlViewerComponentProps> = (props: StlViewer
     let annotationsComponent = undefined;
     if (stlViewerRef.current !== undefined && props.stlAnnotations !== undefined) {
         annotationsComponent = <AnnotationsComponent
+            key={ props.stlUrl }
             isEditable={ props.isEditable }
             onAnnotationListChanged={ props.onAnnotationListChanged }
             showAnnotations={showAnnotations}
