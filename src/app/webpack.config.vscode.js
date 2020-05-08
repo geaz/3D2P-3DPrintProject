@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/StlViewerApp.tsx',
+    entry: './src/StlViewer.vscode.tsx',
     module: {
         rules: [
             {
@@ -15,8 +15,8 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js' ],
     },
     output: {
-        filename: 'StlViewerApp.js',
-        path: path.resolve(__dirname, 'out'),
+        filename: 'StlViewer.js',
+        path: path.resolve(__dirname, '../vscode/out'),
     },
-    mode: 'development'
+    mode: 'production'
 };

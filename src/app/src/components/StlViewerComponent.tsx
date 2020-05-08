@@ -53,6 +53,7 @@ export const StlViewerComponent: FC<StlViewerComponentProps> = (props: StlViewer
 };
 
 const StyledStlWrapper = styled.div`
+    flex: 1;
     height: 100%;
     position: relative;
 `;

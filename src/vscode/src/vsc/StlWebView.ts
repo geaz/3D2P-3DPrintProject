@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { StlInfo } from '3d2p.react.components';
+import { StlInfo } from '3d2p.react.app';
 
 export class StlWebView {
     private readonly _panel: vscode.WebviewPanel;
@@ -15,7 +15,7 @@ export class StlWebView {
         );
 
         const webViewApp = this._panel.webview.asWebviewUri(
-            vscode.Uri.file(path.join(__filename, '..', '..', 'StlViewerApp.js')));
+            vscode.Uri.file(path.join(__filename, '..', '..', 'StlViewer.js')));
         const stlWebviewUri = this._panel.webview.asWebviewUri(stlUri);
 
         this._panel.webview.html = `<!DOCTYPE html>
@@ -23,8 +23,8 @@ export class StlWebView {
             <head>
                 <title>STL Viewer</title>
             </head>            
-            <body style="padding:0;margin:0;height:100%;display:flex;">
-                <div id="stl-viewer-app"></div>
+            <body style="padding:0;margin:0;height:100%;display:flex;align-items:stretch;">
+                <div id="stl-viewer-app" style="flex:1;display:flex;align-items:stretch;"></div>
                 <script src="${webViewApp}"></script>
             </body>
             </html>`;

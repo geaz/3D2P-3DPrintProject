@@ -1,7 +1,9 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { FC, useRef, useEffect, useState } from "react";
-import { StlViewerComponent, StlInfo } from "3d2p.react.components";
+
+import { StlInfo } from "./model/StlInfo";
+import { StlViewerComponent } from "./components/StlViewerComponent";
 
 declare var acquireVsCodeApi: any;
 
@@ -25,7 +27,7 @@ const StlViewerApp: FC = () => {
     }, []);
     useEffect(() => { vscode.current = acquireVsCodeApi(); }, []);
 
-    return <div style={{ flex: 1 }}>
+    return <div style={{ flex: 1, display: "flex", background:"white" }}>
         { stlUrl === undefined && <div>Loading ...</div> }
         { stlUrl !== undefined && <StlViewerComponent 
             stlAnnotations={stlInfo?.annotationList}

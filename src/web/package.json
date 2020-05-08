@@ -24,16 +24,16 @@
   "homepage": "https://github.com/geaz/3D2P-3DPrintProjects#readme",
   "devDependencies": {
     "3d2p.react.components": "file:../components",
-    "@types/node": "^13.9.8",
-    "concurrently": "^5.1.0",
-    "emotion": "^10.0.27",
-    "htm": "^3.0.3",
-    "node-sass": "^4.13.1",
-    "npm-run-all": "^4.1.5",
+    "@types/node": "13.9.8",
+    "concurrently": "5.1.0",
+    "emotion": "10.0.27",
+    "htm": "3.0.3",
+    "node-sass": "4.13.1",
+    "npm-run-all": "4.1.5",
     "preact": "10.3.4",
-    "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "ts-loader": "6.2.2",
+    "typescript": "3.8.3",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11"
   }
 }

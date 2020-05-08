@@ -3,7 +3,7 @@ import { spawn } from 'child_process';
 
 import { IEvent, Event } from './event';
 import { getOutputChannel } from './vsc/OutputChannel';
-import { Status } from '3d2p.react.components';
+import { Status } from '3d2p.react.app';
 
 const cliFileName = "3d2p";
 
