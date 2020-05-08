@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\libraries\PrintProject.ThreeMF\PrintProject.ThreeMF.csproj" />
+    <ProjectReference Include="..\PrintProject.ThreeMF\PrintProject.ThreeMF.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,13 +40,13 @@
     <None Include="app\css\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\libs\lib3mf.dll">
+    <None Include="..\..\..\libs\lib3mf.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\libs\lib3mf.dylib">
+    <None Include="..\..\..\libs\lib3mf.dylib">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\libs\lib3mf.so">
+    <None Include="..\..\..\libs\lib3mf.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

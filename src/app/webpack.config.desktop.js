@@ -16,7 +16,7 @@ module.exports = {
     },
     output: {
         filename: 'app.js',
-        path: path.resolve(__dirname, '../desktop/app'),
+        path: path.resolve(__dirname, '../desktop/PrintProject.App/app'),
     },
     mode: 'production'
 };

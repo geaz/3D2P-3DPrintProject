@@ -27,7 +27,7 @@ export function useDatConfig() {
 
     const configContainerRef = useCallback(node => {
         if (node !== null) {
-            node.innerHTML = '';
+            node.innerHTML = "";
 
             let newGui = new dat.GUI({ hideable: false, autoPlace: false });
             node.appendChild(newGui.domElement);

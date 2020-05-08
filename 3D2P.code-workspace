@@ -21,10 +21,6 @@
 			"path": "src\\web"
 		},
 		{
-			"name": "libraries",
-			"path": "src\\libraries"
-		},
-		{
 			"name": "tests",
 			"path": "tests"
 		}

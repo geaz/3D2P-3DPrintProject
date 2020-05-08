@@ -1,4 +1,4 @@
-import { useEffect, RefObject, Dispatch, SetStateAction, useRef, useState } from "react";
+import { useEffect, RefObject, Dispatch, SetStateAction, useRef } from "react";
 
 export function useWindowResize(resizeCb: () => void) {
     useEffect(() => {
