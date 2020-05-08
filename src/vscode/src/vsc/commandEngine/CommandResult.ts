@@ -1,3 +1,5 @@
 export class CommandResult {
-    constructor(public message: string | undefined = undefined, public isFaulted: boolean = false) {}
+    public message?: string;
+    public notification?: string;
+    public isFaulted: boolean = false;
 }

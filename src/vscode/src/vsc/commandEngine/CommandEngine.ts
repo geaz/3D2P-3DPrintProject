@@ -42,6 +42,8 @@ export class CommandEngine {
                         if (result.isFaulted) {
                             vscode.window.showErrorMessage(`Error during execution: ${result.message}`);
                             resolve(false);
+                        } else if (result.notification !== undefined) {
+                            vscode.window.showInformationMessage(result.notification);
                         } else if (result.message !== undefined) {
                             vscode.window.setStatusBarMessage(result.message);
                         }

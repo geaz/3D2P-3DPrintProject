@@ -8,7 +8,8 @@ export class PackProjectCommand extends BaseCliCommand {
         progress.report({ message: "Creating 3MF ..." });
         if (!result.isFaulted) {
             result.isFaulted = !(await this._cli.packProject(this._projectFilePath!, this._rootFolder!));
-            result.message = result.isFaulted ? `Couldn't create 3MF! Please see 3D2P output for details.` : "3MF created.";
+            result.message = result.isFaulted ? `Couldn't create 3MF! Please see 3D2P output for details.` : undefined;
+            result.notification = !result.isFaulted ? "3MF created." : undefined;
         }
         return result;
     }
