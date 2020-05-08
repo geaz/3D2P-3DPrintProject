@@ -3,6 +3,7 @@ import { spawn } from "child_process";
 
 import { IEvent, Event } from "./event";
 import { getOutputChannel } from "./vsc/OutputChannel";
+import { StlAnnotation } from "3d2p.react.app";
 
 const cliFileName = "3d2p";
 
@@ -33,6 +34,16 @@ export class PrintProjectCli {
 
     public async packProject(projectPath: string, dir: string): Promise<boolean> {
         let params = ["pack", "--project", projectPath, "--dir", dir, "--overwrite"];
+        return await this.execute(params);
+    }
+
+    public async setStlAnnotations(projectPath: string, stlName: string, annotations: Array<StlAnnotation>): Promise<boolean> {
+        let params = [
+            "set", 
+            "annotations", 
+            "--project", projectPath, 
+            "--stl-name", stlName,
+            "--annotations", JSON.stringify(annotations)];
         return await this.execute(params);
     }
 

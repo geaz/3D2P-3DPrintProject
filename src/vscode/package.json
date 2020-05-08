@@ -41,6 +41,10 @@
 				"title": "3D2P: Set STL Info"
 			},
 			{
+				"command": "3d2p.cmd.setStlAnnotations",
+				"title": "3D2P: Set STL Annotations"
+			},
+			{
 				"command": "3d2p.cmd.packProject",
 				"title": "3D2P: Create 3MF"
 			},
@@ -65,6 +69,10 @@
 				},
 				{
 					"command": "3d2p.cmd.setStlInfo",
+					"when": "false"
+				},
+				{
+					"command": "3d2p.cmd.setStlAnnotations",
 					"when": "false"
 				}
 			],

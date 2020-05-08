@@ -4,6 +4,7 @@ using System.CommandLine;
 using PrintProject.Core.Model;
 using System.CommandLine.Invocation;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace PrintProject.App.CLI
 {
@@ -40,8 +41,21 @@ namespace PrintProject.App.CLI
             setStlCommand.Handler = CommandHandler
                 .Create<FileInfo, string, string, Status?>(HandleSetStlCommand);
 
+            var setAnnotationsCommand = new Command("annotations", "Set annotations of a STL.")
+            {
+                new Option<FileInfo>("--project", "Path to project to change.") { Required = true },
+                new Option<string>("--stl-name", "Name of the stl to set the values (Matches the name of the file, added to the project).")
+                {
+                    Required = true
+                },
+                new Option<string>("--annotations", description: "[{id: Number, text: String, x: Number, y: Number, z: Number }]")
+            };
+            setAnnotationsCommand.Handler = CommandHandler
+                .Create<FileInfo, string, string>(HandleSetAnnotationsCommand);
+
             Command.Add(setProjectCommand);
             Command.Add(setStlCommand);
+            Command.Add(setAnnotationsCommand);
         }
 
         private void HandleSetProjectCommand(FileInfo project, string name, Status? status, FileInfo thumbnail, FileInfo readme)
@@ -66,6 +80,23 @@ namespace PrintProject.App.CLI
                 stl.Status = status ?? stl.Status;
                 projectFile.Save(project.FullName, true);
                 Console.WriteLine("STL values set.");
+            }
+            else
+            {
+                Console.WriteLine($"STL with name '{stlName}' not found in project!");
+            }
+        }
+
+        private void HandleSetAnnotationsCommand(FileInfo project, string stlName, string annotations)
+        {
+            var projectFile = ProjectFile.Load(project.FullName);
+            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
+
+            if(stl != null)
+            {
+                stl.AnnotationList = JsonConvert.DeserializeObject<StlAnnotation[]>(annotations).ToList();
+                projectFile.Save(project.FullName, true);
+                Console.WriteLine("STL Annotations set.");
             }
             else
             {

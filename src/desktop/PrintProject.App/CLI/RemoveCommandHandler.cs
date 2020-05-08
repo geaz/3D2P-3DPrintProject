@@ -16,39 +16,19 @@ namespace PrintProject.App.CLI
 
         private void BuildCommand()
         {
-            var removeStlCommand = new Command("stl", "Remove a stl from an existing project file.")
-            {
-                new Option("--project", "Existing project file.")
+            var projectOption = new Option("--project", "Existing project file.")
                 {
                     Required = true,
                     Argument = new Argument<FileInfo>().ExistingOnly()
-                },
-                new Option<string>("--stl-name", "Name of the stl to add the annotation to (Matches the name of the file, added to the project).")
+                };
+            var stlOption = new Option<string>("--stl-name", "Name of the stl to remove (Matches the name of the file, added to the project).")
                 {
                     Required = true,
-                }
-            };
-            removeStlCommand.Handler = CommandHandler
-                .Create<FileInfo, string>(HandleRemoveStlCommand);
+                };
 
-            var removeAnnotationCommand = new Command("annotation", "Add an annotation to an existing stl in a project file.")
-            {
-                new Option("--project", "Existing project file.")
-                {
-                    Required = true,
-                    Argument = new Argument<FileInfo>().ExistingOnly()
-                },
-                new Option<string>("--stl-name", "Name of the stl to add the annotation to (Matches the name of the file, added to the project).")
-                {
-                    Required = true,
-                },
-                new Option<int>("--id", "ID of the annotation") { Required = true }
-            };
-            removeAnnotationCommand.Handler = CommandHandler
-                .Create<FileInfo, string, int>(HandleRemoveAnnotationCommand);
-
-            Command.Add(removeStlCommand);
-            Command.Add(removeAnnotationCommand);
+            Command.Add(projectOption);
+            Command.Add(stlOption);
+            Command.Handler = CommandHandler.Create<FileInfo, string>(HandleRemoveStlCommand);
         }
 
         private void HandleRemoveStlCommand(FileInfo project, string stlName)
@@ -68,31 +48,6 @@ namespace PrintProject.App.CLI
             }
         }
 
-        private void HandleRemoveAnnotationCommand(FileInfo project, string stlName, int id)
-        {
-            var projectFile = ProjectFile.Load(project.FullName);
-            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
-
-            if(stl != null)
-            {
-                var annotation = stl.AnnotationList.SingleOrDefault(a => a.Id == id);
-                if(annotation != null)
-                {
-                    stl.AnnotationList.Remove(annotation);
-                    projectFile.Save(project.FullName, true);
-                    Console.WriteLine($"Removed annotation from project.");
-                }
-                else
-                {
-                    Console.WriteLine($"Annotation with ID {id} not found on STL '{stlName}'!");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"STL with name '{stlName}' not found in project!");
-            }
-        }
-
-        public Command Command { get; } = new Command("remove", "Remove a stl or annotation from an existing project.");
+        public Command Command { get; } = new Command("remove", "Remove a stl from an existing project.");
     }
 }

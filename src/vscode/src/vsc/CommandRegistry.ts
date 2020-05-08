@@ -8,7 +8,8 @@ import { PackProjectCommand } from "./commands/PackProjectCommand";
 import { SetProjectDataCommand } from "./commands/SetProjectDataCommand";
 import { Open3MFCommand } from "./commands/Open3MFCommand";
 import { OpenSTLCommand } from "./commands/OpenSTLCommand";
-import { StlInfo } from "3d2p.react.app";
+import { StlInfo, StlAnnotation } from "3d2p.react.app";
+import { SetStlAnnotationsCommand } from "./commands/SetStlAnnotationsCommand";
 
 export function add3D2PCommands(context: vscode.ExtensionContext) {
     let commandEngine = new CommandEngine();
@@ -29,6 +30,11 @@ export function add3D2PCommands(context: vscode.ExtensionContext) {
         return commandEngine.start(new SetStlInfoCommand(stlInfo));
     });
 
+    let setStlAnnotationsCommand = vscode.commands.registerCommand("3d2p.cmd.setStlAnnotations", 
+    async (stlName: string, annotations: Array<StlAnnotation>) => {
+        return commandEngine.start(new SetStlAnnotationsCommand(stlName, annotations));
+    });
+
     let packProjectCommand = vscode.commands.registerCommand("3d2p.cmd.packProject", async () => {
         return commandEngine.start(new PackProjectCommand());
     });
@@ -45,6 +51,7 @@ export function add3D2PCommands(context: vscode.ExtensionContext) {
     context.subscriptions.push(setProjectDataCommand);
     context.subscriptions.push(addStlCommand);
     context.subscriptions.push(setStlDataCommand);
+    context.subscriptions.push(setStlAnnotationsCommand);
     context.subscriptions.push(packProjectCommand);
     context.subscriptions.push(open3mfCommand);
     context.subscriptions.push(openStlCommand);

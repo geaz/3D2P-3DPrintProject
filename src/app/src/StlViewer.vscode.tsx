@@ -11,11 +11,29 @@ import { DatConfig, ConfigType, ConfigDescription } from "./effects/DatConfigEff
 declare var acquireVsCodeApi: any;
 
 const StlViewerApp: FC = () => {
+    const defaultColor = "#F58026";
+    const defaultColorHex = 16089126;
+
     const vscode = useRef<any>();
     const [stlUrl, setStlUrl] = useState<string>();
     const [stlInfo, setStlInfo] = useState<StlInfo>();
-    const [stlColor, setStlColor] = useState(16089126); /* Orange #F58026 */
+    const [stlColor, setStlColor] = useState(defaultColorHex);
     const [datConfig, setDatConfig] = useState<DatConfig>();
+
+    const saveStlInfoColor = (rgb: string) => {
+        stlInfo!.color = rgb;
+        setStlColor(parseInt(rgb.substring(1), 16));
+        vscode.current?.postMessage({ command: "updateStlInfo", data: stlInfo });
+    };
+
+    const saveStlInfoAnnotations = (annotations: Array<StlAnnotation>) => {
+        if(stlInfo !== undefined) {
+            stlInfo.annotationList = annotations;
+            vscode.current?.postMessage({ command: "updateStlAnnotations", data: annotations });
+        }
+    };
+    
+    useEffect(() => { vscode.current = acquireVsCodeApi(); }, []);
 
     useEffect(() => {
         const handleMessage = (event: any): void => {
@@ -32,7 +50,6 @@ const StlViewerApp: FC = () => {
         window.addEventListener("message", handleMessage);
         return () => { window.removeEventListener("message", handleMessage); };
     }, []);
-    useEffect(() => { vscode.current = acquireVsCodeApi(); }, []);
 
     useEffect(() => {
         let newDatConfig = {} as DatConfig;
@@ -47,17 +64,14 @@ const StlViewerApp: FC = () => {
             newDatConfig.configObject = {
                 color: stlInfo.color, 
                 status: Status[stlInfo.status],
-                resetColor: () => { 
-                }
+                resetColor: () => { saveStlInfoColor(defaultColor); }
             };
             newDatConfig.configDescription.push({ property: "color", type: ConfigType.Color } as ConfigDescription);
             newDatConfig.configDescription.push({ property: "status", type: ConfigType.Picker, options: ["WIP", "Done"] } as ConfigDescription);
             newDatConfig.configDescription.push({ property: "resetColor", type: ConfigType.Button } as ConfigDescription);
             newDatConfig.onConfigChange = (property: string, value: any): void => {
                 if(property == "color") {
-                    stlInfo.color = value;
-                    setStlColor(parseInt(value.substring(1), 16));
-                    vscode.current?.postMessage({ command: "updateStlInfo", data: stlInfo });
+                    saveStlInfoColor(value);
                 } else if(property == "status") {
                     stlInfo.status = (Status as any)[value];
                     vscode.current?.postMessage({ command: "updateStlInfo", data: stlInfo });
@@ -74,7 +88,7 @@ const StlViewerApp: FC = () => {
         { stlUrl !== undefined && <StlViewerComponent 
             isEditable={ true }
             additionalConfig={ datConfig }
-            onAnnotationListChanged={ (anno: Array<StlAnnotation>) => { console.dir(anno); }}
+            onAnnotationListChanged={ (annos: Array<StlAnnotation>) => { saveStlInfoAnnotations(annos); }}
             stlAnnotations={stlInfo?.annotationList}
             stlHexColor={ stlColor }
             stlUrl={ stlUrl }

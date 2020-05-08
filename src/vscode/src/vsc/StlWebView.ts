@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { StlInfo, ProjectFile } from "3d2p.react.app";
+import { StlInfo, ProjectFile, StlAnnotation } from "3d2p.react.app";
 
 export class StlWebView {
     private _stlInfo?: StlInfo;
@@ -45,8 +45,12 @@ export class StlWebView {
                     if (this._stlUpdateHandle !== -1) clearTimeout(this._stlUpdateHandle);
                     this._stlUpdateHandle = setTimeout(async () => {
                         await vscode.commands.executeCommand("3d2p.cmd.setStlInfo", message.data as StlInfo);
-                        this.setStlInfo();
                     }, 100);
+                    break;
+                case "updateStlAnnotations":
+                    await vscode.commands.executeCommand("3d2p.cmd.setStlAnnotations", 
+                        this._stlInfo!.name,
+                        message.data as Array<StlAnnotation>);
                     break;
             }
         });
