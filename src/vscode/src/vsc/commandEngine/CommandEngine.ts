@@ -25,7 +25,7 @@ export class CommandEngine {
             }
 
             if (valid) {
-                await this.executeAsProgress(`${questionnaire.Name}: `, questionnaire.vscCommand.bind(questionnaire));
+                await this.executeAsProgress(`${questionnaire.Name}`, questionnaire.vscCommand.bind(questionnaire));
             } 
             else {
                 vscode.window.showErrorMessage('Please try again and enter values for each prompt!');

@@ -2,11 +2,13 @@ import * as vscode from 'vscode';
 
 import { CommandEngine } from './commandEngine/CommandEngine';
 import { AddStlCommand } from './commands/AddStlCommand';
+import { SetStlInfoCommand } from './commands/SetStlInfoCommand';
 import { InitProjectCommand } from './commands/InitProjectCommand';
 import { PackProjectCommand } from './commands/PackProjectCommand';
 import { SetProjectDataCommand } from './commands/SetProjectDataCommand';
 import { Open3MFCommand } from './commands/Open3MFCommand';
-import { StlWebView } from './StlWebView';
+import { OpenSTLCommand } from './commands/OpenSTLCommand';
+import { StlInfo } from '3d2p.react.app';
 
 export function add3D2PCommands(
     context: vscode.ExtensionContext) 
@@ -23,7 +25,11 @@ export function add3D2PCommands(
     
     let addStlCommand = vscode.commands.registerCommand(
         '3d2p.cmd.addStl', 
-        async() => { return commandEngine.start(new AddStlCommand()); });
+        async(fsPath: string) => { return commandEngine.start(new AddStlCommand(fsPath)); });
+
+    let setStlDataCommand = vscode.commands.registerCommand(
+        '3d2p.cmd.setStlInfo', 
+        async(stlInfo: StlInfo) => { return commandEngine.start(new SetStlInfoCommand(stlInfo)); });
     
     let packProjectCommand = vscode.commands.registerCommand(
         '3d2p.cmd.packProject', 
@@ -35,21 +41,12 @@ export function add3D2PCommands(
 
     let openStlCommand = vscode.commands.registerCommand(
         '3d2p.cmd.openStl',
-        async(uri: vscode.Uri) => { return new StlWebView(uri, undefined); });
-
-  /*  let openStlWebviewCommand = vscode.commands.registerCommand(
-        '3d2p.cmd.openStlWebview', async(uri: vscode.Uri) => {
-            let workspaceRootPath = vscode.workspace.workspaceFolders![0].uri.fsPath
-            let relativePath = path.relative(workspaceRootPath, uri.fsPath);
-
-            let stlInfo = projectFile.stlInfoList.filter(s => s.name)
-            .getItemByRelativePath();
-            return new StlWebView(project, stlInfo); 
-        });*/
+        async(uri: vscode.Uri) => { return commandEngine.start(new OpenSTLCommand(uri)); });
 
     context.subscriptions.push(initProjectCommand);
     context.subscriptions.push(setProjectDataCommand);
     context.subscriptions.push(addStlCommand);
+    context.subscriptions.push(setStlDataCommand);
     context.subscriptions.push(packProjectCommand);
     context.subscriptions.push(open3mfCommand);
     context.subscriptions.push(openStlCommand);

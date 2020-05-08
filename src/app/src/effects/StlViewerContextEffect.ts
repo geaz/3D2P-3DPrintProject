@@ -16,8 +16,6 @@ export function useStlViewerContext() {
     useEffect(() => { 
         if(stlViewerRef !== undefined && stlUrl !== undefined && stlHexColor !== undefined) 
             stlViewerRef.current?.loadStl(stlUrl, stlHexColor)
-        else
-            console.warn("Not rendering due to missing values!");
     }, [stlUrl]);
     useEffect(() => {
         if(stlViewerRef !== undefined && stlHexColor !== undefined)

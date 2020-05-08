@@ -12,7 +12,7 @@
 		"url": "git+https://github.com/geaz/3D2P-3DPrintProject.git"
 	},
 	"engines": {
-		"vscode": "1.43.0"
+		"vscode": "^1.44.0"
 	},
 	"categories": [
 		"Other"
@@ -37,6 +37,10 @@
 				"title": "3D2P: Add STL"
 			},
 			{
+				"command": "3d2p.cmd.setStlInfo",
+				"title": "3D2P: Set STL Info"
+			},
+			{
 				"command": "3d2p.cmd.packProject",
 				"title": "3D2P: Create 3MF"
 			},
@@ -53,6 +57,10 @@
 			"commandPalette": [
 				{
 					"command": "3d2p.cmd.open3mf",
+					"when": "false"
+				},
+				{
+					"command": "3d2p.cmd.setStlInfo",
 					"when": "false"
 				}
 			],

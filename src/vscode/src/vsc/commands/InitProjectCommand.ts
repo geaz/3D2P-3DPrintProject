@@ -14,7 +14,7 @@ import { BaseCliCommand } from './BaseCliCommand';
  * and creates a 3D2P.json files, based on these values.
  */
 export class InitProjectCommand extends BaseCliCommand {
-    public overwrite: PickQuestion = new PickQuestion("Project file already exists. Overwrite?", ['No', 'Yes'], true, () => this._askOverwrite);
+    public overwrite: PickQuestion = new PickQuestion("Project file already exists. Overwrite?", ['No', 'Yes'], true, (() => this._askOverwrite).bind(this));
     public projectName: InputQuestion = new InputQuestion("Enter project name", undefined, true, this.shouldCreateProject.bind(this));
     public status: PickQuestion = new PickQuestion("Pick current project status", ["Done", "WIP"], true, this.shouldCreateProject.bind(this));
     public thumbnailFilePath: FilePickQuestion = new FilePickQuestion("Select thumbnail", { 'Image': ['png', 'jpg', 'jpeg'] }, false, this.shouldCreateProject.bind(this));

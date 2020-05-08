@@ -2,36 +2,81 @@ import * as React from "react";
 import { render } from "react-dom";
 import { FC, useRef, useEffect, useState } from "react";
 
+import { Status } from "./model/Status";
 import { StlInfo } from "./model/StlInfo";
+import { StlAnnotation } from "./model/StlAnnotation";
 import { StlViewerComponent } from "./components/StlViewerComponent";
+import { DatConfig, ConfigType, ConfigDescription } from "./effects/DatConfigEffect";
 
 declare var acquireVsCodeApi: any;
 
 const StlViewerApp: FC = () => {
-    const vscode = useRef();
+    const vscode = useRef<any>();
     const [stlUrl, setStlUrl] = useState<string>();
     const [stlInfo, setStlInfo] = useState<StlInfo>();
+    const [stlColor, setStlColor] = useState(16089126); /* Orange #F58026 */
+    const [datConfig, setDatConfig] = useState<DatConfig>();
 
     useEffect(() => {
         const handleMessage = (event: any): void => {
             let message = event.data;
             switch (message.command) {
-                case 'loadStl':
-                    setStlUrl(message.data.stlUrl);
-                    setStlInfo(message.data.stlInfo);
+                case "setStlInfo":                 
+                    setStlInfo(message.data);
+                    break;
+                case "loadStl":
+                    setStlUrl(message.data);
                     break;
             }
         };
-        window.addEventListener('message', handleMessage);
-        return () => { window.removeEventListener('message', handleMessage); };
+        window.addEventListener("message", handleMessage);
+        return () => { window.removeEventListener("message", handleMessage); };
     }, []);
     useEffect(() => { vscode.current = acquireVsCodeApi(); }, []);
+
+    useEffect(() => {
+        let newDatConfig = {} as DatConfig;
+        newDatConfig.configDescription= [];
+
+        if(stlInfo === undefined) {
+            newDatConfig.configObject = {
+                addSTLToProject: () => { vscode.current?.postMessage({ command: "addSTL" }); }
+            };
+            newDatConfig.configDescription.push({ property: "addSTLToProject", type: ConfigType.Button } as ConfigDescription);
+        } else {
+            newDatConfig.configObject = {
+                color: stlInfo.color, 
+                status: Status[stlInfo.status],
+                resetColor: () => { 
+                }
+            };
+            newDatConfig.configDescription.push({ property: "color", type: ConfigType.Color } as ConfigDescription);
+            newDatConfig.configDescription.push({ property: "status", type: ConfigType.Picker, options: ["WIP", "Done"] } as ConfigDescription);
+            newDatConfig.configDescription.push({ property: "resetColor", type: ConfigType.Button } as ConfigDescription);
+            newDatConfig.onConfigChange = (property: string, value: any): void => {
+                if(property == "color") {
+                    stlInfo.color = value;
+                    setStlColor(parseInt(value.substring(1), 16));
+                    vscode.current?.postMessage({ command: "updateStlInfo", data: stlInfo });
+                } else if(property == "status") {
+                    stlInfo.status = (Status as any)[value];
+                    vscode.current?.postMessage({ command: "updateStlInfo", data: stlInfo });
+                } 
+            };
+            console.log(parseInt(stlInfo.color.substring(1), 16));
+            setStlColor(parseInt(stlInfo.color.substring(1), 16));
+        }
+        setDatConfig(newDatConfig);
+    }, [stlInfo]);
 
     return <div style={{ flex: 1, display: "flex", background:"white" }}>
         { stlUrl === undefined && <div>Loading ...</div> }
         { stlUrl !== undefined && <StlViewerComponent 
+            isEditable={ true }
+            additionalConfig={ datConfig }
+            onAnnotationListChanged={ (anno: Array<StlAnnotation>) => { console.dir(anno); }}
             stlAnnotations={stlInfo?.annotationList}
-            stlHexColor={ stlInfo !== undefined ? parseInt(stlInfo.color.substring(1), 16) : 16089126 /* Orange #F58026 */ }
+            stlHexColor={ stlColor }
             stlUrl={ stlUrl }
             />}
         </div>;
@@ -55,16 +100,16 @@ class App extends Component<{}, AppState> {
     }
 
     public componentWillMount() {
-        window.addEventListener('message', this._windowListener);
+        window.addEventListener("message", this._windowListener);
     }
     
     public componentWillUnmount() {
-        window.removeEventListener('message', this._windowListener);
+        window.removeEventListener("message", this._windowListener);
     }
 
     public render() {
         // Only render the annotations component, if the STL got loaded
-        // and VSCode sent us the annoationList via 'postMessage'
+        // and VSCode sent us the annoationList via "postMessage"
         let annotationsComponent = undefined;
         if(this.state.stlViewerContext !== undefined && this.state.annotationList !== undefined) {
             annotationsComponent = html
@@ -73,7 +118,7 @@ class App extends Component<{}, AppState> {
                     annotationList=${this.state.annotationList}
                     showAnnotations=${this.state.showAnnotations}
                     stlViewerContext=${this.state.stlViewerContext}
-                    onAnnotationListChanged=${(list: Array<IStlAnnotation>) => this.onStlInfoChanged('annotationList', list)} />`;
+                    onAnnotationListChanged=${(list: Array<IStlAnnotation>) => this.onStlInfoChanged("annotationList", list)} />`;
         }
 
         return html
@@ -96,25 +141,25 @@ class App extends Component<{}, AppState> {
             resetColor: () => { 
                 this.setState({ color: DEFAULT_STL_COLOR }); 
                 this._config.color = DEFAULT_STL_COLOR;
-                this.onStlInfoChanged('color', DEFAULT_STL_COLOR); },
+                this.onStlInfoChanged("color", DEFAULT_STL_COLOR); },
             resetCamera: () => {
                 this._stlViewerComponent!.resetCamera();
             }
         };
-        this._configDescription.push(<IConfigDescription>{ property: 'color', type: ConfigType.Color });
-        this._configDescription.push(<IConfigDescription>{ property: 'status', type: ConfigType.Picker, options: ["WIP", "Done"] });
-        this._configDescription.push(<IConfigDescription>{ property: 'showAnnotations', type: ConfigType.CheckBox });
-        this._configDescription.push(<IConfigDescription>{ property: 'resetColor', type: ConfigType.Button });
-        this._configDescription.push(<IConfigDescription>{ property: 'resetCamera', type: ConfigType.Button });
+        this._configDescription.push(<IConfigDescription>{ property: "color", type: ConfigType.Color });
+        this._configDescription.push(<IConfigDescription>{ property: "status", type: ConfigType.Picker, options: ["WIP", "Done"] });
+        this._configDescription.push(<IConfigDescription>{ property: "showAnnotations", type: ConfigType.CheckBox });
+        this._configDescription.push(<IConfigDescription>{ property: "resetColor", type: ConfigType.Button });
+        this._configDescription.push(<IConfigDescription>{ property: "resetCamera", type: ConfigType.Button });
     }
     
     private handleMessage(event: any): void {
         let message = event.data;
         switch (message.command) {
-            case 'filechange':
+            case "filechange":
                 this.setState({ stlFilePath: message.data });
                 break;
-            case 'setStlInfo':
+            case "setStlInfo":
                 this.setState({ color: message.data.color, annotationList: message.data.annotationList });
                 this._config.color = message.data.color;
                 this._config.status = message.data.status;
@@ -123,19 +168,19 @@ class App extends Component<{}, AppState> {
     }
 
     private onStlInfoChanged(property: string, value: any): void {
-        if(property === 'showAnnotations') {
+        if(property === "showAnnotations") {
             this.setState({ showAnnotations: value });
         }
-        else if(property === 'color') {
+        else if(property === "color") {
             this.setState({ color: value });
-            this._vscode.postMessage({ command: 'updateStlColor', color: value });
+            this._vscode.postMessage({ command: "updateStlColor", color: value });
         }
-        else if(property === 'status') {
-            this._vscode.postMessage({ command: 'updateStlStatus', status: value });
+        else if(property === "status") {
+            this._vscode.postMessage({ command: "updateStlStatus", status: value });
         }
-        else if(property === 'annotationList') {
+        else if(property === "annotationList") {
             this.setState({ annotationList: value });
-            this._vscode.postMessage({ command: 'updateStlAnnotationList', annotationList: value });
+            this._vscode.postMessage({ command: "updateStlAnnotationList", annotationList: value });
         }
     }
 
@@ -152,4 +197,4 @@ interface AppState {
     stlViewerContext: StlViewerContext;
 }
 
-render(html`<${App}/>`, document.getElementById('stl-viewer-app')!);*/
+render(html`<${App}/>`, document.getElementById("stl-viewer-app")!);*/

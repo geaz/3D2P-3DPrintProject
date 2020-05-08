@@ -57,6 +57,9 @@ export const StlExplorerComponent: FC<StlExplorerComponentProps> = (props: StlEx
         onFileSelected={(name: string) => setSelectedStl(props.projectFile.stlInfoList.filter((s: any) => s.name === name)[0]) }
     />;
     let contentComponent = <StlViewerComponent 
+        isEditable={ false }
+        additionalConfig={ undefined }
+        onAnnotationListChanged={ undefined }
         stlAnnotations={selectedStl?.annotationList}
         stlHexColor={ selectedStl !== undefined ? parseInt(selectedStl.color.substring(1), 16) : undefined }
         stlUrl={ selectedStl !== undefined ? `${props.projectFolderUrl}/stl/${selectedStl.name}` : undefined }

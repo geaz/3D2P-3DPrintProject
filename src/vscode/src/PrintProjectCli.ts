@@ -3,7 +3,6 @@ import { spawn } from 'child_process';
 
 import { IEvent, Event } from './event';
 import { getOutputChannel } from './vsc/OutputChannel';
-import { Status } from '3d2p.react.app';
 
 const cliFileName = "3d2p";
 
@@ -31,6 +30,19 @@ export class PrintProjectCli {
         let params = ['add', 'stl', '--project', projectPath, '--stl', stlPath, '--status', status];
         return await this.execute(params);
     }
+
+    public async setStlInfo(projectPath: string, stlName: string, status?: string, color?: string): Promise<boolean> {
+        let params = ['set', 'stl', '--project', projectPath, "--stl-name", stlName];
+        if(status) {
+            params.push('--status');
+            params.push(status);
+        }
+        if(color) {
+            params.push('--color');
+            params.push(color);
+        }     
+        return await this.execute(params);
+    }
     
     public async packProject(projectPath: string, dir: string): Promise<boolean> {
         let params = ['pack', '--project', projectPath, '--dir', dir, '--overwrite'];
@@ -40,7 +52,7 @@ export class PrintProjectCli {
     public async setProjectData(
         projectPath: string,
         name?: string, 
-        status?: Status | string, 
+        status?: string, 
         thumbnailFilePath?: string, 
         readmeFilePath?: string
     ): Promise<boolean> {
@@ -51,7 +63,7 @@ export class PrintProjectCli {
         }
         if(status) {
             params.push('--status');
-            params.push(status.toString());
+            params.push(status);
         }
         if(thumbnailFilePath) {
             params.push('--thumbnail');

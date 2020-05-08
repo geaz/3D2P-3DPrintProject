@@ -4,6 +4,7 @@ import * as dat from "dat.gui";
 export interface DatConfig {
     configDescription: Array<ConfigDescription>;
     configObject: object;
+    onConfigChange: (property: string, value: any) => void;
 }
 
 export interface ConfigDescription {
@@ -20,23 +21,24 @@ export enum ConfigType {
     Picker,
 }
 
-export function useDatConfig(
-    datConfig: DatConfig,
-    changeCb: (property: string, value: any) => void
-) {
+export function useDatConfig() {
     const [gui, setGui] = useState<dat.GUI>();
+    const [datConfig, setDatConfig] = useState<DatConfig>();
+
     const configContainerRef = useCallback(node => {
         if (node !== null) {
+            node.innerHTML = '';
+
             let newGui = new dat.GUI({ hideable: false, autoPlace: false });
             node.appendChild(newGui.domElement);
             setGui(newGui);
         }
-    }, []);
+    }, [datConfig]);
 
     useEffect(() => {
         if(gui === undefined) return;
 
-        datConfig.configDescription.forEach((element) => {
+        datConfig?.configDescription.forEach((element) => {
             let controller: dat.GUIController | undefined = undefined;
             switch (element.type) {
                 case ConfigType.Color:
@@ -50,9 +52,9 @@ export function useDatConfig(
                     break;
             }
             controller.listen();
-            controller.onChange((value) => changeCb(element.property, value));
+            controller.onChange((value) => datConfig.onConfigChange(element.property, value));
         });
     }, [gui]);
 
-    return configContainerRef;
+    return [configContainerRef, setDatConfig];
 };

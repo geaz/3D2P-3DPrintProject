@@ -49,7 +49,6 @@ export function useFileDragDrop(
 
     useEffect(() => {
         let handleDrop = (e: DragEvent) => {
-            console.log("test");
             e.preventDefault();
             if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
                 dropCallback(e.dataTransfer.files[0]);

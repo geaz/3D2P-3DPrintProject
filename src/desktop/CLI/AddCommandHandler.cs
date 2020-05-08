@@ -59,18 +59,25 @@ namespace PrintProject.App.CLI
 
         private void HandleAddStlCommand(FileInfo project, FileInfo stl, string color, Status status)
         {
+            var relativeStlPath = Path.GetRelativePath(project.DirectoryName, stl.FullName);
+            
             var projectFile = ProjectFile.Load(project.FullName);
-            var stlInfo = new StlInfo()
-            {
-                Name = stl.Name,
-                RelativePath = Path.GetRelativePath(project.DirectoryName, stl.FullName),
-                Status = status,
-                Color = color
-            };
-            projectFile.StlInfoList.Add(stlInfo);
-            projectFile.Save(project.FullName, true);
-
-            Console.WriteLine("Added stl to project file.");
+            var existingStl = projectFile.StlInfoList.Where(s => s.RelativePath == relativeStlPath);
+            if(existingStl != null) {
+                var stlInfo = new StlInfo()
+                {
+                    Name = stl.Name,
+                    RelativePath = Path.GetRelativePath(project.DirectoryName, stl.FullName),
+                    Status = status,
+                    Color = color
+                };
+                projectFile.StlInfoList.Add(stlInfo);
+                projectFile.Save(project.FullName, true);
+                Console.WriteLine("Added stl to project file.");
+            }
+            else {
+                Console.WriteLine("Skipping - STL already in project!");
+            }
         }
 
         private void HandleAddAnnotationCommand(FileInfo project, string stlName, string text, decimal x, decimal y, decimal z)

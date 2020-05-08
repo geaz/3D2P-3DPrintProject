@@ -1,22 +1,25 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
+import * as vscode from "vscode";
 
-import { StlInfo } from '3d2p.react.app';
+import { StlInfo, ProjectFile } from "3d2p.react.app";
 
 export class StlWebView {
+    private _stlInfo?: StlInfo;
+    private _stlUpdateHandle: number = -1;
     private readonly _panel: vscode.WebviewPanel;
     
-    constructor(stlUri: vscode.Uri, stlInfo: StlInfo | undefined) {
+    constructor(private _stlUri: vscode.Uri, private _projectFilepath: string) {
         this._panel = vscode.window.createWebviewPanel(
-            '3d2pStlWebView',
-            `3D2P - ${path.basename(stlUri.fsPath)}`,
+            "3d2pStlWebView",
+            `3D2P - ${path.basename(_stlUri.fsPath)}`,
             vscode.ViewColumn.One,
             { enableScripts: true, retainContextWhenHidden: true }
         );
 
         const webViewApp = this._panel.webview.asWebviewUri(
-            vscode.Uri.file(path.join(__filename, '..', '..', 'StlViewer.js')));
-        const stlWebviewUri = this._panel.webview.asWebviewUri(stlUri);
+            vscode.Uri.file(path.join(__filename, "..", "..", "StlViewer.js")));
+        const stlWebviewUri = this._panel.webview.asWebviewUri(_stlUri);
 
         this._panel.webview.html = `<!DOCTYPE html>
             <html lang="en" style="height:100%">
@@ -28,27 +31,38 @@ export class StlWebView {
                 <script src="${webViewApp}"></script>
             </body>
             </html>`;
-
+        
+        this.setStlInfo();
         this._panel.webview.postMessage({ 
-            command: 'loadStl', 
-            data: {
-                stlUrl: stlWebviewUri.toString(),
-                stlInfo: stlInfo
-            } 
+            command: "loadStl", 
+            data: stlWebviewUri.toString()
         });
 
-        this._panel.webview.onDidReceiveMessage(message => {
+        this._panel.webview.onDidReceiveMessage(async message => {
             switch (message.command) {
-                case 'updateStlColor':
-                    stlInfo!.color = message.color;
+                case "addSTL":
+                    await vscode.commands.executeCommand("3d2p.cmd.addStl", _stlUri.fsPath);
+                    this.setStlInfo();
                     break;
-                case 'updateStlStatus':
-                    stlInfo!.status = message.status;
-                    break;
-                case 'updateStlAnnotationList':
-                    stlInfo!.annotationList = message.annotationList;
+                case "updateStlInfo":
+                    if(this._stlUpdateHandle !== -1) clearTimeout(this._stlUpdateHandle);
+                    this._stlUpdateHandle = setTimeout(async () => {
+                        await vscode.commands.executeCommand("3d2p.cmd.setStlInfo", message.data as StlInfo);
+                        this.setStlInfo();
+                    }, 100);
                     break;
             }
+        });
+    }
+
+    private setStlInfo(): void { 
+        let projectFile = <ProjectFile>JSON.parse(fs.readFileSync(this._projectFilepath, 'utf8'));
+        this._stlInfo = projectFile
+            .stlInfoList
+            .filter(s => s.name === path.basename(this._stlUri.fsPath))[0];
+        this._panel.webview.postMessage({ 
+            command: "setStlInfo", 
+            data: this._stlInfo
         });
     }
 }

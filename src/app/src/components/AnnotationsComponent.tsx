@@ -12,7 +12,7 @@ interface AnnotationsComponentProps {
     showAnnotations: boolean;
     stlViewerContext: StlViewerContext;
     annotationList: Array<StlAnnotation>;
-    onAnnotationListChanged: (annotationList: Array<StlAnnotation>) => void;
+    onAnnotationListChanged: ((annotationList: Array<StlAnnotation>) => void) | undefined;
 }
 
 export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: AnnotationsComponentProps) => {
@@ -65,9 +65,7 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
         let savedAnnotation = annotationList.filter((a) => a.id == annotation.id);
         if (savedAnnotation.length === 1) {
             savedAnnotation[0].text = annotation.text;
-            if (props.onAnnotationListChanged !== undefined) {
-                props.onAnnotationListChanged(annotationList);
-            }
+            props.onAnnotationListChanged?.(annotationList);
         }
     };
 
@@ -79,9 +77,7 @@ export const AnnotationsComponent: FC<AnnotationsComponentProps> = (props: Annot
                 return;
             }
         });
-        if (props.onAnnotationListChanged !== undefined) {
-            props.onAnnotationListChanged(newAnnotationList);
-        }
+        props.onAnnotationListChanged?.(newAnnotationList);
         setAnnotationList(newAnnotationList);
         setActiveAnnotation(-1);
     };

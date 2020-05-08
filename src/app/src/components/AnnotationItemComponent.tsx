@@ -137,8 +137,13 @@ export const AnnotationItemComponent: FC<AnnotationItemComponentProps> = (props:
             }
         };
         
+        initDepthSprite();
         props.stlViewerContext.addStlLoadedListener(initDepthSprite);
-        return () => props.stlViewerContext.removeStlLoadedListener(initDepthSprite);
+        
+        return () => {
+            if(sprite !== undefined) props.stlViewerContext.Scene.remove(sprite);
+            props.stlViewerContext.removeStlLoadedListener(initDepthSprite);
+        }
     }, [props.index, props.stlViewerContext]);
 
     let annotationText =
@@ -158,11 +163,11 @@ export const AnnotationItemComponent: FC<AnnotationItemComponentProps> = (props:
                         {props.annotation.text}
                     </textarea>
                     <div className="button-container">
-                        <div className="button" onClick={ () => props.onAnnotationSaved(props.annotation) }>Save</div>
+                        <div className="button" onClick={ () => { setEditMode(false); props.onAnnotationSaved(props.annotation) }}>Save</div>
                         <div className="button" onClick={ () => props.onAnnotationDeleted(props.annotation) }>Delete</div>
                     </div></> 
                 }
-                ${!isEditMode &&
+                {!isEditMode &&
                 <><div className="annotation-content" dangerouslySetInnerHTML={{ __html: annotationText }}></div>
                     { props.isEditable &&
                     <div className="button-container">
@@ -179,9 +184,9 @@ export const AnnotationItemComponent: FC<AnnotationItemComponentProps> = (props:
                 ref={ numberContainerRef }
                 onClick={ () => props.onClicked(props.index) }
             >
-                <div className="number">${props.index + 1}</div>
+                <div className="number">{props.index + 1}</div>
             </div>
-            ${annotationBox}
+            {annotationBox}
         </StyledAnnotationItem>;
 }
 

@@ -11,34 +11,49 @@ interface StlViewerComponentProps {
     stlUrl: string | undefined;
     stlHexColor: number | undefined;
     stlAnnotations: Array<StlAnnotation> | undefined;
+    isEditable: boolean;
+    additionalConfig: DatConfig | undefined;
+    onAnnotationListChanged: ((annotationList: Array<StlAnnotation>) => void) | undefined;
 }
 
 export const StlViewerComponent: FC<StlViewerComponentProps> = (props: StlViewerComponentProps) => {
     const [showAnnotations, setShowAnnotations] = useState(true);
-    const [stlDivRef, stlViewerRef, setStlUrl, setStlHexColor] = useStlViewerContext() as any;
-    
+    const [stlDivRef, stlViewerRef, setStlUrl, setStlHexColor] = useStlViewerContext() as any;    
+    const [configContainerRef, setDatConfig] = useDatConfig();
+
     useEffect(() => { setStlUrl(props.stlUrl); }, [props.stlUrl]);
     useEffect(() => { setStlHexColor(props.stlHexColor); }, [props.stlHexColor]);
+    useEffect(() => {
+        const datConfig = {} as DatConfig;
+        datConfig.configObject = {
+            showAnnotations: true,
+            resetCamera: () => {
+                stlViewerRef.current?.resetCamera();
+            },
+        };
+        datConfig.configDescription = [];
+        datConfig.configDescription.push({ property: "showAnnotations", type: ConfigType.CheckBox } as ConfigDescription);
+        datConfig.configDescription.push({ property: "resetCamera", type: ConfigType.Button } as ConfigDescription);
+        datConfig.onConfigChange = (property: string, value: any) => {
+            if (property === "showAnnotations") setShowAnnotations(value);
+        };
 
-    const datConfig = {} as DatConfig;
-    datConfig.configObject = {
-        showAnnotations: true,
-        resetCamera: () => {
-            stlViewerRef.current?.resetCamera();
-        },
-    };
-    datConfig.configDescription = [];
-    datConfig.configDescription.push({ property: "showAnnotations", type: ConfigType.CheckBox } as ConfigDescription);
-    datConfig.configDescription.push({ property: "resetCamera", type: ConfigType.Button } as ConfigDescription);
-    const configContainerRef = useDatConfig(datConfig, (property: string, value: any) => {
-        if (property === "showAnnotations") setShowAnnotations(value);
-    });
-
+        if(props.additionalConfig !== undefined) {
+            datConfig.configObject = { ...datConfig.configObject, ...props.additionalConfig.configObject };
+            datConfig.configDescription = datConfig.configDescription.concat(props.additionalConfig.configDescription);
+            datConfig.onConfigChange = (property: string, value: any) => {
+                if (property === "showAnnotations") setShowAnnotations(value);
+                props.additionalConfig!.onConfigChange(property, value);
+            };
+        }
+        setDatConfig(datConfig);
+    }, [props.additionalConfig]);
+    
     let annotationsComponent = undefined;
     if (stlViewerRef.current !== undefined && props.stlAnnotations !== undefined) {
         annotationsComponent = <AnnotationsComponent
-            isEditable={false}
-            onAnnotationListChanged={ () => { }}
+            isEditable={ props.isEditable }
+            onAnnotationListChanged={ props.onAnnotationListChanged }
             showAnnotations={showAnnotations}
             annotationList={props.stlAnnotations}
             stlViewerContext={stlViewerRef.current}
@@ -47,7 +62,7 @@ export const StlViewerComponent: FC<StlViewerComponentProps> = (props: StlViewer
 
     return <StyledStlWrapper>
         {annotationsComponent}
-        <StyledConfig ref={ configContainerRef } />
+        <StyledConfig ref={ configContainerRef as any } />
         <StyledStlViewer ref={ stlDivRef } />
     </StyledStlWrapper>;
 };
