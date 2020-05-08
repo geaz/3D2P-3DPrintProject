@@ -48,7 +48,6 @@ export class StlWebView {
                         }, 100);
                     break;
                 case "updateStlAnnotations":
-                    console.log(message.data);
                     await vscode.commands.executeCommand("3d2p.cmd.setStlAnnotations", 
                         this._stlInfo!.name,
                         message.data as Array<StlAnnotation>);
