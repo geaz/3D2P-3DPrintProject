@@ -1,6 +1,6 @@
-import { vscodeProgress } from '../commandEngine/BaseCommand';
-import { CommandResult } from '../commandEngine/CommandResult';
-import { BaseCliCommand } from './BaseCliCommand';
+import { vscodeProgress } from "../commandEngine/BaseCommand";
+import { CommandResult } from "../commandEngine/CommandResult";
+import { BaseCliCommand } from "./BaseCliCommand";
 
 export class Open3MFCommand extends BaseCliCommand {
     constructor(private _filepath: string) {
@@ -9,12 +9,10 @@ export class Open3MFCommand extends BaseCliCommand {
 
     public async vscCommand(progress: vscodeProgress): Promise<CommandResult> {
         let result = new CommandResult();
-        progress.report({ message: 'Running 3D2P ...' })
-        if(!result.isFaulted) {
+        progress.report({ message: "Running 3D2P ..." });
+        if (!result.isFaulted) {
             result.isFaulted = !(await this._cli.open3mf(this._filepath));
-            result.message = result.isFaulted 
-                ? `Couldn't open 3MF! Please see 3D2P output for details.` 
-                : '';
+            result.message = result.isFaulted ? `Couldn't open 3MF! Please see 3D2P output for details.` : "";
         }
         return result;
     }

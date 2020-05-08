@@ -1,10 +1,9 @@
 import * as vscode from "vscode";
-import * as path from "path";
 
-import { vscodeProgress } from '../commandEngine/BaseCommand';
-import { CommandResult } from '../commandEngine/CommandResult';
-import { BaseCliCommand } from './BaseCliCommand';
-import { StlWebView } from '../StlWebView';
+import { vscodeProgress } from "../commandEngine/BaseCommand";
+import { CommandResult } from "../commandEngine/CommandResult";
+import { BaseCliCommand } from "./BaseCliCommand";
+import { StlWebView } from "../StlWebView";
 
 export class OpenSTLCommand extends BaseCliCommand {
     constructor(private _uri: vscode.Uri) {
@@ -18,6 +17,6 @@ export class OpenSTLCommand extends BaseCliCommand {
     }
 
     public get Name(): string {
-        return "Open 3MF";
+        return "Open STL";
     }
 }

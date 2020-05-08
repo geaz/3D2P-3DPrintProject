@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
-import { BaseQuestion } from './BaseQuestion';
+import * as vscode from "vscode";
+import { BaseQuestion } from "./BaseQuestion";
 
 /**
  * Text Input Question Type.
- * This question type shows a vscode input prompt. 
+ * This question type shows a vscode input prompt.
  */
 export class InputQuestion extends BaseQuestion {
     constructor(

@@ -1,15 +1,15 @@
-import * as vscode from 'vscode';
-import { BaseQuestion } from './BaseQuestion';
-import { BaseCommand, vscodeProgress } from './BaseCommand';
-import { CommandResult } from './CommandResult';
+import * as vscode from "vscode";
+import { BaseQuestion } from "./BaseQuestion";
+import { BaseCommand, vscodeProgress } from "./BaseCommand";
+import { CommandResult } from "./CommandResult";
 
 /**
- * This class is responsible to lead through the different questions of a given questionnaire.
+ * This class is responsible to lead through the different questions of a given command.
  */
 export class CommandEngine {
     public async start(questionnaire: BaseCommand): Promise<void> {
         let result = await this.executeAsProgress(`${questionnaire.Name}: Checking...`, () => questionnaire.checkPrerequisite());
-        if(result) {
+        if (result) {
             let valid = true;
             let propertyNameList = Object.getOwnPropertyNames(questionnaire);
             for (let index = 0; index < propertyNameList.length; index++) {
@@ -17,7 +17,7 @@ export class CommandEngine {
                 if (possibleQuestion instanceof BaseQuestion && possibleQuestion.shouldShow()) {
                     await possibleQuestion.show();
                     if ((possibleQuestion.answer === "" || possibleQuestion.answer === undefined) && possibleQuestion.answerRequired) {
-                        vscode.window.showErrorMessage('Please try again and enter values for each prompt!');
+                        vscode.window.showErrorMessage("Please try again and enter values for each prompt!");
                         valid = false;
                         break;
                     }
@@ -26,9 +26,8 @@ export class CommandEngine {
 
             if (valid) {
                 await this.executeAsProgress(`${questionnaire.Name}`, questionnaire.vscCommand.bind(questionnaire));
-            } 
-            else {
-                vscode.window.showErrorMessage('Please try again and enter values for each prompt!');
+            } else {
+                vscode.window.showErrorMessage("Please try again and enter values for each prompt!");
             }
         }
     }
@@ -39,21 +38,20 @@ export class CommandEngine {
             (progress, token) => {
                 return new Promise(async (resolve, reject) => {
                     try {
-                        let result = await delegate(progress);  
+                        let result = await delegate(progress);
                         if (result.isFaulted) {
                             vscode.window.showErrorMessage(`Error during execution: ${result.message}`);
                             resolve(false);
-                        }
-                        else if(result.message !== undefined) {
+                        } else if (result.message !== undefined) {
                             vscode.window.showInformationMessage(result.message);
-                        }       
-                        resolve(true);       
-                    }
-                    catch (ex) {                        
+                        }
+                        resolve(true);
+                    } catch (ex) {
                         vscode.window.showErrorMessage(`Unhandled error: ${ex}`);
                         reject();
                     }
                 });
-            });
+            }
+        );
     }
 }

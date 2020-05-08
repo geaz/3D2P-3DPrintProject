@@ -60,6 +60,10 @@
 					"when": "false"
 				},
 				{
+					"command": "3d2p.cmd.openStl",
+					"when": "false"
+				},
+				{
 					"command": "3d2p.cmd.setStlInfo",
 					"when": "false"
 				}

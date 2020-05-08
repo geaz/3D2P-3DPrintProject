@@ -1,5 +1,5 @@
-import * as vscode from 'vscode';
-import { BaseQuestion } from './BaseQuestion';
+import * as vscode from "vscode";
+import { BaseQuestion } from "./BaseQuestion";
 
 /**
  * File Picker Question Type.
@@ -17,17 +17,16 @@ export class FilePickQuestion extends BaseQuestion {
     }
 
     public async show(): Promise<void> {
-        this._answer = await vscode.window
-            .showInputBox({
-                prompt: this.question,
-                placeHolder: 'Enter file path or leave this prompt empty to open a file picker.'
-            });
-        if (this._answer === undefined || this._answer === '') {
-            let selectedFile = await vscode.window.showOpenDialog({ 
-                canSelectMany: false, 
-                canSelectFiles: true, 
-                canSelectFolders: false, 
-                filters: this.filters 
+        this._answer = await vscode.window.showInputBox({
+            prompt: this.question,
+            placeHolder: "Enter file path or leave this prompt empty to open a file picker.",
+        });
+        if (this._answer === undefined || this._answer === "") {
+            let selectedFile = await vscode.window.showOpenDialog({
+                canSelectMany: false,
+                canSelectFiles: true,
+                canSelectFolders: false,
+                filters: this.filters,
             });
             if (selectedFile !== undefined) {
                 this._answer = (<vscode.Uri[]>selectedFile)[0].fsPath;

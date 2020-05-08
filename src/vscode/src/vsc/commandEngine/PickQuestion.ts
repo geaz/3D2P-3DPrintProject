@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
-import { BaseQuestion } from './BaseQuestion';
+import * as vscode from "vscode";
+import { BaseQuestion } from "./BaseQuestion";
 
 /**
  * List Picker Question Type.
- * This question type shows a vscode picker list prompt. 
+ * This question type shows a vscode picker list prompt.
  */
 export class PickQuestion extends BaseQuestion {
     constructor(

@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import { add3D2PCommands } from './vsc/CommandReg';
-import { createOutputChannel } from './vsc/OutputChannel';
+import { add3D2PCommands } from "./vsc/CommandRegistry";
+import { createOutputChannel } from "./vsc/OutputChannel";
 
 export function activate(context: vscode.ExtensionContext) {
     createOutputChannel();
