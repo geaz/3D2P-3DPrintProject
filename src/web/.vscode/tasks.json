@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/PrintProjects.Web/PrintProjects.Web.csproj",
+                "${workspaceFolder}/PrintProject.Web/PrintProject.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/PrintProjects.Web/PrintProjects.Web.csproj",
+                "${workspaceFolder}/PrintProject.Web/PrintProject.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/PrintProjects.Web/PrintProjects.Web.csproj",
+                "${workspaceFolder}/PrintProject.Web/PrintProject.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

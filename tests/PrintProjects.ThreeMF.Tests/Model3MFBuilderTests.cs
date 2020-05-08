@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace PrintProjects.ThreeMF.Tests
+namespace PrintProject.ThreeMF.Tests
 {
     [TestClass]
     public class Model3MFBuilderTests

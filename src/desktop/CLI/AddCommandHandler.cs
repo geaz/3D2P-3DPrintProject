@@ -2,10 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.CommandLine;
-using PrintProjects.Core.Model;
+using PrintProject.Core.Model;
 using System.CommandLine.Invocation;
 
-namespace PrintProjects.App.CLI
+namespace PrintProject.App.CLI
 {
     internal sealed class AddCommandHandler
     {

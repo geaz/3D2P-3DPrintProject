@@ -2,7 +2,7 @@ using System.IO;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 
-namespace PrintProjects.App.CLI
+namespace PrintProject.App.CLI
 {
     internal sealed class RootCommandHandler
     {
@@ -40,7 +40,7 @@ namespace PrintProjects.App.CLI
             RootCommand.Add(_setCommand.Command);
             RootCommand.Add(_removeCommand.Command);
             RootCommand.Add(_packCommand.Command);
-            RootCommand.Handler = CommandHandler.Create<FileInfo>((model) => new PrintProjectsWebview().Run(model));
+            RootCommand.Handler = CommandHandler.Create<FileInfo>((model) => new PrintProjectWebview().Run(model));
         }
 
         public RootCommand RootCommand { get; } = new RootCommand("3D Print Projects - 3MF Viewer and Packager");

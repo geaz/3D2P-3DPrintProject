@@ -6,22 +6,22 @@
     "dev": "npx -c \"concurrently \\\"npm run dev:ts\\\" \\\"npm run dev:sass\\\" \\\"npm run dev:server\\\"\"",
     "dev:ts": "npx webpack --config webpack.config.js --watch",
     "dev:sass": "npx node-sass -w ./wwwroot/sass/ -o ./wwwroot/css/",
-    "dev:server": "dotnet watch --project ./PrintProjects.Web.csproj run",
+    "dev:server": "dotnet watch --project ./PrintProject.Web.csproj run",
     "build": "npx npm-run-all build:*",
     "build:ts": "npx webpack --config webpack.config.js",
     "build:sass": "npx node-sass ./wwwroot/sass/ -o ./wwwroot/css/ --output-style compressed",
-    "build:server": "dotnet publish ./PrintProjects.Web.csproj -r linux-x64 --configuration Release"
+    "build:server": "dotnet publish ./PrintProject.Web.csproj -r linux-x64 --configuration Release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geaz/3D2P-3DPrintProjects.git"
+    "url": "git+https://github.com/geaz/3D2P-3DPrintProject.git"
   },
   "author": "Gerrit 'Geaz' Gazic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geaz/3D2P-3DPrintProjects/issues"
+    "url": "https://github.com/geaz/3D2P-3DPrintProject/issues"
   },
-  "homepage": "https://github.com/geaz/3D2P-3DPrintProjects#readme",
+  "homepage": "https://github.com/geaz/3D2P-3DPrintProject#readme",
   "devDependencies": {
     "3d2p.react.components": "file:../components",
     "@types/node": "13.9.8",

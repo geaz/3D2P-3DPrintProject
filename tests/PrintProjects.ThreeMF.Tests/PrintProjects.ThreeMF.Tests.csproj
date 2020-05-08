@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\libraries\PrintProjects.ThreeMF\PrintProjects.ThreeMF.csproj" />
+    <ProjectReference Include="..\..\src\libraries\PrintProject.ThreeMF\PrintProject.ThreeMF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

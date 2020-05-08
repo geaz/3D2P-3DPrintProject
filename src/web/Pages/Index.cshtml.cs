@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace PrintProjects.Web.Pages
+namespace PrintProject.Web.Pages
 {
     public class Index : PageModel
     {

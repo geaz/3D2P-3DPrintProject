@@ -1,7 +1,7 @@
 using System.IO;
-using PrintProjects.Core;
+using PrintProject.Core;
 
-namespace PrintProjects.ThreeMF
+namespace PrintProject.ThreeMF
 {
     public sealed class Model3MFBuilder
     {

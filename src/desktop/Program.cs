@@ -1,6 +1,6 @@
-﻿using PrintProjects.App.CLI;
+﻿using PrintProject.App.CLI;
 
-namespace PrintProjects.App
+namespace PrintProject.App
 {
     internal static class Program
     {

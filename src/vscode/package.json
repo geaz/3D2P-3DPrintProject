@@ -9,7 +9,7 @@
 	"icon": "logo.png",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/geaz/3D2P-3DPrintProjects.git"
+		"url": "git+https://github.com/geaz/3D2P-3DPrintProject.git"
 	},
 	"engines": {
 		"vscode": "1.43.0"

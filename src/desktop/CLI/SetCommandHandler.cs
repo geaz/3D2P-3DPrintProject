@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.CommandLine;
-using PrintProjects.Core.Model;
+using PrintProject.Core.Model;
 using System.CommandLine.Invocation;
 using System.Linq;
 
-namespace PrintProjects.App.CLI
+namespace PrintProject.App.CLI
 {
     internal sealed class SetCommandHandler
     {

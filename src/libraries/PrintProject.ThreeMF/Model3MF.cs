@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using PrintProjects.Core;
+using PrintProject.Core;
 using System.IO.Compression;
-using PrintProjects.Core.Model;
+using PrintProject.Core.Model;
 using System.Collections.Generic;
-using PrintProjects.ThreeMF.Model;
+using PrintProject.ThreeMF.Model;
 
-namespace PrintProjects.ThreeMF
+namespace PrintProject.ThreeMF
 {
     public sealed class Model3MF
     {

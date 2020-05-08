@@ -10,8 +10,8 @@
     <Authors>Gerrit 'Geaz' Gazic</Authors>
     <RepositoryType>Git</RepositoryType>
     <PublishTrimmed>true</PublishTrimmed>
-    <PackageProjectUrl>https://github.com/geaz/3D2P-3DPrintProjects</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/geaz/3D2P-3DPrintProjects</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/geaz/3D2P-3DPrintProject</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/geaz/3D2P-3DPrintProject</RepositoryUrl>
     <DefaultItemExcludes>$(DefaultItemExcludes);webpack.config.js;node_modules\**;package*.json;tsconfig.json</DefaultItemExcludes>
   </PropertyGroup>
 
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\libraries\PrintProjects.ThreeMF\PrintProjects.ThreeMF.csproj" />
+    <ProjectReference Include="..\libraries\PrintProject.ThreeMF\PrintProject.ThreeMF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

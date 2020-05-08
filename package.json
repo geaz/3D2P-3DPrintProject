@@ -6,5 +6,5 @@
   "author": "Gerrit 'Geaz' Gazic",
   "license": "MIT",
   "private": true,
-  "workspaces": ["app", "vscode"]
+  "workspaces": ["src/app", "src/vscode"]
 }

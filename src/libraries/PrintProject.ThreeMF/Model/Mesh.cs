@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace PrintProjects.ThreeMF.Model
+namespace PrintProject.ThreeMF.Model
 {
     public sealed class Mesh
     {

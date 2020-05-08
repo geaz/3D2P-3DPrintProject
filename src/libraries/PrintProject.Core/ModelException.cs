@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace PrintProjects.Core
+namespace PrintProject.Core
 {
     public class ModelException : Exception
     {

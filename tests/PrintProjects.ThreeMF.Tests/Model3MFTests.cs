@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 
-namespace PrintProjects.ThreeMF.Tests
+namespace PrintProject.ThreeMF.Tests
 {
     [TestClass]
     public class Model3MFTests
@@ -88,11 +88,11 @@ namespace PrintProjects.ThreeMF.Tests
             model.ExtractPrintProject("TestData/extracted");
 
             // Assert
-            Assert.IsTrue(File.Exists("TestData/extracted/Test1.stl"), "Test1.stl not found!");
-            Assert.IsTrue(File.Exists("TestData/extracted/Test2.stl"), "Test2.stl not found!");
+            Assert.IsTrue(File.Exists("TestData/extracted/stl/Test1.stl"), "Test1.stl not found!");
+            Assert.IsTrue(File.Exists("TestData/extracted/stl/Test2.stl"), "Test2.stl not found!");
             Assert.IsTrue(File.Exists("TestData/extracted/3D2P.json"), "3D2P.json not found!");
             Assert.IsTrue(File.Exists("TestData/extracted/README.md"), "README.md not found!");
-            Assert.IsTrue(File.ReadAllBytes("TestData/extracted/Test1.stl").Length > 100);
+            Assert.IsTrue(File.ReadAllBytes("TestData/extracted/stl/Test1.stl").Length > 100);
         }
     }
 }

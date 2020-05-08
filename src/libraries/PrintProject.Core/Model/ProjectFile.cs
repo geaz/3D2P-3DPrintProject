@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
 
-namespace PrintProjects.Core.Model
+namespace PrintProject.Core.Model
 {
     public enum Status
     {

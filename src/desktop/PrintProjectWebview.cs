@@ -4,16 +4,16 @@ using SharpWebview;
 using SharpWebview.Content;
 using System.Threading;
 using System.Reflection;
-using PrintProjects.ThreeMF;
+using PrintProject.ThreeMF;
 
-namespace PrintProjects.App
+namespace PrintProject.App
 {
-    internal sealed class PrintProjectsWebview
+    internal sealed class PrintProjectWebview
     {
         private Webview _webview;
         private readonly string _extractionPath;
 
-        public PrintProjectsWebview()
+        public PrintProjectWebview()
         {
             var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             _extractionPath = Path.Combine(basePath, "app", "extracted");
@@ -30,14 +30,14 @@ namespace PrintProjects.App
                 Thread thread = new Thread(() =>
                 {
                     var initScript =
-                        @"window.printProjects = {};
-                        window.printProjects.dropCallback = dropCallback;";
+                        @"window.printProject = {};
+                        window.printProject.dropCallback = dropCallback;";
                     if(is3MF)
                     {
                         ClearCreateExtractionPath();
                         var model3mf = new Model3MF(model.FullName);
                         model3mf.ExtractPrintProject(_extractionPath);
-                        initScript += "window.printProjects.projectFolderUrl='/extracted';";
+                        initScript += "window.printProject.projectFolderUrl='/extracted';";
                     }
 
                     var hostedContent = new HostedContent();

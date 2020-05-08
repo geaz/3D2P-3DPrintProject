@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace PrintProjects.ThreeMF {
+namespace PrintProject.ThreeMF {
 
 	public enum ePropertyType {
 		NoPropertyType = 0,

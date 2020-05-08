@@ -9,7 +9,7 @@ import { StlExplorerComponent } from "./components/StlExplorerComponent";
 import { useFileDragDrop } from "./effects/EventEffects";
 import { MarkdownComponent } from "./components/MarkdownComponent";
 
-export const PrintProjectsApp: FC = () => {
+export const PrintProjectApp: FC = () => {
     const componentRef = useRef<HTMLDivElement>(null);
     
     const [projectFile, setProjectFile] = useState<ProjectFile | undefined>(undefined);
@@ -38,16 +38,16 @@ export const PrintProjectsApp: FC = () => {
                 };
                 reader.readAsDataURL(file);
             });
-            let dropCallback = (window as any).printProjects?.dropCallback;
+            let dropCallback = (window as any).printProject?.dropCallback;
             if(dropCallback !== undefined) {
                 setProject((await dropCallback(fileDataUrl)).projectFolderUrl);
             }
-            else { console.warn("DropCallback was not set on window.printProjects.dropCallback! Can't handle file drops! "); }
+            else { console.warn("DropCallback was not set on window.printProject.dropCallback! Can't handle file drops! "); }
         }
         setLoading(false);
     };
     useFileDragDrop(componentRef, setDragging, dragDropCb);
-    useEffect(() => { setProject((window as any).printProjects?.projectFolderUrl); }, []);
+    useEffect(() => { setProject((window as any).printProject?.projectFolderUrl); }, []);
     useEffect(() => { window.dispatchEvent(new Event('resize')); }, [isFullscreen]);
 
     let pageContent = undefined;
@@ -218,4 +218,4 @@ const StyledStlBox = styled.div<{ isFullscreen: boolean }>`
     }
 `;
 
-render(<PrintProjectsApp/>, document.getElementById("print-projects-app")!);
+render(<PrintProjectApp/>, document.getElementById("print-projects-app")!);

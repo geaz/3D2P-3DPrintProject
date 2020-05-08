@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace PrintProjects.Core.Model
+namespace PrintProject.Core.Model
 {
     public sealed class StlInfo
     {

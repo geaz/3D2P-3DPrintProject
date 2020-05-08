@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PrintProjects.Core
+namespace PrintProject.Core
 {
     internal static class GuidExtensions
     {

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace PrintProjects.Core.Model
+namespace PrintProject.Core.Model
 {
     public sealed class StlAnnotation
     {
