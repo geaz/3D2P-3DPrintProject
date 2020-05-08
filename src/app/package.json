@@ -1,6 +1,6 @@
 {
   "name": "3d2p.react.app",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "The main preact application used by the desktop  and web application. Also contains some components used by the VS Code extension",
   "typings": "dist/index",
   "main": "dist/index.js",

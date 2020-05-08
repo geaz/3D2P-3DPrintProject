@@ -5,7 +5,7 @@
 	"author": "Gerrit 'Geaz' Gazic",
 	"license": "MIT",
 	"description": "3D Print Projects Management in VS Code",
-	"version": "0.5.2",
+	"version": "0.6.0",
 	"icon": "logo.png",
 	"repository": {
 		"type": "git",
@@ -95,7 +95,7 @@
 		"watch": "npx tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"3d2p.react.app": "0.5.0",
+		"3d2p.react.app": "0.6.0",
 		"@types/command-exists": "1.2.0",
 		"@types/glob": "7.1.1",
 		"@types/node": "12.12.32",

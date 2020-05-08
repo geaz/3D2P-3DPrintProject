@@ -18,10 +18,6 @@ namespace PrintProject.Web
         {
             services.AddRazorPages(); 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "3D Print Project API", Version = "v1" });
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,11 +36,6 @@ namespace PrintProject.Web
             app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "3D2P API V1");
-            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
