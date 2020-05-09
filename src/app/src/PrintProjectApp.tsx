@@ -42,7 +42,7 @@ export const PrintProjectApp: FC = () => {
             });
             let dropCallback = (window as any).printProject?.dropCallback;
             if(dropCallback !== undefined) {
-                setProject((await dropCallback(fileDataUrl)).projectFolderUrl);
+                setProject((await dropCallback(fileDataUrl))?.projectFolderUrl);
             }
             else { console.warn("DropCallback was not set on window.printProject.dropCallback! Can't handle file drops! "); }
         }

@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "Home";
 }
-@section Scripts 
-{
+@section Styles {
+    <link rel="stylesheet" href="~/css/index.css" />
+}
+@section Scripts {
     <script type="text/javascript" src="~/js/app.js"></script>
     <script type="text/javascript">
         window.printProject = {};
@@ -22,8 +24,8 @@
                             resolve({ projectFolderUrl: '/Extracted/' + extractionPath });
                         });
                     }
-                })
-                .catch((ex) => { reject(ex); });
+                    else { resolve(); }
+                });
             });
         };
     </script>

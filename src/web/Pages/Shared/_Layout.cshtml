@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 3D Print Project</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <main>
@@ -12,16 +13,24 @@
     </main>
     <footer>
         <div class="content">
-            <a href="/" title="Home"><img src="/images/logo.svg" id="footer-logo" alt="Logo"/></a>
-            <div class="example-dl">
-                <p>
-                    Look what you can do with 3D2P! 
-                    <a href="/download" title="Download example 3MF">Download</a> and drop a 3MF example.
-                </p>
+            <div class="stretch vertical-center">
+                <a asp-page="/Index" title="Home" id="footer-logo"><img src="/images/logo.svg" alt="Logo"/></a>
             </div>
+            <a class="menu-item" asp-page="/Documentation" title="Documentation">Documentation</a>
+            <a class="menu-item" asp-page="/Application" title="Application">Application</a>
+            <a class="menu-item" href="https://github.com/geaz/3D2P-3DPrintProject" title="Github" target="_blank">
+                <i class="fa fa-github-square" aria-hidden="true"></i>
+            </a>
         </div>
-        <div class="impress">
-            <small>No shitty ads, cookies, 3rd party ressources or tracking.</small>
+        <div class="dark">
+            <small class="stretch">
+                No shitty ads, cookies, 3rd party ressources or tracking.
+            </small>
+            <small>
+                Look what you can do with 3D2P! 
+                <a href="https://github.com/geaz/simplyRetro-Z5/raw/master/simplyRetro%20z5.3mf" title="Download example 3MF">Download</a> 
+                and drop a 3MF example.
+            </small>
         </div>
     </footer>
     @RenderSection("Scripts", required: false)

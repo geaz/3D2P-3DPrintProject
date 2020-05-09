@@ -10,14 +10,8 @@ namespace PrintProject.Web.Pages
     [IgnoreAntiforgeryToken(Order = 1001)]
     public class Index : PageModel
     {
-        private readonly ILogger<Index> _logger;
         private readonly string _extractionPath = 
             Environment.GetEnvironmentVariable("PRINTPROJECT_EXTRACTION_TARGET_PATH");
-
-        public Index(ILogger<Index> logger)
-        {
-            _logger = logger;
-        }
 
         public IActionResult OnPost([FromBody]string base64DataUrl) 
         {
