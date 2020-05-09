@@ -1,56 +1,6 @@
 @import 'var';
 
-video {
-    width: 100%;
-    border-radius: 0 0 5px 5px;
-    border-top: 2px solid #008000;
-    box-shadow: $box-shadow;
-}
-
-.headline {
-    p {
-        margin: 0;
-        text-align: center;
-    }
-
-    .primary-line {
-        font-size: 1.8rem;
-        margin-bottom: 1.15rem;
-
-        span {
-            font-weight: 700;
-        }        
-    }
-
-    .secondary-line {
-        font-size: 1.4rem;
-        color: #666666;
-
-        span {
-            font-style: italic;
-        }  
-    }
-}
-
-.action {
-    text-align: center;
-    margin-bottom: 1.15rem;
-    
-    a {
-        padding:15px;
-        color: white;
-        background-color: $secondary-color;
-        border-radius: 5px;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    a:hover {
-        background-color: $primary-color;
-        color: white;
-    }
-
-    small {
-        display: block;
-    }
+#print-projects-app {
+    flex: 1;
+    p { margin-top: 0; }
 }

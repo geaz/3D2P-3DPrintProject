@@ -7,78 +7,44 @@ html, body {
 body {
     display: flex;
     color: $text-color;
+    align-items: stretch;
     flex-direction: column;
     background: $background-color;
 }
 
-header {
-    padding: 20px 0;
-    background: white;
-    box-shadow: $box-shadow;
-
-    .container {
-        display: flex;
-    }
-
-    nav {
-        flex-grow: 1;
-        display:flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-
-        a {
-            margin-right: 10px;
-            font-weight: bold;
-            text-decoration: none;
-            color: #a1a0a0;
-            padding: 5px;
-        }
-
-        form {
-            display: flex;
-        }
-
-        input[type="text"] {
-            padding: 5px 10px;       
-            border: 1px solid #0000001f;
-            border-radius: 5px 0 0 5px;
-        }
-
-        input[type="submit"] {
-            color: $text-color;
-            background: none;
-            border-radius: 0 5px 5px 0;            
-            border: 1px solid #0000001f;
-            border-left: none;
-
-            &:hover {
-                color: $primary-color;
-                cursor: pointer;
-            }
-        }
-    }
-}
-
 main {
-    padding: 50px 0;
+    flex: 1;
+    display: flex;
 }
 
 footer {
-    padding: 20px 0;
-    margin-top: auto;
-    color: $footer-color;
-    background: $footer-backcolor;
+    position: fixed;
+    left:0;
+    bottom:0;
+    width: 100%;
+    z-index: 999;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 
-    small {
-        color: #939393;
+    p { margin: 0; }
+
+    #footer-logo {
+        width: 45px;
     }
-}
 
-#logo {
-    height: 35px;
-    
-    img {
-        height: 35px;
+    .content {
+        display: flex;
+        padding: 10px;
+    }
+
+    .impress {
+        padding: 10px;
+        color: $footer-color;
+        background: $footer-backcolor;
+
+        small {
+            color: #939393;
+        }
     }
 }
 
@@ -88,14 +54,4 @@ a {
     &:hover {
         color: $primary-color;
     }
-}
-
-img {
-    max-width: 100%;
-}
-
-.container {
-    max-width: 974px;
-    padding: 0 25px;
-    margin: 0 auto;
 }

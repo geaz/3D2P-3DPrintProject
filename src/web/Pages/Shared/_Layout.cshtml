@@ -3,25 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - 3D2P - 3D Print Projects</title>
+    <title>@ViewData["Title"] - 3D Print Project</title>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <div class="container">            
-            <a id="logo" asp-page="/Index" title="3D2P - 3D Print Projects - Home"><img src="~/logo.svg" alt="3D2P" /></a>
-            <nav>                
-                <a asp-page="/Index" title="Home">Home</a>
-            </nav>
-        </div>
-    </header>
     <main>
-        <div class="container">
-            @RenderBody()
-        </div>
+        @RenderBody()
     </main>
     <footer>
-        <div class="container">
+        <div class="content">
+            <a href="/" title="Home"><img src="/images/logo.svg" id="footer-logo" alt="Logo"/></a>
+            <div class="example-dl">
+                <p>
+                    Look what you can do with 3D2P! 
+                    <a href="/download" title="Download example 3MF">Download</a> and drop a 3MF example.
+                </p>
+            </div>
+        </div>
+        <div class="impress">
             <small>No shitty ads, cookies, 3rd party ressources or tracking.</small>
         </div>
     </footer>

@@ -6,6 +6,7 @@ using System.IO.Compression;
 using PrintProject.Core.Model;
 using System.Collections.Generic;
 using PrintProject.ThreeMF.Model;
+using System;
 
 namespace PrintProject.ThreeMF
 {
@@ -13,16 +14,29 @@ namespace PrintProject.ThreeMF
     {
         private readonly CModel _model = Wrapper.CreateModel();
 
+        public static Model3MF FromBase64DataUrl(string dataUrl)
+        {
+            var basePos = dataUrl.IndexOf("base64,") + 7;
+            dataUrl = dataUrl.Substring(basePos);
+
+            var fileBytes = Convert.FromBase64String(dataUrl);
+            return new Model3MF(fileBytes);
+        }
+
+        public Model3MF(byte[] fileBytes)
+        {
+            var reader = _model.QueryReader("3mf");
+            reader.AddRelationToRead("http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve");
+            reader.ReadFromBuffer(fileBytes);
+            LoadModel();
+        }
+
         public Model3MF(string file)
         {
             var reader = _model.QueryReader("3mf");
             reader.AddRelationToRead("http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve");
             reader.ReadFromFile(file);
-
-            LoadReadme();
-            LoadColors();
-            LoadMeshes();
-            LoadProjectFile();
+            LoadModel();
         }
 
         public byte[] GetAttachment(string attachmenPath)
@@ -64,6 +78,14 @@ namespace PrintProject.ThreeMF
 
             if(!string.IsNullOrEmpty(Readme)) File.WriteAllText(Path.Combine(directory, "README.md"), Readme);
             ProjectFile?.Save(Path.Combine(directory, "3D2P.json"), true);
+        }
+
+        private void LoadModel() 
+        {
+            LoadReadme();
+            LoadColors();
+            LoadMeshes();
+            LoadProjectFile();
         }
 
         private void LoadReadme()

@@ -10,7 +10,8 @@
   "scripts": {
     "build:package": "npx tsc",
     "build:desktop": "npx webpack --config webpack.config.desktop.js",
-    "build:vscode": "npx webpack --config webpack.config.vscode.js"
+    "build:vscode": "npx webpack --config webpack.config.vscode.js",
+    "build:web": "npx webpack --config webpack.config.web.js"
   },
   "repository": {
     "type": "git",

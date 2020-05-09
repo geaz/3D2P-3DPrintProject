@@ -70,18 +70,10 @@ namespace PrintProject.App
 
         private void DropCallback(string id, string req)
         {
-            var trimmedJsDataUrl = req.Trim(new char[]{ '[', ']', '"' });
-            var basePos = trimmedJsDataUrl.IndexOf("base64,") + 7;
-            trimmedJsDataUrl = trimmedJsDataUrl.Substring(basePos);
-
             ClearCreateExtractionPath();
 
-            var modelFilePath = Path.Combine(_extractionPath, "model.3mf");
-            File.WriteAllBytes(
-                modelFilePath,
-                Convert.FromBase64String(trimmedJsDataUrl));
-
-            var model3mf = new Model3MF(modelFilePath);
+            var trimmedJsDataUrl = req.Trim(new char[]{ '[', ']', '"' });
+            var model3mf = Model3MF.FromBase64DataUrl(trimmedJsDataUrl);
             model3mf.ExtractPrintProject(_extractionPath);
 
             _webview.Return(id, RPCResult.Success, "{ projectFolderUrl: '/extracted' }");

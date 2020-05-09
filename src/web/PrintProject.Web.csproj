@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\desktop\PrintProject.Core\PrintProject.Core.csproj" />
+    <ProjectReference Include="..\desktop\PrintProject.ThreeMF\PrintProject.ThreeMF.csproj" />
   </ItemGroup>
 
 </Project>

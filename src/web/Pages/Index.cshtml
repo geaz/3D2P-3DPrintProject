@@ -3,16 +3,30 @@
 @{
     ViewData["Title"] = "Home";
 }
+@section Scripts 
+{
+    <script type="text/javascript" src="~/js/app.js"></script>
+    <script type="text/javascript">
+        window.printProject = {};
+        window.printProject.dropCallback = function(base64DataUrl) {
+            return new Promise((resolve, reject) => {
+                fetch("/", {
+                    method: "POST",
+                    body: JSON.stringify(base64DataUrl),
+                    headers: { 'Content-type': 'application/json' }
+                })
+                .then((response) => {
+                    if(response.ok) {
+                        response.text()
+                        .then((extractionPath) => {
+                            resolve({ projectFolderUrl: '/Extracted/' + extractionPath });
+                        });
+                    }
+                })
+                .catch((ex) => { reject(ex); });
+            });
+        };
+    </script>
+}
 
-<div class="headline">
-    <p class="secondary-line"><span>Free</span> & <span>Open Source</span> <a href="https://github.com/geaz/3D2P-3DPrintProject" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a></p>
-    <p class="primary-line"><span>Manage</span> & <span>Upload</span> your 3D Print Projects within <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a></p>
-</div>
-
-<div class="action">
-    <a href="https://marketplace.visualstudio.com/items?itemName=3d2p.vscode" target="_blank">Download Extension</a>
-</div>
-    
-<video src="~/videos/demo.mp4" poster="~/videos/demo-poster.png" muted controls>
-    <img src="~/videos/demo-poster.png" title="No video support" />
-</video>
+<div id="print-projects-app"></div>

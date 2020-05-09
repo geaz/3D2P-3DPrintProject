@@ -24,6 +24,8 @@ export const PrintProjectApp: FC = () => {
             let response = await fetch(projectFolderUrl + "/3D2P.json");
             let json = await response.json();
             setProjectFile(json as ProjectFile);
+        } else {
+            console.warn("Did not get any project folder url! Can't load 3MF.")
         }
     };
     
