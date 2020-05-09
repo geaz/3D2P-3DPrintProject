@@ -86,6 +86,8 @@ const StlViewerApp: FC = () => {
         { stlUrl === undefined && <div>Loading ...</div> }
         { stlUrl !== undefined && <StlViewerComponent 
             isEditable={ true }
+            /* To force a rerender on STL added to Project */
+            key={ stlUrl + stlInfo?.name }
             additionalConfig={ datConfig }
             onAnnotationListChanged={ (annos: Array<StlAnnotation>) => { saveStlInfoAnnotations(annos); }}
             stlAnnotations={stlInfo?.annotationList}

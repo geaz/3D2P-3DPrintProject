@@ -15,14 +15,12 @@ body {
 main {
     flex: 1;
     display: flex;
+    overflow: auto;
 }
 
 footer {
-    position: fixed;
-    left:0;
-    bottom:0;
-    width: 100%;
     z-index: 999;
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
     background: white;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 

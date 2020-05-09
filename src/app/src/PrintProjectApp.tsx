@@ -195,6 +195,7 @@ const StyledStlBox = styled.div<{ isFullscreen: boolean }>`
 
     #box-content {
         flex: 1;
+        overflow: auto;
     }
 
     #box-footer {
