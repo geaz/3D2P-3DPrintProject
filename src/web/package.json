@@ -1,39 +1,33 @@
 {
   "name": "3d2p.web",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "The 3D2P website",
   "scripts": {
-    "dev": "npx -c \"concurrently \\\"npm run dev:ts\\\" \\\"npm run dev:sass\\\" \\\"npm run dev:server\\\"\"",
-    "dev:ts": "npx webpack --config webpack.config.js --watch",
+    "dev": "npx -c \"concurrently \\\"npm run dev:sass\\\" \\\"npm run dev:server\\\"\"",
     "dev:sass": "npx node-sass -w ./wwwroot/sass/ -o ./wwwroot/css/",
-    "dev:server": "dotnet watch --project ./PrintProjects.Web.csproj run",
+    "dev:server": "dotnet watch run",
     "build": "npx npm-run-all build:*",
-    "build:ts": "npx webpack --config webpack.config.js",
     "build:sass": "npx node-sass ./wwwroot/sass/ -o ./wwwroot/css/ --output-style compressed",
-    "build:server": "dotnet publish ./PrintProjects.Web.csproj -r linux-x64 --configuration Release"
+    "build:server": "dotnet publish -r linux-x64 --configuration Release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geaz/3D2P-3DPrintProjects.git"
+    "url": "git+https://github.com/geaz/3D2P-3DPrintProject.git"
   },
   "author": "Gerrit 'Geaz' Gazic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geaz/3D2P-3DPrintProjects/issues"
+    "url": "https://github.com/geaz/3D2P-3DPrintProject/issues"
   },
-  "homepage": "https://github.com/geaz/3D2P-3DPrintProjects#readme",
+  "homepage": "https://github.com/geaz/3D2P-3DPrintProject#readme",
   "devDependencies": {
-    "3d2p.preact.components": "file:../components",
-    "@types/node": "^13.9.8",
-    "concurrently": "^5.1.0",
-    "emotion": "^10.0.27",
-    "htm": "^3.0.3",
-    "node-sass": "^4.13.1",
-    "npm-run-all": "^4.1.5",
-    "preact": "^10.3.4",
-    "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+		"3d2p.react.app": "1.0.0",
+    "concurrently": "5.1.0",
+    "node-sass": "4.14.1",
+    "npm-run-all": "4.1.5",
+    "ts-loader": "6.2.2",
+    "typescript": "3.8.3",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11"
   }
 }

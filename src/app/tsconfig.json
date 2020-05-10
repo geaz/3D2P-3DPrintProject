@@ -1,17 +1,23 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es5",
-		"outDir": "out",
+		"target": "es6",
+		"module": "es6",
+		"moduleResolution": "node",
+		"outDir": "dist",
 		"lib": [
 			"es6",
 			"es2019",
 			"dom"
 		],
-		"sourceMap": true,
-		"strict": true
+		"jsx": "react",
+		"strict": true,
+		"rootDir": "src",
+		"declaration": true,
+		"skipLibCheck": true,
+		"experimentalDecorators": true
 	},
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"dist"
 	]
 }

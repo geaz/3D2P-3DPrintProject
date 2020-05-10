@@ -3,26 +3,36 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - 3D2P - 3D Print Projects</title>
+    <title>@ViewData["Title"] - 3D Print Project</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
-        <div class="container">            
-            <a id="logo" asp-page="/Index" title="3D2P - 3D Print Projects - Home"><img src="~/logo.svg" alt="3D2P" /></a>
-            <nav>                
-                <a asp-page="/Index" title="Home">Home</a>
-            </nav>
+        <div class="content">
+            <div class="stretch vertical-center">
+                <a asp-page="/Index" title="Home" id="header-logo"><img src="/images/logo.svg" alt="Logo"/></a>
+            </div>
+            <a class="menu-item" asp-page="/Documentation" title="Documentation">Documentation</a>
+            <a class="menu-item" asp-page="/Application" title="Application">Application</a>
+            <a class="menu-item" href="https://github.com/geaz/3D2P-3DPrintProject" title="Github" target="_blank">
+                <i class="fa fa-github-square" aria-hidden="true"></i>
+            </a>
         </div>
     </header>
     <main>
-        <div class="container">
-            @RenderBody()
-        </div>
+        @RenderBody()
     </main>
-    <footer>
-        <div class="container">
-            <small>No shitty ads, cookies, 3rd party ressources or tracking.</small>
+    <footer>        
+        <div class="dark content">
+            <small class="stretch">
+                No shitty ads, cookies, 3rd party ressources or tracking.
+            </small>
+            <small>
+                Look what you can do with 3D2P! 
+                <a href="https://github.com/geaz/simplyRetro-Z5/raw/master/simplyRetro%20z5.3mf" title="Download example 3MF">Download</a> 
+                and drop a 3MF example.
+            </small>
         </div>
     </footer>
     @RenderSection("Scripts", required: false)

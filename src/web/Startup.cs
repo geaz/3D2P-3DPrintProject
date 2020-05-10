@@ -1,11 +1,12 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
-namespace PrintProjects.Web
+namespace PrintProject.Web
 {
     public class Startup
     {
@@ -18,10 +19,6 @@ namespace PrintProjects.Web
         {
             services.AddRazorPages(); 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "3D Print Project API", Version = "v1" });
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,14 +34,16 @@ namespace PrintProjects.Web
             }
 
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Environment.GetEnvironmentVariable("PRINTPROJECT_EXTRACTION_TARGET_PATH")
+                ),
+                RequestPath = "/Extracted"
+            });
             app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "3D2P API V1");
-            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

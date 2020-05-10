@@ -1,40 +1,44 @@
 {
-  "name": "3d2p.app",
-  "version": "0.5.0",
-  "description": "The 3D2P desktop application - Includes a 3MF Viewer and 3D2P.json bundler",
+  "name": "3d2p.react.app",
+  "version": "1.0.0",
+  "description": "The main preact application used by the desktop  and web application. Also contains some components used by the VS Code extension",
+  "typings": "dist/index",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "dev": "npx npm-run-all dev:*",
-    "dev:ts": "npx webpack --config webpack.config.js",
-    "dev:app": "dotnet build --configuration Debug",
-    "dev:js": "npx copyfiles ./app/app.js ./bin/Debug/netcoreapp3.1/app/ -f",
-    "build": "npx npm-run-all build:*",
-    "build:ts": "npx webpack --config webpack.config.js",
-    "build:app": "dotnet build --configuration Release",
-    "build:js": "npx copyfiles ./app/app.js ./bin/Release/netcoreapp3.1/app/ -f"
+    "build:package": "npx tsc",
+    "build:desktop": "npx webpack --config webpack.config.desktop.js",
+    "build:vscode": "npx webpack --config webpack.config.vscode.js",
+    "build:web": "npx webpack --config webpack.config.web.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geaz/3D2P-3DPrintProjects.git"
+    "url": "git+ssh://git@github.com/geaz/3d2p.git"
   },
   "author": "Gerrit 'Geaz' Gazic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geaz/3D2P-3DPrintProjects/issues"
+    "url": "https://github.com/geaz/3d2p/issues"
   },
-  "homepage": "https://github.com/geaz/3D2P-3DPrintProjects#readme",
+  "homepage": "https://github.com/geaz/3d2p#readme",
   "devDependencies": {
-    "3d2p.preact.components": "file:../components",
-    "@types/node": "^13.9.8",
-    "concurrently": "^5.1.0",
-    "copyfiles": "^2.2.0",
-    "emotion": "^10.0.27",
-    "htm": "^3.0.3",
-    "node-sass": "^4.13.1",
-    "npm-run-all": "^4.1.5",
-    "preact": "^10.3.4",
-    "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "@types/dat.gui": "0.7.5",
+    "@types/marked": "0.7.4",
+    "@types/react": "16.9.34",
+    "@types/react-dom": "16.9.7",
+    "@types/styled-components": "5.1.0",
+    "@types/webgl2": "0.0.5",
+    "dat.gui": "0.7.6",
+    "marked": "1.0.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "styled-components": "5.1.0",
+    "three": "0.115.0",
+    "ts-loader": "6.2.2",
+    "typescript": "3.8.3",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11"
   }
 }

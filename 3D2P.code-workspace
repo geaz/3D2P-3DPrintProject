@@ -1,12 +1,16 @@
 {
 	"folders": [
 		{
-			"name": "3D2P-3DPrintProjects",
+			"name": "3D2P-3DPrintProject",
 			"path": "."
 		},
 		{
 			"name": "app",
 			"path": "src\\app"
+		},
+		{
+			"name": "desktop",
+			"path": "src\\desktop"
 		},
 		{
 			"name": "vscode",
@@ -15,14 +19,6 @@
 		{
 			"name": "web",
 			"path": "src\\web"
-		},
-		{
-			"name": "components",
-			"path": "src\\components"
-		},
-		{
-			"name": "libraries",
-			"path": "src\\libraries"
 		},
 		{
 			"name": "tests",

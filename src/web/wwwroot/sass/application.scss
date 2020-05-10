@@ -1,0 +1,82 @@
+@import 'shared/var';
+
+#application {
+    flex: 1;
+    margin: 0 auto;
+    max-width: 1024px;
+    padding-bottom: 4rem;
+    text-align: center;
+}
+
+h1 { margin: 0; }
+
+.github-line {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 4rem;
+    font-size: 1.4rem;
+    color: #666666;
+
+    span {
+        font-style: italic;
+    }  
+}
+
+.box {
+    display: flex;
+    margin-bottom: 4rem;
+
+    .left { margin: 0 3rem 0 0; }
+
+    .box-content {
+        text-align: justify;
+        max-width: 40%;
+    
+        h2 { margin-top: 0; margin-bottom: 2rem; }
+        h3 { margin-top: 0; }
+    }
+    
+    .action-bar {
+        display:flex;
+        align-items: stretch;
+    
+        .primary { 
+            background: $primary-color;    
+    
+            &:hover {
+                background-color: $text-color;
+                color: white;
+            }
+        }
+    
+        .secondary { 
+            background: $secondary-color;    
+    
+            &:hover {
+                background-color: $text-color;
+                color: white;
+            }
+        }
+    
+        .action {
+            flex: 1;
+            margin-right: 1.5rem;
+            text-align: center;
+            
+            padding:15px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .last { margin-right: 0; }
+    }
+    
+    video {
+        width: 100%;
+        max-width: 1024px;
+        border-radius: 0 0 5px 5px;
+        border-top: 2px solid #008000;
+        box-shadow: $box-shadow;
+    }
+}

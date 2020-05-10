@@ -1,0 +1,10 @@
+{
+  "name": "3d2p.workspace",
+  "version": "1.0.0",
+  "description": "PrintProject Workspace",
+  "repository": "https://github.com/geaz/3d2p-PrintProject",
+  "author": "Gerrit 'Geaz' Gazic",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["src/app", "src/vscode", "src/web"]
+}

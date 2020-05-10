@@ -1,0 +1,81 @@
+<Wix 
+    xmlns="http://schemas.microsoft.com/wix/2006/wi"
+    xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+>
+    <Product 
+        Id="*"
+        UpgradeCode="ec34e91b-cc2d-4e96-9ede-62718d0747c4"
+        Name="3D2P" Version="1.0.0" Manufacturer="3D2P" Language="1033"
+    >
+        <!-- The package needs administrative permission to install - needed for the loopback exception -->
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+        <Media Id="1" Cabinet="files.cab" EmbedCab="yes" />
+
+        <!-- Define the directory structure of the target folder -->
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="3D2P"/>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="3D2P"/>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="PathVar" Guid="cc40e686-5ee0-4c54-b92e-475321b4eb5b">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="03e625e1-8189-4c11-b329-4114c992a3e7">
+                <Shortcut Id="ApplicationStartMenuShortcut" 
+                    Name="3D2P" 
+                    Description="3MF Viewer and CLI"
+                    Target="[!fil5A9C9D1376DA714E0E705D31E885C7D3]"
+                    WorkingDirectory="INSTALLDIR"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\3D2P\3D2P" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+           </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="dirE346A75FEDD174A44A845475C6757E1F">
+            <Component Id="AppFolderPermission" Guid="fb1af65a-060d-4aa8-97bc-cc9ff07b3e94">
+                <CreateFolder>
+                    <util:PermissionEx User="Users" GenericAll="yes"/>
+                </CreateFolder>
+            </Component>
+        </DirectoryRef>
+
+        <!-- Feature definition includes all files harvested by heat -->
+        <Feature Id="Complete" Level="1">      
+            <ComponentGroupRef Id="ApplicationFiles" />
+            <ComponentRef Id="AppFolderPermission" /> 
+            <ComponentRef Id="ApplicationShortcut" /> 
+            <ComponentRef Id="PathVar" /> 
+        </Feature>
+
+        <UI>
+            <!-- Skip License and show installer with path chooser -->
+            <Publish Dialog="WelcomeDlg"
+                Control="Next"
+                Event="NewDialog"
+                Value="InstallDirDlg"
+                Order="2">1</Publish>
+            <Publish Dialog="InstallDirDlg"
+                Control="Back"
+                Event="NewDialog"
+                Value="WelcomeDlg"
+                Order="2">1</Publish>
+            <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+            <UIRef Id="WixUI_InstallDir" />
+            <UIRef Id="WixUI_ErrorProgressText" />
+        </UI>
+
+        <!-- Add loopback exception -->
+        <InstallExecuteSequence>
+            <Custom Action='LoopBackCmd' Before='InstallFinalize'/>
+        </InstallExecuteSequence>
+        <CustomAction Id="LoopBackCmd" Directory="INSTALLDIR" Execute="deferred" Impersonate="no" ExeCommand="cmd.exe /c &quot;CheckNetIsolation.exe LoopbackExempt -a -n=&quot;Microsoft.Win32WebViewHost_cw5n1h2txyewy&quot;&quot;" Return="ignore" />
+    </Product>
+</Wix>

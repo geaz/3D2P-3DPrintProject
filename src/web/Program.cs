@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace PrintProjects.Web
+namespace PrintProject.Web
 {
     public class Program
     {
