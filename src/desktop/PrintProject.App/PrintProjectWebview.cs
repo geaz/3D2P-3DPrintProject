@@ -53,7 +53,9 @@ namespace PrintProject.App
                             .Run();
                     }
                 });
+                #if Windows
                 thread.SetApartmentState(ApartmentState.STA);
+                #endif
                 thread.Start();
                 thread.Join();
             }
