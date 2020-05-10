@@ -5,15 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
-- Right click command in explorer view to open STL in viewer
-- Set cover image vscode command
 
+## [0.6.0] - 2020-05-10
 ### Changed
-- Single image necessary as cover, if uploading to 3D2P website
-
-### Removed
-- Gallery TreeView
+- This version introduces a complete application overhaul
+- Head over to the [documentation](https://3d2p.net/Documentation) to see the features
 
 ## [0.5.2] - 2020-04-08
 ### Fixed
