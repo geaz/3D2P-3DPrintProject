@@ -1,81 +1,56 @@
-# 3D2P - 3D Print Projects
+# 3D2P - 3D Print Project
 
-[TODO]
+The **3D2P** desktop application is a CLI which includes functionalities to open, view and create **3MF files**.
 
-## Code Structure
+In contrast to other 3MF applications the CLI is able to add readme files to a 3MF in a specification compliant way. Every 3MF file created by 3D2P is a **valid 3MF file**! 
+This way you are able to package your **complete 3D print projects into a single file**.
 
-This section will give a brief overview of the repository code/folder structure and which technologies and frameworks were used.
-Hopefully this will help potential contributers.
+To download the application go to the [release page](https://github.com/geaz/3D2P-3DPrintProject/releases) or try [the viewer online](https://3d2p.net). There is also a [Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=3d2p.vscode) available, to make the creation of 3D2P files easier.
 
-### Used Framworks / Technologies
+Please head over to the [Application](https://3d2p.net/Application) page, for **two small videos**.
 
-[ASP.NET Core Razor Pages](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1), C#, [Typescript](https://www.typescriptlang.org/), [Preact](https://preactjs.com/), [HTM - HTML templates](https://github.com/developit/htm), [Emotion - CSS](https://emotion.sh), Node.js, NPM
+![Application](https://github.com/geaz/3D2P-3DPrintProject/raw/feature-cli/src/web/wwwroot/videos/app-poster.png)
 
-### components
+## Development
 
-This folder contains all [Preact](https://preactjs.com/) components used by the **vscode extension** and the **website**.
-It is designed as a local NPM package. This way the **vscode extension** and the **website** are able to share some *preact* components.
+This section will give a brief overview of the repository code/folder structure and which technologies and frameworks were used. Hopefully this will help potential contributers.
 
-The package includes three major components:
+### Get started
 
-- **ConfigComponent.ts**
-- **StlViewerComponent.ts**
-- **AnnotationsComponent.ts** *uses the AnnotationItemComponent as a subcomponent*
+Clone the repository and make sure that you have **.net core**, **npm** and **yarn** installed. The repository uses a *yarn workspace*. Run **yarn install** in the root folder of the repository to install the dependencies of all projects.
+
+After *yarn* ran successfully, open the *3D2P.code-workspace* file in Visual Studio Code.
+
+### app
+
+This folder contains the main application and components. The STL viewer components and applications (Web, Desktop and Visual Studio Code) are written in *Typescript*. All components are implemented as [React](https://reactjs.org/) functional components.
+
+The folder contains three webpack files to create the application packages for the different platforms. The Web and Desktop application are using the same *PrintProjectApp* (PrintProjectApp.tsx). Visual Studio Code only uses parts of the main application. Thats why it got its own *StlViewer* (StlViewer.vscode.tsx).
+
+### desktop
+
+The desktop folder contains a *.net core* console application. It implements the CLI commands and uses [SharpWebview](https://github.com/geaz/sharpWebview) to interface the available web browser on the running system. The application **does not use electron**!
+
+Make sure to run *npm run build:desktop* in the *app* folder before you try to run the desktop application (*dotnet run*). The npm task will package the Typescript application and copies it into the *app* folder of the dektop application.
 
 ### vscode
 
-[TODO]
+The Visual Studio Code extension uses the installed 3D2P CLI on the system. It provides common commands to manage and create 3D2P files and 3MF files.
+
+The extension implements all its commands through the included *commandEngine*. Have a look into the [AddStlCommand.ts](https://github.com/geaz/3D2P-3DPrintProject/blob/feature-cli/src/vscode/src/vsc/commands/AddStlCommand.ts) for an example how a command is implemented. 
+
+To run/debug it, simply select the *Run VSCode Extension* task in the *debug view* of Visual Studio Code and run it.
 
 ### web
 
-[TODO]
-
-## Development Build Instructions
-
-To get a consistent build, all build tasks are designed as npm scripts.
-
-### VS Code Extension
-
-The **vscode** folder contains the whole code for the Visual Studio Code Extension. The following steps are needed to get it running:
-
-1. Execute *npm install* inside the **components** and **vscode** folder.
-2. Execute *npm run compile:apps* inside the **vscode** folder.
-3. Open the **vscode** folder in Visual Studio Code and press *F5* to run and debug the extension in a new VS Code instance.
-
-### Server
-
-The **web** folder contains the code for the *webapi* and the *homepage* of **3D2P**. The following steps are needed to get it running:
-
-1. Execute *npm install* inside the **web** folder.
-2. Execute *npm run dev* - this starts a development server and starts watching for scss and c# file changes
-
-The server uses a mongo database. Make sure that you have one installed and execute the following commands on your mongo database:
-
-```
-use 3d2p
-db.projects.createIndex( { "Name": "text", "Readme": "text" } )
-db.createUser({ user: "USERNAME", pwd: passwordPrompt(), roles: [{role: "readWrite", db:"3d2p"}]})
-```
+The website is a *ASP.net core* application. It is pretty basic and interfaces the same *react* components as the desktop application. Make sure to run *npm run build:web* in the *app* folder before you try to run the web application (*dotnet run*). You can also use *npm run dev* in the web folder to run sass and .net core in *watch mode*.
 
 Add the following environment variables to your system:
 
 ```
-export _3D2P_MONGOAUTH='USERNAME:PASS'
-export _3D2P_PROJECT_TARGET_PATH='PATH_TO_PROJECTS_DOWNLOAD_FOLDER'
+export PRINTPROJECT_EXTRACTION_TARGET_PATH='PATH_TO_PROJECTS_EXTRACTION_FOLDER'
 ```
 
 ## Credits
 
 The icons used in the Visual Studio Code Extension are taken from [Freepik](https://www.flaticon.com/) and [Icons8](https://icons8.com/)
-
-## TODOs
-
-### VSCode
-- Rewrite for 3D2P CLI
-
-### Web
-- Add Guide (Markdown Renderer from Github)
-- Startpage promotes App and shows drop part from application to use online
-
-### Repository
-- Change Readme (Repo restructuring and heavy project changes)

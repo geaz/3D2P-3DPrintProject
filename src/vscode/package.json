@@ -92,7 +92,8 @@
 		"vscode:prepublish": "npx npm-run-all compile:*",
 		"compile:app": "npm run --prefix ../app build:vscode",
 		"compile:vsc": "npx tsc -p ./",
-		"watch": "npx tsc -watch -p ./"
+		"watch": "npx npm-run-all compile::app watch:ts",
+		"watch:ts": "npx tsc -watch -p ./"
 	},
 	"devDependencies": {
 		"3d2p.react.app": "0.6.0",
