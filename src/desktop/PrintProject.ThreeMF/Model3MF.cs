@@ -80,7 +80,7 @@ namespace PrintProject.ThreeMF
             ProjectFile?.Save(Path.Combine(directory, "3D2P.json"), true);
         }
 
-        private void LoadModel() 
+        private void LoadModel()
         {
             LoadReadme();
             LoadColors();

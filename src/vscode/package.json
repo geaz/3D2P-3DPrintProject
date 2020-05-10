@@ -92,7 +92,7 @@
 		"vscode:prepublish": "npx npm-run-all compile:*",
 		"compile:app": "npm run --prefix ../app build:vscode",
 		"compile:vsc": "npx tsc -p ./",
-		"watch": "npx npm-run-all compile::app watch:ts",
+		"watch": "npx npm-run-all compile:app watch:ts",
 		"watch:ts": "npx tsc -watch -p ./"
 	},
 	"devDependencies": {

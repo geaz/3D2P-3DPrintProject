@@ -39,7 +39,7 @@ namespace PrintProject.App.CLI
         private void HandleAddStlCommand(FileInfo project, FileInfo stl, string color, Status status)
         {
             var relativeStlPath = Path.GetRelativePath(project.DirectoryName, stl.FullName);
-            
+
             var projectFile = ProjectFile.Load(project.FullName);
             var existingStl = projectFile.StlInfoList.Where(s => s.RelativePath == relativeStlPath);
             if(existingStl != null) {
