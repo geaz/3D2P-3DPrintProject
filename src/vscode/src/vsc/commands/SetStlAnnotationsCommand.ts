@@ -1,7 +1,7 @@
 import { vscodeProgress } from "../commandEngine/BaseCommand";
 import { CommandResult } from "../commandEngine/CommandResult";
 import { BaseCliCommand } from "./BaseCliCommand";
-import { StlAnnotation } from "3d2p.react.app";
+import { StlAnnotation } from "3d2p-react-app";
 
 export class SetStlAnnotationsCommand extends BaseCliCommand {
     constructor(private _stlName: string, private _stlAnnotations: Array<StlAnnotation>) {

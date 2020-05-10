@@ -1,5 +1,5 @@
 {
-	"name": "3d2p.vscode",
+	"name": "vscode",
 	"publisher": "3d2p",
 	"displayName": "3D2P - 3D Print Project",
 	"author": "Gerrit 'Geaz' Gazic",
@@ -12,7 +12,7 @@
 		"url": "git+https://github.com/geaz/3D2P-3DPrintProject.git"
 	},
 	"engines": {
-		"vscode": "^1.44.0"
+		"vscode": "^1.43.0"
 	},
 	"categories": [
 		"Other"
@@ -96,15 +96,17 @@
 		"watch:ts": "npx tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"3d2p.react.app": "1.0.0",
+		"3d2p-react-app": "1.0.0",
 		"@types/command-exists": "1.2.0",
 		"@types/glob": "7.1.1",
 		"@types/node": "12.12.32",
 		"@types/vscode": "1.43.0",
 		"@types/webgl2": "0.0.5",
-		"command-exists": "1.2.9",
 		"npm-run-all": "4.1.5",
 		"glob": "7.1.6",
 		"typescript": "3.8.3"
+	},
+	"dependencies": {
+		"command-exists": "1.2.9"
 	}
 }

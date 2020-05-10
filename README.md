@@ -21,6 +21,8 @@ Clone the repository and make sure that you have **.net core**, **npm** and **ya
 
 After *yarn* ran successfully, open the *3D2P.code-workspace* file in Visual Studio Code.
 
+*Remark*: Direct dependencies of the VS Code extension have to be directly in the node_modules folder to package them correctly. Thats why a different version of these dependencies got added into the root package.json. It is a work around. This way yarn copies the VS Code dependencies directly into the node_modules folder of the extension. It is the first time I used yarn and workspaces. If you know a better way, let me know!
+
 ### app
 
 This folder contains the main application and components. The STL viewer components and applications (Web, Desktop and Visual Studio Code) are written in *Typescript*. All components are implemented as [React](https://reactjs.org/) functional components.

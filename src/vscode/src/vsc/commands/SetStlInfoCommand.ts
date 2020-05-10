@@ -1,9 +1,9 @@
 import { vscodeProgress } from "../commandEngine/BaseCommand";
 import { CommandResult } from "../commandEngine/CommandResult";
 import { BaseCliCommand } from "./BaseCliCommand";
-import { StlInfo } from "3d2p.react.app";
+import { StlInfo } from "3d2p-react-app";
 
-// TODO: If imported from 3d2p.react.app package
+// TODO: If imported from 3d2p-react-app package
 // Error on run... (import only in module)
 enum Status {
     Unknown,

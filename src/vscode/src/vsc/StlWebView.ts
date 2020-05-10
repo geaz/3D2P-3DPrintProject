@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { StlInfo, ProjectFile, StlAnnotation } from "3d2p.react.app";
+import { StlInfo, ProjectFile, StlAnnotation } from "3d2p-react-app";
 
 export class StlWebView {
     private _stlInfo?: StlInfo;

@@ -1,5 +1,5 @@
 {
-  "name": "3d2p.web",
+  "name": "3d2p-web",
   "version": "1.0.0",
   "description": "The 3D2P website",
   "scripts": {
@@ -19,15 +19,5 @@
   "bugs": {
     "url": "https://github.com/geaz/3D2P-3DPrintProject/issues"
   },
-  "homepage": "https://github.com/geaz/3D2P-3DPrintProject#readme",
-  "devDependencies": {
-		"3d2p.react.app": "1.0.0",
-    "concurrently": "5.1.0",
-    "node-sass": "4.14.1",
-    "npm-run-all": "4.1.5",
-    "ts-loader": "6.2.2",
-    "typescript": "3.8.3",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11"
-  }
+  "homepage": "https://github.com/geaz/3D2P-3DPrintProject#readme"
 }

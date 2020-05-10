@@ -8,7 +8,7 @@ import { PackProjectCommand } from "./commands/PackProjectCommand";
 import { SetProjectDataCommand } from "./commands/SetProjectDataCommand";
 import { Open3MFCommand } from "./commands/Open3MFCommand";
 import { OpenSTLCommand } from "./commands/OpenSTLCommand";
-import { StlInfo, StlAnnotation } from "3d2p.react.app";
+import { StlInfo, StlAnnotation } from "3d2p-react-app";
 import { SetStlAnnotationsCommand } from "./commands/SetStlAnnotationsCommand";
 
 export function add3D2PCommands(context: vscode.ExtensionContext) {
