@@ -1,7 +1,23 @@
 @import 'shared/var';
 
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    color: $text-color;
+    align-items: stretch;
+    flex-direction: column;
+    background: $background-color;
+}
+
 main {
+    flex: 1;
     padding: 0;
+    display: flex;
+    overflow: auto;
+    transform: translate3d(0,0,0);
 }
 
 #print-projects-app {

@@ -8,13 +8,10 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <main>
-        @RenderBody()
-    </main>
-    <footer>
+    <header>
         <div class="content">
             <div class="stretch vertical-center">
-                <a asp-page="/Index" title="Home" id="footer-logo"><img src="/images/logo.svg" alt="Logo"/></a>
+                <a asp-page="/Index" title="Home" id="header-logo"><img src="/images/logo.svg" alt="Logo"/></a>
             </div>
             <a class="menu-item" asp-page="/Documentation" title="Documentation">Documentation</a>
             <a class="menu-item" asp-page="/Application" title="Application">Application</a>
@@ -22,7 +19,12 @@
                 <i class="fa fa-github-square" aria-hidden="true"></i>
             </a>
         </div>
-        <div class="dark">
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer>        
+        <div class="dark content">
             <small class="stretch">
                 No shitty ads, cookies, 3rd party ressources or tracking.
             </small>

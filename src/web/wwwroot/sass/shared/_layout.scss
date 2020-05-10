@@ -1,69 +1,72 @@
 @import 'var';
 
-html, body {
-    height: 100%;
-}
-
 body {
-    display: flex;
     color: $text-color;
-    align-items: stretch;
-    flex-direction: column;
     background: $background-color;
 }
 
 main {
-    flex: 1;
-    display: flex;
-    overflow: auto;
-    padding: 75px 50px 100px 50px;
+    padding: 1.5rem 1rem 2rem 1rem;
+}
+
+#header-logo {
+    display: inline-block;
+    height: 20px;
+
+    img { width: 45px; }
+}
+
+header {    
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 footer {
-    z-index: 999;
-    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
-    background: white;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    color: $footer-color;
+    background: $footer-backcolor;
+}
 
+header, footer {
     p { margin: 0; }
 
-    #footer-logo {
-        display: inline-block;
-        height: 20px;
-
-        img { width: 45px; }
+    small {
+        color: #939393;
     }
 
-    .content {
-        display: flex;
-        padding: 10px;
+    a { 
+        color: $primary-color;
+        text-decoration: none;
+
+        &:hover { text-decoration: underline;}
     }
 
     .stretch {
         flex: 1;
     }
-
+    
     .vertical-center {
         display: flex;
         align-items: center;
     }
 
-    .dark {
+    .content {
         display: flex;
-        padding: 10px;
-        color: $footer-color;
-        background: $footer-backcolor;
+        padding: 0.5rem 3rem;
+    }
 
-        small {
-            color: #939393;
-        }
-
-        a { 
-            color: $primary-color;
-            text-decoration: none;
-
-            &:hover { text-decoration: underline;}
-        }
+    .menu-item {
+        margin-left: 10px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #a1a0a0;
+    }
+    
+    .primary {
+        background: $primary-color;
+    }
+    
+    .secondary {
+        background: $secondary-color;
     }
 }
 
@@ -73,19 +76,4 @@ a {
     &:hover {
         color: $primary-color;
     }
-}
-
-.menu-item {
-    margin-left: 10px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #a1a0a0;
-}
-
-.primary {
-    background: $primary-color;
-}
-
-.secondary {
-    background: $secondary-color;
 }

@@ -3,4 +3,14 @@
 #documentation {
     margin: 0 auto;
     max-width: 1024px;
+    text-align: justify;
+    padding-bottom: 4rem;
+
+    img { 
+        max-width: 100%;
+        display: block;
+        margin: auto; 
+    }
 }
+
+h1 { text-align: center; margin: 0; }

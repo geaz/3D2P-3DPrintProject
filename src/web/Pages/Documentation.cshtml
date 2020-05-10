@@ -9,33 +9,62 @@
 <div id="documentation">
     <h1>Documentation</h1>
     <h2>Get started with the CLI</h2>
+    <p>
+        Download the application from the <a href="https://github.com/geaz/3D2P-3DPrintProject/releases" title="Release Download" target="_blank">Github Release page</a>.
+        After installation the 3D2P application should be available in your <i>PATH</i> variable and therefore callable from any command prompt.
+        Open a <b>command prompt</b> and enter <b>3d2p -h</b>. The CLI should show you all available commands. Enter <b>3d2p --version</b> to show the installed version of the CLI.
+    </p>
+    
+    <img src="/images/3d2p-h.gif" alt="3d2p Commands Gif"/>
+
+    <p>
+        You are able to start the 3MF viewer either by entering <b>3d2p</b> into the command prompt or with the created <b>start menu entry</b> on Windows.
+        If you are using the command prompt to open the viewer, you are able to pass a 3MF file as an argument to open it. Or just associate the .3mf file ending with the 3D2P application.
+        This way a simple double click on any 3MF file will open it in 3D2P.
+    </p>
+    <p>
+        As you may have seen the CLI ships commands to create project files. These project files hold information about what a resulting 3MF file should contain, if you package the project.
+        But using the CLI for this is tedious. So head over to the next section to see how you can use the Visual Studio Code extension to create and manage a 3D2P file.
+    </p>
+    
 
     <h2>Visual Studio Code</h2>
+    <p>
+        If you don't know <a href="https://code.visualstudio.com/" title="VSCode" target="_blank">Visual Studio Code</a>, it is a free and open source text editor which is highly extensible and great for many Use Cases.
+    </p>
+
     <h3>Install the extension</h3>
-    <p>To install the extension, go to the extension tab in Visual Studio Code and search for <b>3D2P</b>.</p>
-    GIF
+    <p>To install the extension, go to the extension tab in Visual Studio Code and search for <b>3D2P</b> and hit install.</p>
+    <img src="/images/3d2p-vsc-install.gif" alt="3d2p VSC Install"/>
 
     <h3>Create a 3D2P file</h3>
-    <p>Open a folder - ideally it already contains all your project files like images, STLs and a readme.</p>
-    <p>Inside your folder press <b>Ctrl+Shift+P</b> to open the command bar in Visual Studio Code. Enter <b>3D2P: Init</b>.</p>
-    <p>Press enter and follow the prompts.</p>
-    GIF
+    <p>
+        Open a folder - ideally it already contains all your project files like images, STLs and a readme.
+        Inside your folder press <b>Ctrl+Shift+P</b> to open the command bar in Visual Studio Code. Enter <b>3D2P: Initialize 3D Print Project</b> (first few letters should be enough to find it).
+        Press enter and follow the prompts. On the <i>thumbnail</i> and <i>readme</i> prompt just hit <i>enter</i> to open a file chooser.
+    </p>
+    <img src="/images/3d2p-vsc-create.gif" alt="3d2p VSC Create"/>
 
     <h3>Adding STLs</h3>
-    <p>The easiest way to add STLs to your 3D2P file is to open them directly in Visual Studio Code. <b>Right-Click a STL</b>
-    and select <b>3D2P: Open STL</b>.</p>
-    <p>The STL Viewer should open. From here press <b>addSTLtoProject</b>.</p>
-    GIF
+    <p>
+        The easiest way to add STLs to your 3D2P file is by open them directly in Visual Studio Code. <b>Right-Click a STL</b>
+        and select <b>3D2P: Open STL</b>. From here just press <b>addSTLToProject</b> and select the current STL status.
+    </p>    
+    <img src="/images/3d2p-vsc-addStl.gif" alt="3d2p VSC Add STL"/>
 
     <h3>Adding Notes</h3>
-    <p>After adding the STL to your project, your are able to change the Status and Color of the STL directly in the viewer.</p>
-    <p>Furthermore you are able to add Notes to your STL by <b>double clicking</b> a position on your model.</p>
-    <p>Initially the note is empty and is only a <b>Mark</b>. Press <b>edit</b> and use <b>Markdown</b> to add some information.</p>
-    GIF
+    <p>
+        After adding the STL to your project, your are able to change the Status and Color of the STL directly in the viewer.
+        Furthermore you are able to add Notes to your STL by <b>double clicking</b> a position on your model.
+        Initially the note is empty and is only a <b>Mark</b>. Press <b>edit</b> and use <b>Markdown</b> to add some information.
+    </p>    
+    <img src="/images/3d2p-vsc-notes.gif" alt="3d2p VSC Notes"/>
 
     <h3>Package the project</h3>
-    <p>If you are happy, you are ready to create the 3MF file out of the 3D2P file.</p>
-    <p>Press <b>Ctrl+Shift+P</b> again and enter <b>3D2P: Create 3MF</b>. Press enter and wait a bit. The created 3MF file will be
-    saved into the root of your opened folder in Visual Studio Code.</p>
-    GIF
+    <p>
+        If you are happy with your project, you are ready to create the 3MF file out of the 3D2P file.
+        Press <b>Ctrl+Shift+P</b> again and enter <b>3D2P: Create 3MF</b>. Press enter and wait a bit. The created 3MF file will be
+        saved into the root of your opened folder in Visual Studio Code. Right-Click it and pree <b>3D2P: Open 3MF</b> to show it in the installed application.
+    </p>    
+    <img src="/images/3d2p-vsc-3mf.gif" alt="3d2p 3MF"/>
 </div>
