@@ -3,7 +3,7 @@
 The **3D2P** desktop application is a CLI which includes functionalities to open, view and create **3MF files**.
 
 In contrast to other 3MF applications the CLI is able to add readme files to a 3MF in a specification compliant way. Every 3MF file created by 3D2P is a **valid 3MF file**! 
-This way you are able to package your **complete 3D print projects into a single file**.
+This way you are able to package your **complete 3D print project into a single file**.
 
 To download the application go to the [release page](https://github.com/geaz/3D2P-3DPrintProject/releases) or try [the viewer online](https://3d2p.net). There is also a [Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=3d2p.vscode) available, to make the creation of 3D2P files easier.
 

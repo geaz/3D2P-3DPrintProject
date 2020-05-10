@@ -5,7 +5,7 @@
     <Product 
         Id="*"
         UpgradeCode="ec34e91b-cc2d-4e96-9ede-62718d0747c4"
-        Name="3D2P" Version="0.6.0" Manufacturer="3D2P" Language="1033"
+        Name="3D2P" Version="1.0.0" Manufacturer="3D2P" Language="1033"
     >
         <!-- The package needs administrative permission to install - needed for the loopback exception -->
         <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>

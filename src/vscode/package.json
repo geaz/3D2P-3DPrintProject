@@ -1,11 +1,11 @@
 {
 	"name": "3d2p.vscode",
 	"publisher": "3d2p",
-	"displayName": "3D2P - 3D Print Projects",
+	"displayName": "3D2P - 3D Print Project",
 	"author": "Gerrit 'Geaz' Gazic",
 	"license": "MIT",
-	"description": "3D Print Projects Management in VS Code",
-	"version": "0.6.0",
+	"description": "3D Print Project Management in VS Code",
+	"version": "1.0.0",
 	"icon": "logo.png",
 	"repository": {
 		"type": "git",
@@ -96,7 +96,7 @@
 		"watch:ts": "npx tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"3d2p.react.app": "0.6.0",
+		"3d2p.react.app": "1.0.0",
 		"@types/command-exists": "1.2.0",
 		"@types/glob": "7.1.1",
 		"@types/node": "12.12.32",

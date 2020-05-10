@@ -43,6 +43,6 @@ namespace PrintProject.App.CLI
             RootCommand.Handler = CommandHandler.Create<FileInfo>((model) => new PrintProjectWebview().Run(model));
         }
 
-        public RootCommand RootCommand { get; } = new RootCommand("3D Print Projects - 3MF Viewer and Packager");
+        public RootCommand RootCommand { get; } = new RootCommand("3D Print Project - 3MF Viewer and Packager");
     }
 }

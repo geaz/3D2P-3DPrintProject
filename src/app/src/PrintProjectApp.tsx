@@ -221,4 +221,4 @@ const StyledStlBox = styled.div<{ isFullscreen: boolean }>`
     }
 `;
 
-render(<PrintProjectApp/>, document.getElementById("print-projects-app")!);
+render(<PrintProjectApp/>, document.getElementById("print-project-app")!);

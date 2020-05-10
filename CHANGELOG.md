@@ -6,10 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.0] - 2020-05-10
+## [1.0.0] - 2020-05-10
 ### Changed
 - This version introduces a complete application overhaul
-- Head over to the [documentation](https://3d2p.net/Documentation) to see the features
+- Head over to the [documentation](https://3d2p.net/Documentation) to see the features. Because it is not compatible with the previous version it will be version 1.0 to make this clear
 
 ## [0.5.2] - 2020-04-08
 ### Fixed
