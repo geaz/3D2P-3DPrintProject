@@ -10,6 +10,7 @@ namespace PrintProject.App.CLI
         private readonly SetCommandHandler _setCommand = new SetCommandHandler();
         private readonly ListCommandHandler _listCommand = new ListCommandHandler();
         private readonly PackCommandHandler _packCommand = new PackCommandHandler();
+        private readonly ExtractCommandHandler _extractCommand = new ExtractCommandHandler();
         private readonly CreateCommandHandler _createCommand = new CreateCommandHandler();
         private readonly RemoveCommandHandler _removeCommand = new RemoveCommandHandler();
 
@@ -40,6 +41,7 @@ namespace PrintProject.App.CLI
             RootCommand.Add(_setCommand.Command);
             RootCommand.Add(_removeCommand.Command);
             RootCommand.Add(_packCommand.Command);
+            RootCommand.Add(_extractCommand.Command);
             RootCommand.Handler = CommandHandler.Create<FileInfo>((model) => new PrintProjectWebview().Run(model));
         }
 
