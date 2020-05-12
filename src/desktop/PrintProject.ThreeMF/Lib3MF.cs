@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Security;
 using System.Runtime.InteropServices;
 
 namespace PrintProject.ThreeMF {
@@ -1004,7 +1005,7 @@ namespace PrintProject.ThreeMF {
 			public unsafe extern static Int32 Model_AddMultiPropertyGroup (IntPtr Handle, out IntPtr AMultiPropertyGroupInstance);
 
 			[DllImport("lib3mf", EntryPoint = "lib3mf_model_addbuilditem", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, InternalTransform ATransform, out IntPtr ABuildItemInstance);
+			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, IntPtr ATransform, out IntPtr ABuildItemInstance);
 
 			[DllImport("lib3mf", EntryPoint = "lib3mf_model_removebuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_RemoveBuildItem (IntPtr Handle, IntPtr ABuildItemInstance);
@@ -1088,7 +1089,7 @@ namespace PrintProject.ThreeMF {
 			public extern static Int32 ColorToFloatRGBA (InternalColor ATheColor, out Single ARed, out Single AGreen, out Single ABlue, out Single AAlpha);
 
 			[DllImport("lib3mf", EntryPoint = "lib3mf_getidentitytransform", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
-			public extern static Int32 GetIdentityTransform (out InternalTransform ATransform);
+			public extern static Int32 GetIdentityTransform (IntPtr ATransform);
 
 			[DllImport("lib3mf", EntryPoint = "lib3mf_getuniformscaletransform", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetUniformScaleTransform (Single AFactor, out InternalTransform ATransform);
@@ -3883,12 +3884,11 @@ namespace PrintProject.ThreeMF {
 			return new CMultiPropertyGroup (newMultiPropertyGroupInstance );
 		}
 
-		public CBuildItem AddBuildItem (CObject AObject, sTransform ATransform)
+		public CBuildItem AddBuildItem (CObject AObject, IntPtr ATransform)
 		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newBuildItemInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddBuildItem (Handle, AObject.GetHandle(), intTransform, out newBuildItemInstance));
+			CheckError(Internal.Lib3MFWrapper.Model_AddBuildItem (Handle, AObject.GetHandle(), ATransform, out newBuildItemInstance));
 			return new CBuildItem (newBuildItemInstance );
 		}
 
@@ -4138,12 +4138,9 @@ namespace PrintProject.ThreeMF {
 			CheckError(Internal.Lib3MFWrapper.ColorToFloatRGBA (intTheColor, out ARed, out AGreen, out ABlue, out AAlpha));
 		}
 
-		public static sTransform GetIdentityTransform ()
+		public static void GetIdentityTransform (STransform transform)
 		{
-			Internal.InternalTransform intresultTransform;
-
-			CheckError(Internal.Lib3MFWrapper.GetIdentityTransform (out intresultTransform));
-			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
+			CheckError(Internal.Lib3MFWrapper.GetIdentityTransform (transform.__Instance));
 		}
 
 		public static sTransform GetUniformScaleTransform (Single AFactor)
@@ -4171,5 +4168,87 @@ namespace PrintProject.ThreeMF {
 		}
 
 	}
+	public unsafe partial class STransform : IDisposable
+        {
+            [StructLayout(LayoutKind.Explicit, Size = 48)]
+            public partial struct __Internal
+            {
+                [FieldOffset(0)]
+                internal fixed float m_Fields[12];
 
+                [SuppressUnmanagedCodeSecurity]
+                [DllImport("Lib3MF", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                    EntryPoint="??0sTransform@Lib3MF@@QEAA@AEBU01@@Z")]
+                internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            }
+
+            public global::System.IntPtr __Instance { get; protected set; }
+
+            internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, STransform> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, STransform>();
+            protected internal void*[] __OriginalVTables;
+
+            protected bool __ownsNativeInstance;
+
+            internal static STransform __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+            {
+                return new STransform(native.ToPointer(), skipVTables);
+            }
+
+            internal static STransform __CreateInstance(STransform.__Internal native, bool skipVTables = false)
+            {
+                return new STransform(native, skipVTables);
+            }
+
+            private static void* __CopyValue(STransform.__Internal native)
+            {
+                var ret = Marshal.AllocHGlobal(sizeof(STransform.__Internal));
+                *(STransform.__Internal*) ret = native;
+                return ret.ToPointer();
+            }
+
+            private STransform(STransform.__Internal native, bool skipVTables = false)
+                : this(__CopyValue(native), skipVTables)
+            {
+                __ownsNativeInstance = true;
+                NativeToManagedMap[__Instance] = this;
+            }
+
+            protected STransform(void* native, bool skipVTables = false)
+            {
+                if (native == null)
+                    return;
+                __Instance = new global::System.IntPtr(native);
+            }
+
+            public STransform()
+            {
+                __Instance = Marshal.AllocHGlobal(sizeof(STransform.__Internal));
+                __ownsNativeInstance = true;
+                NativeToManagedMap[__Instance] = this;
+            }
+
+            public STransform(STransform _0)
+            {
+                __Instance = Marshal.AllocHGlobal(sizeof(STransform.__Internal));
+                __ownsNativeInstance = true;
+                NativeToManagedMap[__Instance] = this;
+                *((STransform.__Internal*) __Instance) = *((STransform.__Internal*) _0.__Instance);
+            }
+
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+            }
+
+            public virtual void Dispose(bool disposing)
+            {
+                if (__Instance == IntPtr.Zero)
+                    return;
+                STransform __dummy;
+                NativeToManagedMap.TryRemove(__Instance, out __dummy);
+                if (__ownsNativeInstance)
+                    Marshal.FreeHGlobal(__Instance);
+                __Instance = IntPtr.Zero;
+            }
+        }
 }

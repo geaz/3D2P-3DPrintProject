@@ -63,13 +63,16 @@ namespace PrintProject.ThreeMF
             if(!Directory.Exists(stlFolder))
                 Directory.CreateDirectory(stlFolder);
 
+            var identityTransform = new STransform();
+            Wrapper.GetIdentityTransform(identityTransform);
+
             foreach(var mesh in Meshes)
             {
                 var stlModel = Wrapper.CreateModel();
                 var stlMesh = stlModel.AddMeshObject();
                 stlMesh.SetName(mesh.Name);
                 stlMesh.SetGeometry(mesh.NativeVertices, mesh.NativeTriangles);
-                stlModel.AddBuildItem(stlMesh, Wrapper.GetIdentityTransform());
+                stlModel.AddBuildItem(stlMesh, identityTransform.__Instance);
 
                 var stlWriter = stlModel.QueryWriter("stl");
                 stlWriter.WriteToFile(Path.Combine(stlFolder, stlMesh.GetName()));

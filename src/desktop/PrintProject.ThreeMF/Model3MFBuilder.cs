@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using PrintProject.Core;
 
@@ -50,7 +51,9 @@ namespace PrintProject.ThreeMF
             newMeshObject.SetName(Path.GetFileName(stlFilepath));
             newMeshObject.SetGeometry(vertices, triangles);
 
-            _model.AddBuildItem(newMeshObject, Wrapper.GetIdentityTransform());
+            var identityTransform = new STransform();
+            Wrapper.GetIdentityTransform(identityTransform);
+            _model.AddBuildItem(newMeshObject, identityTransform.__Instance);
         }
 
         public void Write3MF(string filepath, bool overwrite)

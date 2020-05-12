@@ -6,19 +6,19 @@
 		},
 		{
 			"name": "app",
-			"path": "src\\app"
+			"path": "src/app"
 		},
 		{
 			"name": "desktop",
-			"path": "src\\desktop"
+			"path": "src/desktop"
 		},
 		{
 			"name": "vscode",
-			"path": "src\\vscode"
+			"path": "src/vscode"
 		},
 		{
 			"name": "web",
-			"path": "src\\web"
+			"path": "src/web"
 		},
 		{
 			"name": "tests",
