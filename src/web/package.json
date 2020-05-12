@@ -9,7 +9,7 @@
     "build": "npx npm-run-all build:*",
 		"build:app": "npm run --prefix ../app build:web",
     "build:sass": "npx node-sass ./wwwroot/sass/ -o ./wwwroot/css/ --output-style compressed",
-    "build:server": "dotnet publish -r linux-x64 --configuration Release"
+    "build:server": "dotnet publish -c Release"
   },
   "repository": {
     "type": "git",
