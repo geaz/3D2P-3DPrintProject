@@ -90,7 +90,7 @@ export const PrintProjectApp: FC = () => {
         <StyledApp ref={componentRef} isFullscreen={ isFullscreen }>
             {(isDragging || isLoading || projectFile === undefined) &&
                 <StyledDropOverlay>
-                    <img src="/images/logo.svg" title="Logo" id="logo" />
+                    <img src="/images/logo.png" title="Logo" id="logo" />
                     {isLoading && <i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>}
                     {!isLoading && <p>Drop 3MF here</p>}
                 </StyledDropOverlay>
