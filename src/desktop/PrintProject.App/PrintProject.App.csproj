@@ -53,13 +53,13 @@
     <None Include="app\css\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\libs\lib3mf.dll">
+    <None Include="..\..\..\libs\lib3mf.dll" Condition="'$(IsWindows)'=='true'">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\libs\lib3mf.dylib">
+    <None Include="..\..\..\libs\lib3mf.dylib" Condition="'$(IsOSX)'=='true'">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\libs\lib3mf.so">
+    <None Include="..\..\..\libs\lib3mf.so" Condition="'$(IsLinux)'=='true'">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
