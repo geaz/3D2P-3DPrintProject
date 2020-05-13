@@ -16,7 +16,7 @@ jobs:
         run: $env:WIX
       - name: test3
         run: >-
-          $env:Path += ";$env:WIX\bin"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value "$env:Path;$env:WIX\bin"
       - name: test4
         run: $env:Path
       - name: Setup .NET Core
