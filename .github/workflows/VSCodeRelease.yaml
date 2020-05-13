@@ -16,15 +16,14 @@ jobs:
           node-version: '12'
       - name: Install Packages
         run: yarn install
+      - name: Install VSCE
+        run: yarn global add vsce
       - name: Create Build Directory
         run: mkdir build
         working-directory: ./src/vscode
-      - name: Change Folder
-        run: cd src/vscode
       - name: Package VSCode Extension
-        uses: lannonbr/vsce-action@master
-        with:
-          args: "package -o ./build"
+        run: vsce package -o ./build
+        working-directory: ./src/vscode
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
         with:
