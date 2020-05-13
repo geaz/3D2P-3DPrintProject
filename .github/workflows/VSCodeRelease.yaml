@@ -19,11 +19,12 @@ jobs:
       - name: Create Build Directory
         run: mkdir build
         working-directory: ./src/vscode
+      - name: Change Folder
+        run: cd src/vscode
       - name: Package VSCode Extension
         uses: lannonbr/vsce-action@master
         with:
           args: "package -o ./build"
-          working-directory: ./src/vscode
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
         with:

@@ -15,11 +15,11 @@ jobs:
         with:
           dotnet-version: 3.1.101
       - name: Set Policy
-        run: "Set-ExecutionPolicy RemoteSigned -scope CurrentUser"
+        run: Set-ExecutionPolicy RemoteSigned -scope CurrentUser
       - name: Install Scoop
-        run: "iwr -useb get.scoop.sh | iex"
+        run: iwr -useb get.scoop.sh | iex
       - name: Install WIX
-        run: "scoop install wixtoolset"
+        run: scoop install wixtoolset
       - name: Install Node
         uses: actions/setup-node@v1
         with:
