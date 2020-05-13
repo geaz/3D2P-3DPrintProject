@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - '*-cliRelease'
+      - ['*-Release', '*-cliRelease']
 
 name: Build CLI
 jobs:

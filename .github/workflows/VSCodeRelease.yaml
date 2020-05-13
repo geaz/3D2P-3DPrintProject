@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - '*-vscRelease'
+      - ['*-Release', '*-vscRelease']
 name: Build Extension
 jobs:
   build-vsce:
