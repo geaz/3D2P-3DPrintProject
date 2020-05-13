@@ -1,0 +1,44 @@
+on:
+  push:
+    tags:
+      - '*-cliRelease'
+
+name: Build Windows
+jobs:
+  build-win64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: Install Wix
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: "install wixtoolset"
+      - run: ./wix.bat
+        working-directory: ./src/desktop
+      - name: Upload Package
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: "win64"
+          path: ./src/desktop/wixBuild
+
+name: Build Linux
+jobs:
+  build-linux64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - run: ./build.sh
+        working-directory: ./src/desktop
+      - name: Upload Package
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: "linux64"
+          path: ./src/desktop/PrintProject.App/bin/Release/netcoreapp3.1/linux-x64/publish

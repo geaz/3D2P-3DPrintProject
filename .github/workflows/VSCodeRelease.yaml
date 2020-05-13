@@ -1,0 +1,26 @@
+on:
+  push:
+    tags:
+      - '*-vscRelease'
+name: Build Extension
+jobs:
+  build-vsce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Packages
+        uses: Borales/actions-yarn@v2.1.0
+        with:
+          cmd: install 
+      - run: mkdir build
+        working-directory: ./srv/vscode
+      - name: Package VSCode Extension
+        uses: lannonbr/vsce-action@master
+        working-directory: ./src/vscode
+        with:
+          args: "package -o ./build"
+      - name: Upload Package
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: "vscode"
+          path: ./src/vscode/build

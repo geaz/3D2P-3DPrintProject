@@ -16,3 +16,5 @@ bin
 obj
 TestResults
 src/components/lib/**
+src/vscode/build
+src/desktop/wixBuild
