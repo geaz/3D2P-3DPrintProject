@@ -3,7 +3,7 @@ on:
     tags:
       - '*-cliRelease'
 
-name: Build Windows
+name: Build CLI
 jobs:
   build-win64:
     runs-on: windows-latest
@@ -25,8 +25,6 @@ jobs:
           name: "win64"
           path: ./src/desktop/wixBuild
 
-name: Build Linux
-jobs:
   build-linux64:
     runs-on: ubuntu-latest
     steps:
