@@ -1,7 +1,7 @@
 import * as commandExists from "command-exists";
 import { spawn } from "child_process";
 
-import { IEvent, Event } from "./event";
+import { IEvent, Event } from "./Event";
 import { getOutputChannel } from "./vsc/OutputChannel";
 import { StlAnnotation } from "3d2p-react-app";
 
