@@ -10,26 +10,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: test1
-        run: $env:Path
-      - name: test2
-        run: $env:WIX
-      - name: test3
-        run: >-
-          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value "$env:Path;$env:WIX\bin"
-      - name: test4
-        run: $env:Path
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
-      - name: Install Wix
-        uses: crazy-max/ghaction-chocolatey@v1
-        with:
-          args: "install wixtoolset"
-      - name: Set Path
-        run: >-
-          $env:Path += ";$env:WIX\bin"
       - name: Install Node
         uses: actions/setup-node@v1
         with:
@@ -37,7 +21,7 @@ jobs:
       - name: Install Packages
         run: yarn install
       - name: Build CLI
-        run: ./wix.bat
+        run: $env:Path+=";$env:WIX\bin" | ./wix.bat
         working-directory: ./src/desktop
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
