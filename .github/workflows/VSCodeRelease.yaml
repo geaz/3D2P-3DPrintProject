@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Packages
-        uses: Borales/actions-yarn@v2.1.0
+      - name: Install Node
+        uses: actions/setup-node@v1
         with:
-          cmd: install 
+          node-version: '12'
+      - name: Install Packages
+        run: yarn install
       - name: Create Build Directory
         run: mkdir build
-        working-directory: ./srv/vscode
+        working-directory: ./src/vscode
       - name: Package VSCode Extension
         uses: lannonbr/vsce-action@master
         with:
