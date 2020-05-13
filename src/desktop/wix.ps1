@@ -1,6 +1,5 @@
-echo "Setting WIX"
+echo "Setting WIX Path"
 $env:Path+=";$env:WIX\bin"
-$env:Path
 
 echo "Build app.js"
 npm --prefix ..\app run build:desktop
