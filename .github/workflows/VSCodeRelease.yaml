@@ -22,7 +22,7 @@ jobs:
         run: mkdir build
         working-directory: ./src/vscode
       - name: Package VSCode Extension
-        run: vsce package -o ./build
+        run: npx vsce package -o ./build
         working-directory: ./src/vscode
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
