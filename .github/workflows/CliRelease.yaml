@@ -10,6 +10,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+      - name: test1
+        run: $env:Path
+      - name: test2
+        run: $env:WIX
+      - name: test3
+        run: >-
+          $env:Path += ";$env:WIX\bin"
+      - name: test4
+        run: $env:Path
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
