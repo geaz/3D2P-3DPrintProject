@@ -5,7 +5,7 @@ import { IEvent, Event } from "./Event";
 import { getOutputChannel } from "./vsc/OutputChannel";
 import { StlAnnotation } from "3d2p-react-app";
 
-const cliFileName = "3d2p";
+const cliFileName = "3D2P";
 
 export class PrintProjectCli {
     public async cliExists(): Promise<boolean> {
@@ -89,9 +89,9 @@ export class PrintProjectCli {
 
     private execute(args: string[]): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            getOutputChannel().appendLine(`Executing: 3d2p ${args.join(" ")}`);
-            getOutputChannel().appendLine("");
-
+            getOutputChannel().appendLine(`Executing: ${cliFileName} ${args.join(" ")}`);
+            getOutputChannel().appendLine(""); 
+             
             let process = spawn(cliFileName, args, {});
             process.on("close", (code) => {
                 resolve(code === 0);
