@@ -21,7 +21,7 @@ jobs:
       - name: Install Packages
         run: yarn install
       - name: Build CLI
-        run: $env:Path+=";$env:WIX\bin" | ./wix.bat
+        run: ./wix.ps1
         working-directory: ./src/desktop
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
