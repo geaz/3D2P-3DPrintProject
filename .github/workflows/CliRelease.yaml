@@ -1,0 +1,53 @@
+on:
+  push:
+    tags:
+      - '*-Release'
+      - '*-cliRelease'
+
+name: Build CLI
+jobs:
+  build-win64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Install Packages
+        run: yarn install
+      - name: Build CLI
+        run: ./wix.ps1
+        working-directory: ./src/desktop
+      - name: Upload Package
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: "win64"
+          path: ./src/desktop/wixBuild
+
+  build-linux64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Install Packages
+        run: yarn install
+      - name: Build CLI
+        run: ./build.sh
+        working-directory: ./src/desktop
+      - name: Upload Package
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: "linux64"
+          path: ./src/desktop/PrintProject.App/bin/Release/netcoreapp3.1/linux-x64/publish

@@ -1,0 +1,31 @@
+on:
+  push:
+    tags:
+      - '*-Release'
+      - '*-vscRelease'
+
+name: Build Extension
+jobs:
+  build-vsce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Install Packages
+        run: yarn install
+      - name: Install VSCE
+        run: yarn global add vsce
+      - name: Create Build Directory
+        run: mkdir build
+        working-directory: ./src/vscode
+      - name: Package VSCode Extension
+        run: npx vsce package -o ./build
+        working-directory: ./src/vscode
+      - name: Upload Package
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: "vscode"
+          path: ./src/vscode/build
