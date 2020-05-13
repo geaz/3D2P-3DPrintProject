@@ -16,7 +16,11 @@ jobs:
       - name: Install Wix
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: "install wixtoolset"
+          args: "install wixtoolset --force"
+      - name: Install Packages
+        uses: Borales/actions-yarn@v2.1.0
+        with:
+          cmd: install
       - run: ./wix.bat
         working-directory: ./src/desktop
       - name: Upload Package
@@ -33,6 +37,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+      - name: Install Packages
+        uses: Borales/actions-yarn@v2.1.0
+        with:
+          cmd: install
       - run: ./build.sh
         working-directory: ./src/desktop
       - name: Upload Package
