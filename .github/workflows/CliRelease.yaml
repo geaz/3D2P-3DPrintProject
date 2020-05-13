@@ -18,11 +18,14 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: "install wixtoolset --force"
-      - name: Install Packages
-        uses: Borales/actions-yarn@v2.1.0
+      - name: Install Node
+        uses: actions/setup-node@v1
         with:
-          cmd: install
-      - run: ./wix.bat
+          node-version: '12'
+      - name: Install Packages
+        run: yarn install
+      - name: Build CLI
+        run: ./wix.bat
         working-directory: ./src/desktop
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
@@ -38,11 +41,14 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
-      - name: Install Packages
-        uses: Borales/actions-yarn@v2.1.0
+      - name: Install Node
+        uses: actions/setup-node@v1
         with:
-          cmd: install
-      - run: ./build.sh
+          node-version: '12'
+      - name: Install Packages
+        run: yarn install
+      - name: Build CLI
+        run: ./build.sh
         working-directory: ./src/desktop
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0

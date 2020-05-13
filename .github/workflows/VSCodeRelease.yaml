@@ -14,13 +14,14 @@ jobs:
         uses: Borales/actions-yarn@v2.1.0
         with:
           cmd: install 
-      - run: mkdir build
+      - name: Create Build Directory
+        run: mkdir build
         working-directory: ./srv/vscode
       - name: Package VSCode Extension
         uses: lannonbr/vsce-action@master
-        working-directory: ./src/vscode
         with:
           args: "package -o ./build"
+          working-directory: ./src/vscode
       - name: Upload Package
         uses: actions/upload-artifact@v1.0.0
         with:
