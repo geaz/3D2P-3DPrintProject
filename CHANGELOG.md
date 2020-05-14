@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Bugs in VSCode under Linux
+- Bug on trying to add already added STL
 
 ### Added
 - First Linux Version of CLI and VSCode Extension

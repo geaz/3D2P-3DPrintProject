@@ -42,8 +42,8 @@ namespace PrintProject.App.CLI
                 var relativeStlPath = Path.GetRelativePath(project.DirectoryName, stl.FullName);
 
                 var projectFile = ProjectFile.Load(project.FullName);
-                var existingStl = projectFile.StlInfoList.Where(s => s.RelativePath == relativeStlPath);
-                if(existingStl != null)
+                var existingStl = projectFile.StlInfoList.SingleOrDefault(s => s.RelativePath == relativeStlPath);
+                if(existingStl == null)
                 {
                     var stlInfo = new StlInfo()
                     {
