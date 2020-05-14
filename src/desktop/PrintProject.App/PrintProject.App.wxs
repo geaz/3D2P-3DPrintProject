@@ -39,7 +39,7 @@
            </Component>
         </DirectoryRef>
 
-        <DirectoryRef Id="dirE346A75FEDD174A44A845475C6757E1F">
+        <DirectoryRef Id="INSTALLDIR">
             <Component Id="AppFolderPermission" Guid="fb1af65a-060d-4aa8-97bc-cc9ff07b3e94">
                 <CreateFolder>
                     <util:PermissionEx User="Users" GenericAll="yes"/>
