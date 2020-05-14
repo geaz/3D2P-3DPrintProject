@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.CommandLine;
 using PrintProject.ThreeMF;
@@ -7,7 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class PackCommandHandler
+    internal sealed class PackCommandHandler : CliResultBase
     {
         public PackCommandHandler()
         {
@@ -36,25 +35,29 @@ namespace PrintProject.App.CLI
                 .Create<FileInfo, DirectoryInfo, bool>(HandlePackCommand);
         }
 
-        private void HandlePackCommand(FileInfo project, DirectoryInfo dir, bool overwrite)
+        private int HandlePackCommand(FileInfo project, DirectoryInfo dir, bool overwrite)
         {
-            var modelBuilder = new Model3MFBuilder();
-            var projectFile = ProjectFile.Load(project.FullName);
-
-            modelBuilder.Set3D2PFile(project.FullName);
-            if(!string.IsNullOrEmpty(projectFile.Readme))
-                modelBuilder.SetReadme(Path.GetFullPath(projectFile.Readme, project.DirectoryName));
-            if(!string.IsNullOrEmpty(projectFile.Thumbnail))
-                modelBuilder.SetThumbnail(Path.GetFullPath(projectFile.Thumbnail, project.DirectoryName));
-
-            foreach(var stl in projectFile.StlInfoList)
+            return ResultWrapper(() =>
             {
-                modelBuilder.AddStl(Path.GetFullPath(stl.RelativePath, project.DirectoryName));
-            }
+                var modelBuilder = new Model3MFBuilder();
+                var projectFile = ProjectFile.Load(project.FullName);
 
-            var targetFilepath = Path.Combine(dir.FullName, $"{projectFile.Name}.3mf");
-            Console.WriteLine($"Creating '{targetFilepath}' ...");
-            modelBuilder.Write3MF(targetFilepath, overwrite);
+                modelBuilder.Set3D2PFile(project.FullName);
+                if(!string.IsNullOrEmpty(projectFile.Readme))
+                    modelBuilder.SetReadme(Path.GetFullPath(projectFile.Readme, project.DirectoryName));
+                if(!string.IsNullOrEmpty(projectFile.Thumbnail))
+                    modelBuilder.SetThumbnail(Path.GetFullPath(projectFile.Thumbnail, project.DirectoryName));
+
+                foreach(var stl in projectFile.StlInfoList)
+                {
+                    modelBuilder.AddStl(Path.GetFullPath(stl.RelativePath, project.DirectoryName));
+                }
+
+                var targetFilepath = Path.Combine(dir.FullName, $"{projectFile.Name}.3mf");
+                modelBuilder.Write3MF(targetFilepath, overwrite);
+
+                Logger.Info($"'{targetFilepath}' created");
+            });
         }
 
         public Command Command { get; } = new Command("pack", "Pack a project to a 3MF file.");

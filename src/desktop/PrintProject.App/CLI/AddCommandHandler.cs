@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.CommandLine;
@@ -7,7 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class AddCommandHandler
+    internal sealed class AddCommandHandler : CliResultBase
     {
         public AddCommandHandler()
         {
@@ -36,27 +35,32 @@ namespace PrintProject.App.CLI
             Command.Handler = CommandHandler.Create<FileInfo, FileInfo, string, Status>(HandleAddStlCommand);
         }
 
-        private void HandleAddStlCommand(FileInfo project, FileInfo stl, string color, Status status)
+        private int HandleAddStlCommand(FileInfo project, FileInfo stl, string color, Status status)
         {
-            var relativeStlPath = Path.GetRelativePath(project.DirectoryName, stl.FullName);
+            return ResultWrapper(() =>
+            {
+                var relativeStlPath = Path.GetRelativePath(project.DirectoryName, stl.FullName);
 
-            var projectFile = ProjectFile.Load(project.FullName);
-            var existingStl = projectFile.StlInfoList.Where(s => s.RelativePath == relativeStlPath);
-            if(existingStl != null) {
-                var stlInfo = new StlInfo()
+                var projectFile = ProjectFile.Load(project.FullName);
+                var existingStl = projectFile.StlInfoList.Where(s => s.RelativePath == relativeStlPath);
+                if(existingStl != null)
                 {
-                    Name = stl.Name,
-                    RelativePath = Path.GetRelativePath(project.DirectoryName, stl.FullName),
-                    Status = status,
-                    Color = color
-                };
-                projectFile.StlInfoList.Add(stlInfo);
-                projectFile.Save(project.FullName, true);
-                Console.WriteLine("Added stl to project file.");
-            }
-            else {
-                Console.WriteLine("Skipping - STL already in project!");
-            }
+                    var stlInfo = new StlInfo()
+                    {
+                        Name = stl.Name,
+                        RelativePath = Path.GetRelativePath(project.DirectoryName, stl.FullName),
+                        Status = status,
+                        Color = color
+                    };
+                    projectFile.StlInfoList.Add(stlInfo);
+                    projectFile.Save(project.FullName, true);
+                    Logger.Info("Added stl to project file.");
+                }
+                else
+                {
+                    Logger.Warn("Skipping - STL already in project!");
+                }
+            });
         }
 
         public Command Command { get; } = new Command("add", "Add a stl to an existing project.");

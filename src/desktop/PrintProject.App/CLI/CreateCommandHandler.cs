@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.CommandLine;
 using PrintProject.Core.Model;
@@ -6,7 +5,7 @@ using System.CommandLine.Invocation;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class CreateCommandHandler
+    internal sealed class CreateCommandHandler : CliResultBase
     {
         public CreateCommandHandler()
         {
@@ -27,14 +26,15 @@ namespace PrintProject.App.CLI
             Command.Handler = CommandHandler.Create<DirectoryInfo, bool>(HandleCreateCommand);
         }
 
-        private void HandleCreateCommand(DirectoryInfo dir, bool overwrite)
+        private int HandleCreateCommand(DirectoryInfo dir, bool overwrite)
         {
-            Console.WriteLine("Creating new 3D2P.json file ...");
+            return ResultWrapper(() =>
+            {
+                var projectFile = new ProjectFile();
+                projectFile.Save(Path.Combine(dir.FullName, ProjectFile.ProjectFileName), overwrite);
 
-            var projectFile = new ProjectFile();
-            projectFile.Save(Path.Combine(dir.FullName, ProjectFile.ProjectFileName), overwrite);
-
-            Console.WriteLine($"Saved 3D2P.json to '{dir.FullName}' (overwrite: {overwrite})");
+                Logger.Info($"Saved 3D2P.json to '{dir.FullName}' (overwrite: {overwrite})");
+            });
         }
 
         public Command Command { get; } = new Command("create", "Create a new project file.");

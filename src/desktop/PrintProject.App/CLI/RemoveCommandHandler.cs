@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.CommandLine;
@@ -7,7 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class RemoveCommandHandler
+    internal sealed class RemoveCommandHandler : CliResultBase
     {
         public RemoveCommandHandler()
         {
@@ -31,21 +30,24 @@ namespace PrintProject.App.CLI
             Command.Handler = CommandHandler.Create<FileInfo, string>(HandleRemoveStlCommand);
         }
 
-        private void HandleRemoveStlCommand(FileInfo project, string stlName)
+        private int HandleRemoveStlCommand(FileInfo project, string stlName)
         {
-            var projectFile = ProjectFile.Load(project.FullName);
-            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
+            return ResultWrapper(() =>
+            {
+                var projectFile = ProjectFile.Load(project.FullName);
+                var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
 
-            if(stl != null)
-            {
-                projectFile.StlInfoList.Remove(stl);
-                projectFile.Save(project.FullName, true);
-                Console.WriteLine($"Removed stl '{stlName}' from project.");
-            }
-            else
-            {
-                Console.WriteLine($"STL with name '{stlName}' not found in project!");
-            }
+                if(stl != null)
+                {
+                    projectFile.StlInfoList.Remove(stl);
+                    projectFile.Save(project.FullName, true);
+                    Logger.Info($"Removed stl '{stlName}' from project.");
+                }
+                else
+                {
+                    Logger.Warn($"STL with name '{stlName}' not found in project!");
+                }
+            });
         }
 
         public Command Command { get; } = new Command("remove", "Remove a stl from an existing project.");

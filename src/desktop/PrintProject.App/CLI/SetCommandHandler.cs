@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.CommandLine;
 using PrintProject.Core.Model;
@@ -8,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class SetCommandHandler
+    internal sealed class SetCommandHandler : CliResultBase
     {
         public SetCommandHandler()
         {
@@ -58,50 +57,59 @@ namespace PrintProject.App.CLI
             Command.Add(setAnnotationsCommand);
         }
 
-        private void HandleSetProjectCommand(FileInfo project, string name, Status? status, FileInfo thumbnail, FileInfo readme)
+        private int HandleSetProjectCommand(FileInfo project, string name, Status? status, FileInfo thumbnail, FileInfo readme)
         {
-            var projectFile = ProjectFile.Load(project.FullName);
-            projectFile.Name = !string.IsNullOrEmpty(name) ? name : projectFile.Name;
-            projectFile.Status = status ?? projectFile.Status;
-            projectFile.Thumbnail = thumbnail != null ? Path.GetRelativePath(project.DirectoryName, thumbnail.FullName) : projectFile.Thumbnail;
-            projectFile.Readme = readme != null ? Path.GetRelativePath(project.DirectoryName, readme.FullName) : projectFile.Readme;
-            projectFile.Save(project.FullName, true);
-            Console.WriteLine("Project values set.");
+            return ResultWrapper(() =>
+            {
+                var projectFile = ProjectFile.Load(project.FullName);
+                projectFile.Name = !string.IsNullOrEmpty(name) ? name : projectFile.Name;
+                projectFile.Status = status ?? projectFile.Status;
+                projectFile.Thumbnail = thumbnail != null ? Path.GetRelativePath(project.DirectoryName, thumbnail.FullName) : projectFile.Thumbnail;
+                projectFile.Readme = readme != null ? Path.GetRelativePath(project.DirectoryName, readme.FullName) : projectFile.Readme;
+                projectFile.Save(project.FullName, true);
+                Logger.Info("Project values set");
+            });
         }
 
-        private void HandleSetStlCommand(FileInfo project, string stlName, string color, Status? status)
+        private int HandleSetStlCommand(FileInfo project, string stlName, string color, Status? status)
         {
-            var projectFile = ProjectFile.Load(project.FullName);
-            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
+            return ResultWrapper(() =>
+            {
+                var projectFile = ProjectFile.Load(project.FullName);
+                var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
 
-            if(stl != null)
-            {
-                stl.Color = color ?? stl.Color;
-                stl.Status = status ?? stl.Status;
-                projectFile.Save(project.FullName, true);
-                Console.WriteLine("STL values set.");
-            }
-            else
-            {
-                Console.WriteLine($"STL with name '{stlName}' not found in project!");
-            }
+                if(stl != null)
+                {
+                    stl.Color = color ?? stl.Color;
+                    stl.Status = status ?? stl.Status;
+                    projectFile.Save(project.FullName, true);
+                    Logger.Info("STL values set");
+                }
+                else
+                {
+                    Logger.Warn($"STL with name '{stlName}' not found in project!");
+                }
+            });
         }
 
-        private void HandleSetAnnotationsCommand(FileInfo project, string stlName, string annotations)
+        private int HandleSetAnnotationsCommand(FileInfo project, string stlName, string annotations)
         {
-            var projectFile = ProjectFile.Load(project.FullName);
-            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
+            return ResultWrapper(() =>
+            {
+                var projectFile = ProjectFile.Load(project.FullName);
+                var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
 
-            if(stl != null)
-            {
-                stl.AnnotationList = JsonConvert.DeserializeObject<StlAnnotation[]>(annotations).ToList();
-                projectFile.Save(project.FullName, true);
-                Console.WriteLine("STL Annotations set.");
-            }
-            else
-            {
-                Console.WriteLine($"STL with name '{stlName}' not found in project!");
-            }
+                if(stl != null)
+                {
+                    stl.AnnotationList = JsonConvert.DeserializeObject<StlAnnotation[]>(annotations).ToList();
+                    projectFile.Save(project.FullName, true);
+                    Logger.Info("STL Annotations set");
+                }
+                else
+                {
+                    Logger.Warn($"STL with name '{stlName}' not found in project!");
+                }
+            });
         }
 
         public Command Command { get; } = new Command("set", "Set properties of an existing project or stl.");

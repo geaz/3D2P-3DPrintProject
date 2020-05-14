@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.CommandLine;
 using PrintProject.ThreeMF;
@@ -6,7 +5,7 @@ using System.CommandLine.Invocation;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class ExtractCommandHandler
+    internal sealed class ExtractCommandHandler : CliResultBase
     {
         public ExtractCommandHandler()
         {
@@ -30,21 +29,26 @@ namespace PrintProject.App.CLI
             Command.Add(directoryOption);
 
             Command.Handler = CommandHandler
-                .Create<FileInfo, DirectoryInfo, bool>(HandleExtractCommand);
+                .Create<FileInfo, DirectoryInfo>(HandleExtractCommand);
         }
 
-        private void HandleExtractCommand(FileInfo model, DirectoryInfo dir, bool overwrite)
+        private int HandleExtractCommand(FileInfo model, DirectoryInfo dir)
         {
-            if(dir.Exists)
+            return ResultWrapper(() =>
             {
-                Console.WriteLine("Please use a new directory for the extraction!");
-            }
-            else
-            {
-                dir.Create();
-                var model3mf = new Model3MF(model.FullName);
-                model3mf.ExtractPrintProject(dir.FullName);
-            }
+                if(dir.Exists)
+                {
+                    Logger.Warn("Please use a new directory for the extraction!");
+                }
+                else
+                {
+                    dir.Create();
+                    var model3mf = new Model3MF(model.FullName);
+                    model3mf.ExtractPrintProject(dir.FullName);
+
+                    Logger.Info($"Extracted successfully to '{dir.FullName}'");
+                }
+            });
         }
 
         public Command Command { get; } = new Command("extract", "Extract the content of a 3MF file (Created default 3D2P.json file, if non existent).");

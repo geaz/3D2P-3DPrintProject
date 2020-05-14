@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.CommandLine;
@@ -7,7 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace PrintProject.App.CLI
 {
-    internal sealed class ListCommandHandler
+    internal sealed class ListCommandHandler : CliResultBase
     {
         public ListCommandHandler()
         {
@@ -44,32 +43,38 @@ namespace PrintProject.App.CLI
             Command.Add(listAnnotationsCommand);
         }
 
-        private void HandleListStlsCommand(FileInfo project)
+        private int HandleListStlsCommand(FileInfo project)
         {
-            var projectFile = ProjectFile.Load(project.FullName);
-            Console.WriteLine($"Project at '{project.FullName}' includes the following STLs:");
-            foreach(var stl in projectFile.StlInfoList)
+            return ResultWrapper(() =>
             {
-                Console.WriteLine($"- {stl.Name} ({stl.Status}, {stl.Color}, Annotations: {stl.AnnotationList.Count})");
-            }
+                var projectFile = ProjectFile.Load(project.FullName);
+                Logger.Info($"Project at '{project.FullName}' includes the following STLs:");
+                foreach(var stl in projectFile.StlInfoList)
+                {
+                    Logger.Info($"- {stl.Name} ({stl.Status}, {stl.Color}, Annotations: {stl.AnnotationList.Count})");
+                }
+            });
         }
 
-        private void HandleListAnnotationsCommand(FileInfo project, string stlName)
+        private int HandleListAnnotationsCommand(FileInfo project, string stlName)
         {
-            var projectFile = ProjectFile.Load(project.FullName);
-            var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
+            return ResultWrapper(() =>
+            {
+                var projectFile = ProjectFile.Load(project.FullName);
+                var stl = projectFile.StlInfoList.SingleOrDefault(s => s.Name == stlName);
 
-            if(stl != null)
-            {
-                foreach(var annotation in stl.AnnotationList)
+                if(stl != null)
                 {
-                    Console.WriteLine($"- ID: {annotation.Id}, Text: {annotation.Text}");
+                    foreach(var annotation in stl.AnnotationList)
+                    {
+                        Logger.Info($"- ID: {annotation.Id}, Text: {annotation.Text}");
+                    }
                 }
-            }
-            else
-            {
-                Console.WriteLine($"STL with name '{stlName}' not found in project!");
-            }
+                else
+                {
+                    Logger.Warn($"STL with name '{stlName}' not found in project!");
+                }
+            });
         }
 
         public Command Command { get; } = new Command("list", "List stls and annotations in project file.");
